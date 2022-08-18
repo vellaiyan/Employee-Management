@@ -17,7 +17,8 @@ import com.ideas2it.exception.customException;
 import java.util.concurrent.TimeUnit;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
+import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 /**
  * The {@code EmployeeController} class is to show and control the 
  * employee options.
@@ -33,15 +34,17 @@ public class EmployeeController {
     private  TrainerService trainerService = new TrainerService();
     private  TraineeService traineeService = new TraineeService();
     private SignInAndLogInController signinController = new SignInAndLogInController();
+    private static Logger logger = Logger.getLogger(EmployeeController.class);
 
     public static void main(String[] args) {
-        EmployeeController employeeController = new EmployeeController();      
+        EmployeeController employeeController = new EmployeeController();  
+        BasicConfigurator.configure();    
         do {
             try {
                 employeeController.showOptions();
             } catch (InputMismatchException e) {
-                System.out.println("********************************** INVALID OPTION ************************************");
-                System.out.println("\nPlease choose valid option");
+                logger.info("********************************** INVALID OPTION ************************************");
+                logger.info("\nPlease choose valid option");
             }
         } while (isFlow);
     }
@@ -59,10 +62,10 @@ public class EmployeeController {
      */
     public void showOptions() {
         int userOption;
-        System.out.println("\nPlease choose the option below\n");
+        logger.info("Please choose the option below");
         Scanner scanner = new Scanner(System.in);
         while (isFlow) {
-            System.out.println("1. Trainee SignIn. \n2. Trainer SignIn. \n\nIf you have an account Choose below : \n\n"
+            logger.info("\n1. Trainee SignIn. \n2. Trainer SignIn. \n\nIf you have an account Choose below : \n\n"
                 + "3.Trainee LogIn. \n4. Trainer LogIn To Modify Trainee Details.  \n5. HR Management. \n6. Store default trainee."
                 + "\n7. Store default trainers.\n8. Exit");
             userOption = scanner.nextInt();
@@ -76,28 +79,28 @@ public class EmployeeController {
                     break;
 
                 case 3:
-                    System.out.println("\n Enter the detials to access your account\n");
-                    System.out.println("Enter your name : ");
+                    logger.info("\n Enter the detials to access your account\n");
+                    logger.info("Enter your name : ");
                     String traineeName = scanner.next();
-                    System.out.println("Enter yor email-id : ");
+                    logger.info("Enter yor email-id : ");
                     String traineeEmail = scanner.next();
                     DateUtil.timeDelay(500);
                     signinController.displayTraineeByNameAndEmail(traineeName, traineeEmail);
                     break;
 
                 case 4:
-                    System.out.print("Enter User Name : ");
+                    logger.info("Enter User Name : ");
                     String logInName = scanner.next();
-                    System.out.print("Enter Password : ");
+                    logger.info("Enter Password : ");
                     String logInPassword = scanner.next();
                     DateUtil.timeDelay(500);
                     signinController.trainerOperations(logInName, logInPassword, null, null);
                     break;
  
                 case 5:
-                    System.out.print("Enter User Name : ");
+                    logger.info("Enter User Name : ");
                     String HrName = scanner.next();
-                    System.out.print("Enter Password :");
+                    logger.info("Enter Password :");
                     String HrPassword = scanner.next();
                     DateUtil.timeDelay(500);
                     signinController.hrOperationsByNameAndPassword(HrName, HrPassword);
@@ -106,14 +109,14 @@ public class EmployeeController {
                 case 6:
                     if (traineeService.defaultTrainees()) {
                         DateUtil.timeDelay(500);
-                        System.out.println("\nTrainees added successfully\n");
+                        logger.info("\nTrainees added successfully\n");
                     }
                     break;
  
                 case 7:
                     if (trainerService.defaultTrainers()) {
                         DateUtil.timeDelay(500);
-                        System.out.println("\nTrainers added successfully\n");
+                        logger.info("\nTrainers added successfully\n");
                     }
                     break;
 
@@ -137,7 +140,7 @@ public class EmployeeController {
         try {
             signinController.signIn(user);
         } catch (customException e) {
-            System.out.println("\n"+ e.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
+            logger.info("\n"+ e.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
         }
     }
 }

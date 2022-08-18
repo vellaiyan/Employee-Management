@@ -23,6 +23,11 @@ import java.util.LinkedList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Appender; 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.SimpleLayout;
 
 /**
  * The {@code SignInAndLogInController} class helps trainee and trainee to
@@ -65,6 +70,7 @@ public class SignInAndLogInController {
     private TraineeService traineeService = new TraineeService();
     private TrainerService trainerService = new TrainerService();
     private HumanResourceService humanResourceService = new HumanResourceService();
+    private static Logger logger = Logger.getLogger(SignInAndLogInController.class);
  
     /**
      * {@code signIn} implemented to sign-in for both trianee and trainer.
@@ -113,21 +119,21 @@ public class SignInAndLogInController {
             byte trainingBatch = Byte.valueOf(batch);
             if (traineeService.addTrainee(firstName, lastName, id, trainingBatch, dateOfBirth, fatherName, motherName, gender, emailId, mobile,
                     doorNo, city, taluk, state, district, pin, age)) {
-                System.out.println("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");                
+                logger.info("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");                
             }
         }
         //If user is trainee then pass details to trainee service to add new trainee.
         if (user == trainer) {
             if(trainerService.addTrainer(firstName, lastName, id, domain, experience, dateOfBirth, fatherName, motherName, gender,
                     emailId, mobile, doorNo, city, taluk, state, district, pin, age)) {
-                System.out.println("Hi Mam/Sir Your details are saved successfully\n To access Trainee and Trainer details you "
+                logger.info("Hi Mam/Sir Your details are saved successfully\n To access Trainee and Trainer details you "
                     +"have to verfy username and password");                
 
             }
 
-            System.out.print("Enter usernme : ");
+            logger.info("Enter usernme : ");
             String validName = scanner.next();
-            System.out.print("Enter Your password : ");
+            logger.info("Enter Your password : ");
             String validPassword= scanner.next();
             trainerOperations(validName, validPassword, firstName, emailId);
         }
@@ -149,7 +155,7 @@ public class SignInAndLogInController {
         int remainingTimes = 0;
         //Asking input from user five times if the given input is invalid.
         for (int checkingLoop = 0; checkingLoop < 5; checkingLoop++) {
-            System.out.println("Enter your date of birth(dd-MM-yyyy) : ");
+            logger.info("Enter your date of birth(dd-MM-yyyy) : ");
             dateOfBirth = scanner.next();
             String date = DateUtil.dateOfBirthValidation(dateOfBirth);
             //Check the user input is valid or not.
@@ -158,10 +164,10 @@ public class SignInAndLogInController {
                 checkingLoop = 4;
                 dateOfBirth = date;
             } else if (date.equals("max")) {
-                System.out.println("Your date of birth exceeds current year");
+                logger.info("Your date of birth exceeds current year");
                 remainingTimes++;
             } else if (date.equals("low")) { 
-                System.out.println("Given date of birth is not valid");
+                logger.info("Given date of birth is not valid");
                 remainingTimes++;
             } else if (date.equals("min")) {
                 System.out.println("Your age is too low");
