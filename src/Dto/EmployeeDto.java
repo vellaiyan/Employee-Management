@@ -6,7 +6,7 @@
  *
  */
 
-package com.ideas2it.model;
+package com.ideas2it.dto;
 
 /**
  * The {@code Employee} class represents the all common characters 
@@ -17,7 +17,7 @@ package com.ideas2it.model;
  * @since  1.0
  * @jls    1.1 Adding EmployeeId
  */  
-public class Employee { 
+public class EmployeeDto { 
     protected int employeeId;
     protected int batch;
     protected String firstName;
@@ -38,7 +38,7 @@ public class Employee {
     protected int pinCode;
     protected String state;
 
-    public Employee(int employeeId, int batch , String firstName, String lastName, String subject, String experience, String gender,
+    public EmployeeDto(int employeeId, int batch , String firstName, String lastName, String subject, String experience, String gender,
             String dateOfBirth, int age, String emailId, long mobileNumber, String doorNumber, String fatherName, String motherName, String city,
             String taluk, String district, int pinCode, String state) {
         this.employeeId = employeeId;
@@ -57,19 +57,28 @@ public class Employee {
         this.motherName = motherName;
         this.city = city;
         this.employeeId = employeeId;
+        this.pinCode = pinCode;
         this.taluk = taluk;
         this.district = district;
-        this.pinCode = pinCode;
         this.state = state;
     }
 
     public int getAge() {
         return age;
     }
-    
+
+    public String getExperience() {
+	return experience;
+    }
+   
     public int getBatch() {
         return batch;
     }
+
+    public String getSubject() {
+        return subject;
+    }
+
 
     public String getFirstName() {
         return firstName;
@@ -195,15 +204,6 @@ public class Employee {
         this.age = age;
     }
 
-
-    public String getExperience() {
-	return experience;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
     public void setExperience(String experience) {
         this.experience = experience;
     }
@@ -212,6 +212,17 @@ public class Employee {
         this.subject = subject;
 
     } 
+
+    public void setBatch(int batch) {
+        this.batch = batch;
+    }
+
+    @Override  
+    public String toString() {
+        String output = String.format("%5s %11s %10s %12s %12s %12s %12s %15s %8s %20s %16s %10s %7S %7s %9s %5s", employeeId, batch, 
+                firstName, lastName, subject, experience, gender, dateOfBirth, age, emailId, mobileNumber, doorNumber, city, taluk, pinCode, "|");
+        return  output;              
+    }
 }
 
 
