@@ -8,15 +8,6 @@
 
 package com.ideas2it.model;
 
-/**
- * The {@code Employee} class represents the all common characters 
- * of trainer as well trainees
- *
- * @author Vellaiyan
- *
- * @since  1.0
- * @jls    1.1 Adding EmployeeId
- */  
 public class Employee { 
     protected int employeeId;
     protected int batch;
@@ -26,6 +17,7 @@ public class Employee {
     protected String experience;
     protected String gender;
     protected String dateOfBirth;
+    protected String dateOfJoining;
     protected int age;
     protected String emailId;
     protected long mobileNumber; 
@@ -39,7 +31,7 @@ public class Employee {
     protected String state;
 
     public Employee(int employeeId, int batch , String firstName, String lastName, String subject, String experience, String gender,
-            String dateOfBirth, int age, String emailId, long mobileNumber, String doorNumber, String fatherName, String motherName, String city,
+            String dateOfBirth, String dateOfJoining, int age, String emailId, long mobileNumber, String doorNumber, String fatherName, String motherName, String city,
             String taluk, String district, int pinCode, String state) {
         this.employeeId = employeeId;
         this.batch = batch;
@@ -49,6 +41,7 @@ public class Employee {
         this.experience = experience;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
+        this.dateOfJoining = dateOfJoining;
         this.age = age;
         this.emailId = emailId;
         this.mobileNumber = mobileNumber;
@@ -65,6 +58,10 @@ public class Employee {
 
     public int getAge() {
         return age;
+    }
+ 
+    public String getDateOfJoining() {
+        return dateOfJoining;
     }
     
     public int getBatch() {
@@ -210,8 +207,11 @@ public class Employee {
   
     public void setSubject(String subject) {
         this.subject = subject;
-
     } 
+
+    public void setDateOfJoining(String dateOfJoining) {
+        this.dateOfJoining = dateOfJoining;
+    }
 }
 
 

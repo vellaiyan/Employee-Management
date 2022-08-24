@@ -1,23 +1,31 @@
+/*
+ * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
+ * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ *
+ *
+ */
+
 package com.ideas2it.exception;
 
 import java.lang.Exception;
 
-public class customException extends Exception{
+public class CustomException extends Exception{
 
-    public customException() {
+    public CustomException() {
         super();
     }
 
-    public customException(String exception) {
+    public CustomException(String exception) {
         super(exception);
     }
 
-    public customException(Throwable throwable) {
+    public CustomException(Throwable throwable) {
         super(throwable);
 
     }
     
-    public customException(String exception, Throwable throwable) {
+    public CustomException(String exception, Throwable throwable) {
         super(exception, throwable);
 
     }

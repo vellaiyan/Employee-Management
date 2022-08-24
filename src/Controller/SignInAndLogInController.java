@@ -12,24 +12,13 @@ import com.ideas2it.service.EmployeeService;
 import com.ideas2it.utilitis.ValidationUtil;
 import com.ideas2it.utilitis.DateUtil;
 import com.ideas2it.dto.EmployeeDto;
-import com.ideas2it.exception.customException;
+import com.ideas2it.exception.CustomException;
  
 import java.util.List;
 import java.util.LinkedList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
-
-/**
- * The {@code SignInAndLogInController} class helps trainee and trainee to
- * signin or login to their account. 
- * This class also provides modification support aswell. 
- *
- * @author Vellaiyan
- *
- * @since  1.0
- * @jls    1.1 Showing details in table format.
- */
 
 public class SignInAndLogInController { 
     private int employeeId = 130;
@@ -40,6 +29,7 @@ public class SignInAndLogInController {
     private String experience;
     private String gender;
     private String dateOfBirth;
+    private String dateOfJoining;
     private int age;
     private String emailId;
     private String mobileNumber;
@@ -55,22 +45,14 @@ public class SignInAndLogInController {
     private Scanner scanner = new Scanner(System.in);
     private EmployeeService employeeService = new EmployeeService();
  
-    /**
-     * {@code signIn} implemented to sign-in for both trianee and trainer.
-     *
-     * @param user
-     *          Decides which user is going to sign-in (trainer/trainee).
-     * 
-     * @since 1.0
-     *
-     */
-    public void signIn(String userType) throws customException{
+    public void signIn(String userRole) throws CustomException{
         try{
             firstName = getInput("First Name", ValidationUtil.NAME_PATTERN);
             lastName = getInput("Last Name", ValidationUtil.NAME_PATTERN);
             subject = getInput("Subject", ValidationUtil.NAME_PATTERN);
             experience = getInput("Experience", ValidationUtil.EMPLOYEE_ID_PATTERN);        
-            dateOfBirth = getDateOfBirth();
+            dateOfBirth =  getDateOfBirthAndJoining("Enter your date of birth (dd/MM/yyyy)", "dob");
+            dateOfJoining = getDateOfBirthAndJoining("Enter your date of joining (dd/MM/yyyy)", "joining");
             batch = getInput("batch Number", ValidationUtil.EMPLOYEE_ID_PATTERN);
             fatherName = getInput("Father Name", ValidationUtil.NAME_PATTERN);
             motherName = getInput("Mother Name", ValidationUtil.NAME_PATTERN);
@@ -83,9 +65,8 @@ public class SignInAndLogInController {
             state = getInput("State", ValidationUtil.NAME_PATTERN);
             district = getInput("District", ValidationUtil.NAME_PATTERN);
             pinCode = getInput("PinCode", ValidationUtil.PIN_PATTERN);
-
-        } catch(customException e) {
-            throw new customException("invalid input");
+        } catch(CustomException e) {
+            throw new CustomException("invalid input");
         }
         employeeId++;
         int pin = Integer.valueOf(pinCode); 
@@ -93,35 +74,25 @@ public class SignInAndLogInController {
         age = DateUtil.age;
         int batchNo = Integer.valueOf(batch);
         byte trainingBatch = Byte.valueOf(batch);
-        EmployeeDto employeeDto = new EmployeeDto(employeeId, batchNo, firstName, lastName, subject, experience, gender, dateOfBirth, age, emailId, mobile,
-                doorNumber, fatherName, motherName, city, taluk, district, pin, state);        
-        if (employeeService.addEmployee(employeeDto)) {
+        EmployeeDto employeeDto = new EmployeeDto(employeeId, batchNo, firstName, lastName, subject, experience, gender, dateOfBirth, dateOfJoining,
+                age, emailId, mobile, doorNumber, fatherName, motherName, city, taluk, district, pin, state);        
+        if (employeeService.addEmployee(employeeDto, userRole)) {
             System.out.println("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");                
          
         }
     }
 
-    /**
-     * {@code getDateOfBirth} get date of birth from employee and 
-     * validate it under some checking condition.
-     *
-     *
-     * @return dateOfBirth of employee.
-     * 
-     * @since 1.0
-     *
-     */
-    public String getDateOfBirth() throws customException{
+    public String  getDateOfBirthAndJoining(String input, String choosenDate) throws CustomException{
         boolean isValidDate = true;
-        String dateOfBirth = "";
+        String dateOfBirthAndJoining = "";
         int remainingTimes = 0;
         //Asking input from user five times if the given input is invalid.
         for (int checkingLoop = 0; checkingLoop < 5; checkingLoop++) {
-            System.out.println("Enter your date of birth(dd-MM-yyyy) : ");
-            dateOfBirth = scanner.next();
-            String date = DateUtil.dateOfBirthValidation(dateOfBirth);
+            System.out.println(input);
+            dateOfBirthAndJoining = scanner.next();
+            String date = DateUtil.dateOfBirthValidation(dateOfBirthAndJoining, choosenDate);
             //Check the user input is valid or not.
-            if (date.equals(dateOfBirth)) {
+            if (date.equals(dateOfBirthAndJoining)) {
                 isValidDate = false;
                 checkingLoop = 4;
                 dateOfBirth = date;
@@ -138,26 +109,13 @@ public class SignInAndLogInController {
                 System.out.println("Invalid dateOfBirth");
                 remainingTimes++;
             } if (remainingTimes == 5) {
-                throw new customException("Invalid Input");                
+                throw new CustomException("Invalid Input");                
             }
         }
-        return dateOfBirth;
+        return dateOfBirthAndJoining;
     }   
-
-    /**
-     * {@code getInput} common method to get input from the employee.
-     *
-     * @param inputType
-     *          type of input.
-     * @param regex
-     *          pattern to check the given input.
-     *
-     * @return user input if it is valid.
-     * 
-     * @since 1.0
-     *
-     */   
-    private String getInput(String inputType, String regex) throws customException{
+  
+    private String getInput(String inputType, String regex) throws CustomException{
         String initialUserInput = "";
         int remainingTimes = 0;
         //Asking input from user five times if the given input is invalid.
@@ -173,7 +131,7 @@ public class SignInAndLogInController {
                     System.out.println("Invalid " + inputType + "("+(5-(numberOfTimes+1)) + " more times)");
                     remainingTimes++;                                 
                 } if (remainingTimes == 5){
-                    throw new customException("Invalid");
+                    throw new CustomException("Invalid");
                 }
         }
         return initialUserInput;

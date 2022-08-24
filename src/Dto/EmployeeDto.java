@@ -7,16 +7,7 @@
  */
 
 package com.ideas2it.dto;
-
-/**
- * The {@code Employee} class represents the all common characters 
- * of trainer as well trainees
- *
- * @author Vellaiyan
- *
- * @since  1.0
- * @jls    1.1 Adding EmployeeId
- */  
+ 
 public class EmployeeDto { 
     protected int employeeId;
     protected int batch;
@@ -26,6 +17,7 @@ public class EmployeeDto {
     protected String experience;
     protected String gender;
     protected String dateOfBirth;
+    protected String dateOfJoining;
     protected int age;
     protected String emailId;
     protected long mobileNumber; 
@@ -39,7 +31,7 @@ public class EmployeeDto {
     protected String state;
 
     public EmployeeDto(int employeeId, int batch , String firstName, String lastName, String subject, String experience, String gender,
-            String dateOfBirth, int age, String emailId, long mobileNumber, String doorNumber, String fatherName, String motherName, String city,
+            String dateOfBirth, String dateOfJoining, int age, String emailId, long mobileNumber, String doorNumber, String fatherName, String motherName, String city,
             String taluk, String district, int pinCode, String state) {
         this.employeeId = employeeId;
         this.batch = batch;
@@ -49,6 +41,7 @@ public class EmployeeDto {
         this.experience = experience;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
+        this.dateOfJoining = dateOfJoining;
         this.age = age;
         this.emailId = emailId;
         this.mobileNumber = mobileNumber;
@@ -65,6 +58,10 @@ public class EmployeeDto {
 
     public int getAge() {
         return age;
+    }
+
+    public String getDateOfJoining() {
+        return dateOfJoining;
     }
 
     public String getExperience() {
@@ -217,10 +214,13 @@ public class EmployeeDto {
         this.batch = batch;
     }
 
+    public void setDateOfJoining(String dateOfJoining) {
+        this.dateOfJoining = dateOfJoining;
+    }
     @Override  
     public String toString() {
-        String output = String.format("%5s %11s %10s %12s %12s %12s %12s %15s %8s %20s %16s %10s %7S %7s %9s %5s", employeeId, batch, 
-                firstName, lastName, subject, experience, gender, dateOfBirth, age, emailId, mobileNumber, doorNumber, city, taluk, pinCode, "|");
+        String output = String.format("%5s %11s %10s %12s %12s %12s %12s %15s %8s %20s %16s %10s %7S", employeeId, batch, 
+                firstName, lastName, subject, experience, gender, dateOfBirth, age, emailId, mobileNumber, doorNumber, city, "|");
         return  output;              
     }
 }

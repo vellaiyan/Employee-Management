@@ -11,22 +11,12 @@ import com.ideas2it.controller.SignInAndLogInController;
 import com.ideas2it.dto.EmployeeDto;
 import com.ideas2it.service.EmployeeService;
 import com.ideas2it.utilitis.DateUtil;
-import com.ideas2it.exception.customException;
+import com.ideas2it.exception.CustomException;
 import com.ideas2it.utilitis.Constants;
 
 import java.util.concurrent.TimeUnit;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
-/**
- * The {@code EmployeeController} class is to show and control the 
- * employee options.
- *
- * @author Vellaiyan
- *
- * @since  1.0
- * @jls    1.1  Additional option to add defaulttrainees and trainers
- */
 
 public class EmployeeController {
     private static boolean isFlow = true;
@@ -45,17 +35,6 @@ public class EmployeeController {
         } while (isFlow);
     }
 
-     /**
-     * {@code showOptions} to show different options to employee.
-     *
-     * @param dob
-     *          The date of birth need to be validate.
-     * 
-     * @throws InputMismatchException
-     *
-     * @since 1.0
-     *
-     */
     public void showOptions() {
         int userOption;
         System.out.println("\nPlease choose the option below\n");
@@ -122,20 +101,10 @@ public class EmployeeController {
         }       
     }
  
-    /**
-     * {@code userSignIn} common method for all employee to 
-     * sign-in.
-     *
-     * @param user
-     *          Which user (trainee/trainee) is going to sign-in.
-     *
-     * @since 1.0
-     *
-     */
     public void userSignIn(String userType) {
         try {
             signinController.signIn(userType);
-        } catch (customException e) {
+        } catch (CustomException e) {
             System.out.println("\n"+ e.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
         }
     }
