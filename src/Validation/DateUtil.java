@@ -20,7 +20,6 @@ import java.text.ParseException;
 
 public class DateUtil {
     public static int age;
-
     public static String dateOfBirthValidation(String dob, String choosenDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         simpleDateFormat.setLenient(false);

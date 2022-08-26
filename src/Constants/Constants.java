@@ -13,6 +13,5 @@ public class Constants {
     public static String TRAINER = "Trainer";
     public static String DATABASE_URL = "jdbc:mysql://localhost/employeedatabase?verifyServerCertificate=false&useSSL=true";
     public static String USER_NAME = "root";
-    public static String PASSWORD = "VellaiyanI22146";
-    
+    public static String PASSWORD = "VellaiyanI22146";    
 }

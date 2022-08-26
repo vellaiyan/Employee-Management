@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class BaseDao {
+
     public Connection databaseConnection() throws CustomException {
         try {
             Connection connection = DriverManager.getConnection(Constants.DATABASE_URL,Constants.USER_NAME, Constants.PASSWORD);	

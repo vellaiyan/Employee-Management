@@ -1,4 +1,4 @@
-/*
+   /*
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
@@ -12,52 +12,36 @@ public class Employee {
     protected int employeeId;
     protected int batch;
     protected String firstName;
-    protected String lastName;
     protected String subject;
-    protected String experience;
     protected String gender;
     protected String dateOfBirth;
     protected String dateOfJoining;
-    protected int age;
+    protected String createDate;
+    protected String updateDate;
     protected String emailId;
-    protected long mobileNumber; 
-    protected String doorNumber; 
-    protected String fatherName;
-    protected String motherName; 
-    protected String city;
-    protected String taluk;
-    protected String district;
-    protected int pinCode;
-    protected String state;
+    protected long mobileNumber;  
 
-    public Employee(int employeeId, int batch , String firstName, String lastName, String subject, String experience, String gender,
-            String dateOfBirth, String dateOfJoining, int age, String emailId, long mobileNumber, String doorNumber, String fatherName, String motherName, String city,
-            String taluk, String district, int pinCode, String state) {
+    public Employee() {
+
+    }
+
+    public Employee(int employeeId, int batch , String firstName, String subject, String gender,
+            String dateOfBirth, String dateOfJoining, String emailId, long mobileNumber, String createDate, String updateDate) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
-        this.lastName = lastName;
         this.subject = subject;
-        this.experience = experience;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.dateOfJoining = dateOfJoining;
-        this.age = age;
         this.emailId = emailId;
         this.mobileNumber = mobileNumber;
-        this.doorNumber = doorNumber;
-        this.fatherName = fatherName; 
-        this.motherName = motherName;
-        this.city = city;
-        this.employeeId = employeeId;
-        this.taluk = taluk;
-        this.district = district;
-        this.pinCode = pinCode;
-        this.state = state;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
     }
 
-    public int getAge() {
-        return age;
+    public String getSubject() {
+        return subject;
     }
  
     public String getDateOfJoining() {
@@ -72,21 +56,6 @@ public class Employee {
         return firstName;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public String getFatherName() {
-        return fatherName;
-    }
-
-    public String getMotherName() {
-        return motherName;
-    }
 
     public String getEmailId() {
          return emailId;
@@ -100,77 +69,30 @@ public class Employee {
         return mobileNumber;
     }
 
-    public String getDoorNumber() {
-        return doorNumber;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getTaluk() {
-        return taluk;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public int getPinCode() {
-        return pinCode;
-    }
-
     public int getEmployeeId() {
         return employeeId;
+    }
+   
+    public String getCreateDate() {
+        return createDate;
+    }
+  
+    public String getUpdateDate() {
+        return updateDate;
+    }
+  
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
    public void setFirstName(String firstName) { 
         this.firstName = firstName; 
     }
 
-    public void setLastName(String lastName) { 
-        this.lastName = lastName; 
-    } 
-
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName; 
-    }
-
-    public void setMotherName(String motherName) {
-        this.motherName = motherName; 
-    }
-
     public void setEmailId(String emailId) { 
         this.emailId = emailId; 
     }
 
-    public void setCity(String city) {
-        this.city = city;	
-    }
-
-    public void setTaluk(String taluk) {
-        this.taluk = taluk;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public void setDoorNumber(String doorNumber) {
-        this.doorNumber = doorNumber;
-    }
-
-    public void setPinCode(int pinCode) {
-        this.pinCode = pinCode;
-    }
 
     public void setMobileNumber(long mobileNumber) {
         this.mobileNumber = mobileNumber;
@@ -183,27 +105,6 @@ public class Employee {
     public void setDateOfBirth(String date) {
         this.dateOfBirth = date;
     }
-
-    public void setId(short employeeId) {
-        this.employeeId = employeeId;
-    }
-   
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-
-    public String getExperience() {
-	return experience;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setExperience(String experience) {
-        this.experience = experience;
-    }
   
     public void setSubject(String subject) {
         this.subject = subject;
@@ -212,10 +113,23 @@ public class Employee {
     public void setDateOfJoining(String dateOfJoining) {
         this.dateOfJoining = dateOfJoining;
     }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+ 
+    public void setBatch(int batch) {
+        this.batch = batch;
+    }
 }
-
-
-
 
 
 

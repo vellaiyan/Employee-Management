@@ -20,8 +20,8 @@ import java.util.Scanner;
 
 public class EmployeeController {
     private static boolean isFlow = true;
-    private EmployeeService EmployeeService = new EmployeeService();
-    private SignInAndLogInController signinController = new SignInAndLogInController();
+    private EmployeeService employeeService = new EmployeeService();
+    private SignInAndLogInController signInController = new SignInAndLogInController();
 
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();      
@@ -69,7 +69,7 @@ public class EmployeeController {
                     System.out.print("Enter Password : ");
                     String logInPassword = scanner.next();
                     DateUtil.timeDelay(500);
-                    //signinController.trainerOperations(logInName, logInPassword, null, null);
+                    signInController.traineeOperations(logInName, logInPassword);
                     break;
  
                 case 5:
@@ -103,7 +103,7 @@ public class EmployeeController {
  
     public void userSignIn(String userType) {
         try {
-            signinController.signIn(userType);
+            signInController.signIn(userType,"add", null);
         } catch (CustomException e) {
             System.out.println("\n"+ e.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
         }

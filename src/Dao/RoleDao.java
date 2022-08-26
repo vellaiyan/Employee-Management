@@ -15,30 +15,35 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class RoleDao extends BaseDao {
-    Statement statement;
-    Connection connection;
-    ResultSet resultSet;
-    PreparedStatement preparedStatement;
-    int roleId;
+    Connection connection = databaseConnection();
      
-    public void assignEmployeeRole(int employeeId, String employeeType) {
+    public boolean assignEmployeeRole(int employeeId, int roleId) {
         try {
-            connection = databaseConnection();
-            System.out.println("entered");
-            String sql = "select id from role where name = '"+ employeeType + "'";
-            preparedStatement = connection.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                roleId = resultSet.getInt("id");
-            }
             String query = " insert into employee_roles(employee_id, role_id)" + " values (?, ?)";
-            preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, employeeId);
             preparedStatement.setInt(2, roleId);
             preparedStatement.execute();
-
+            return true;
         } catch (Exception e) {
 
         }
+        return false;
     }   
+    
+    public int retriveRoleIdByName(String name) {
+        int roleId;
+        try {
+            String sql = "select id from role where name = '"+ name + "'";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery(sql);
+            while(resultSet.next()) {
+                roleId = resultSet.getInt("id");
+                return roleId;
+            }
+        } catch (Exception e) {
+
+        }
+        return 0;
+    }
 }
