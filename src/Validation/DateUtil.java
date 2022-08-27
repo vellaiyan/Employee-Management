@@ -19,13 +19,11 @@ import java.time.ZonedDateTime;
 import java.text.ParseException;
 
 public class DateUtil {
-    public static int age;
     public static String dateOfBirthValidation(String dob, String choosenDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         simpleDateFormat.setLenient(false);
         String dateOfBirth = "";
         try {
-            //Month month = FEBRUARY;
             if(choosenDate.equals("dob")) {
                 Date dateOfBirthParse = simpleDateFormat.parse(dob);            
                 Instant instant = dateOfBirthParse.toInstant();
@@ -49,9 +47,6 @@ public class DateUtil {
                 else {
                     dateOfBirth = dob;
                 }
-                Period agePeriod = Period.between(givenDate, LocalDate.now());
-                int userAge = agePeriod.getYears();
-                age = userAge;
             } else {
                 return dateOfBirth = dob;
             }

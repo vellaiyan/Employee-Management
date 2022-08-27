@@ -8,16 +8,19 @@
 
 package com.ideas2it.model;
 
+import java.time.LocalDate;
+
 public class Employee { 
     protected int employeeId;
     protected int batch;
     protected String firstName;
     protected String subject;
     protected String gender;
-    protected String dateOfBirth;
-    protected String dateOfJoining;
-    protected String createDate;
-    protected String updateDate;
+    protected LocalDate dateOfBirth;
+    protected LocalDate dateOfJoining;
+    protected LocalDate createDate;
+    protected LocalDate updateDate;
+    protected String timeZone;
     protected String emailId;
     protected long mobileNumber;  
 
@@ -26,7 +29,7 @@ public class Employee {
     }
 
     public Employee(int employeeId, int batch , String firstName, String subject, String gender,
-            String dateOfBirth, String dateOfJoining, String emailId, long mobileNumber, String createDate, String updateDate) {
+            LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber, LocalDate createDate, LocalDate updateDate) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
@@ -43,8 +46,12 @@ public class Employee {
     public String getSubject() {
         return subject;
     }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
  
-    public String getDateOfJoining() {
+    public LocalDate getDateOfJoining() {
         return dateOfJoining;
     }
     
@@ -73,15 +80,15 @@ public class Employee {
         return employeeId;
     }
    
-    public String getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
   
-    public String getUpdateDate() {
+    public LocalDate getUpdateDate() {
         return updateDate;
     }
   
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -102,7 +109,7 @@ public class Employee {
         this.gender = gender;
     }
 
-    public void setDateOfBirth(String date) {
+    public void setDateOfBirth(LocalDate date) {
         this.dateOfBirth = date;
     }
   
@@ -110,15 +117,15 @@ public class Employee {
         this.subject = subject;
     } 
 
-    public void setDateOfJoining(String dateOfJoining) {
+    public void setDateOfJoining(LocalDate dateOfJoining) {
         this.dateOfJoining = dateOfJoining;
     }
 
-    public void setCreateDate(String createDate) {
+    public void setCreateDate(LocalDate createDate) {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(String updateDate) {
+    public void setUpdateDate(LocalDate updateDate) {
         this.updateDate = updateDate;
     }
 
@@ -128,6 +135,10 @@ public class Employee {
  
     public void setBatch(int batch) {
         this.batch = batch;
+    }
+
+    public void getTimeZone(String timeZone) {
+        this.timeZone = timeZone; 
     }
 }
 

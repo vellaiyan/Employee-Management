@@ -38,6 +38,7 @@ public class RoleDao extends BaseDao {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery(sql);
             while(resultSet.next()) {
+                System.out.println("role dao working fine");
                 roleId = resultSet.getInt("id");
                 return roleId;
             }

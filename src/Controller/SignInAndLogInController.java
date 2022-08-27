@@ -19,26 +19,34 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Date;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.text.DateFormat;  
+import java.text.SimpleDateFormat;   
+import java.util.Calendar;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class SignInAndLogInController { 
     private Scanner scanner = new Scanner(System.in);
     private EmployeeService employeeService = new EmployeeService();
-    public void signIn(String userRole, String operation, String email) throws CustomException{
+    public void signIn(String userRole, String operation, int employeeId) throws CustomException{
     EmployeeDto employeeDto;
-        try{          
+        try { 
             employeeDto = new EmployeeDto();      
             employeeDto.setEmployeeId(0);
             employeeDto.setFirstName(getInput("First Name", ValidationUtil.NAME_PATTERN));
             employeeDto.setSubject(getInput("Subject", ValidationUtil.NAME_PATTERN));
-            employeeDto.setDateOfBirth(getDateOfBirthAndJoining("Enter your date of birth (dd/MM/yyyy)", "dob"));
-            employeeDto.setDateOfJoining(getDateOfBirthAndJoining("Enter your date of joining (dd/MM/yyyy)", "joining"));
+            employeeDto.setDateOfBirth(LocalDate.parse(getDateOfBirthAndJoining("Enter your date of birth (yyy-MM-dd)", "dob")));
+            employeeDto.setDateOfJoining(LocalDate.parse(getDateOfBirthAndJoining("Enter your date of joining (yyyy-MM-dd)", "joining")));
             employeeDto.setBatch(Integer.parseInt((getInput("batch Number", ValidationUtil.EMPLOYEE_ID_PATTERN))));
             employeeDto.setGender(getInput("Gender", ValidationUtil.GENDER_PATTERN));
             employeeDto.setEmailId(getInput("Email-Id", ValidationUtil.EMAIL_PATTERN));
             employeeDto.setMobileNumber(Long.parseLong(getInput("Mobile Number", ValidationUtil.PHONE_PATTERN)));
-            employeeDto.setCreateDate("00-00-0000");
-            employeeDto.setUpdateDate("00-00-0000");
+            employeeDto.setCreateDate(LocalDate.parse("2000-02-28"));
+            employeeDto.setUpdateDate(LocalDate.parse("2000-02-28"));
         } catch(CustomException e) {
             throw new CustomException("invalid input");
         }
@@ -47,7 +55,7 @@ public class SignInAndLogInController {
             boolean isAdded = employeeService.addEmployee(employeeDto, userRole);
             System.out.println("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");                         
         } else {
-            boolean isUpdated = employeeService.updateEmployeeDetails(employeeDto, email);
+            boolean isUpdated = employeeService.updateEmployeeDetails(employeeDto, employeeId);
         }
     }
 
@@ -111,14 +119,15 @@ public class SignInAndLogInController {
         boolean isContinue = true;
         if (name.equals("ideas2it") && password.equals("admin")) {
             System.out.println("1. View all trainee details. \n2. View all trainer details"
-                +"\n3.Update employee details. \n4. Delete employee \n5. Update employee particular detail");
+                +"\n3. Update employee details. \n4. Delete employee \n5. Update employee particular detail. \n6. View particular employee"
+                +"\n7. Exit");
             String userOption = scannerInput.next();
                 switch (userOption) {
                     case "1":
                         try {
                             displayEmployees(Constants.TRAINEE);
                         } catch(Exception e) {
-
+                            System.out.println("sorry");
                         }
                         break;
  
@@ -126,7 +135,7 @@ public class SignInAndLogInController {
                         try {
                             displayEmployees(Constants.TRAINER);
                         } catch(Exception e) {
-            
+                            System.out.println("sorry");
                         }
                         break;
 
@@ -134,7 +143,7 @@ public class SignInAndLogInController {
                          try {
                              updateEmployeeDetails();
                          } catch(Exception e) {
- 
+                             System.out.println("sorry");
                          }
                          break;
 
@@ -142,70 +151,92 @@ public class SignInAndLogInController {
                         try {
                             deleteEmployee();
                         } catch(Exception e) {
+                            System.out.println("Sorry");
                
                         }
+                        break;
                     
                     case "5":
                         try {
                             System.out.println("Enter the user email id you want to update");
-                            String emailId = scanner.next();
-                            if(!employeeService.isEmployeeAvailable(emailId)) {
+                            int employeeId= scanner.nextInt();
+                            if(!employeeService.checkEmployeeById(employeeId)) {
                                 System.out.println("Invalid email Id");
                             } else {
-                                updateEmployeeDetail(emailId);
+                                updateEmployeeDetail(employeeId);
                             }
                             
                         } catch (Exception e) {
+                            System.out.println("sorry");
 
                         }
+                        break;
+
+                    case "6":
+                        try {
+                            System.out.println("Enter the trainee Id you want to see");
+                            int traineeId = scanner.nextInt();
+                            if(!employeeService.checkEmployeeById(traineeId)) {
+                                System.out.println("\nInvalid Employe Id\n");   
+                            } else {
+                                System.out.println(employeeService.getEmployeeById(traineeId));
+                            }
+
+                        } catch(Exception e) {
+                            System.out.println("sorry");
+
+                        }
+                        break;
                     default:
                         isContinue = false;
                 }        
         }
     } 
 
-    public void displayEmployees(String userRole) {
-        List<EmployeeDto> trainees = employeeService.getEmployeesByRole(userRole);
+    public void displayEmployees(String userRole) throws CustomException {
+        List<EmployeeDto> employees = employeeService.getEmployeesByRole(userRole);
         System.out.println("---------------------------------------------------------------------------------"
             +"------------------------------------------------------------------------------------------");  
         System.out.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s \n", "Id", "Batch", "First Name", 
             "Subject", "Gender", "Date Of Birth", "Date Of Joining", "Create Date", "Update Date", "email Id", "Mobile Number"); 
         System.out.println("------------------------------------------------------------------------------------"
             +"---------------------------------------------------------------------------------------");  
-        for(EmployeeDto employeeDto : trainees) {
+        for(EmployeeDto employeeDto : employees) {
             System.out.println(employeeDto);
         }  
     }
 
     public void updateEmployeeDetails() throws CustomException {
-        System.out.println("Enter the Employee Email-Id you want to update");
-        String emailId = scanner.next();
-        if(!employeeService.isEmployeeAvailable(emailId)) {
-            System.out.println("not available");
+        System.out.println("Enter the Employee Id you want to update");
+        int employeeId = scanner.nextInt();
+        if(employeeService.checkEmployeeById(employeeId)) {
+            signIn("employee", "update", employeeId);
         } else {
-                signIn("employee", "update", emailId);
+            System.out.println("\n not available \n");
+
         }       
         
     }
    
     public void deleteEmployee() throws CustomException{
-        System.out.println("Enter the employee Email-Id you want to delete");
-        String emailId = scanner.next();
-        if(!employeeService.isEmployeeAvailable(emailId)) {
-            System.out.println("Not available\n");
-        } else {
-            boolean isDeleted = employeeService.deleteEmployee(emailId);
+        System.out.println("Enter the employee Id you want to delete");
+        int employeeId = scanner.nextInt();
+        if(employeeService.checkEmployeeById(employeeId)) {
+            boolean isDeleted = employeeService.deleteEmployeeById(employeeId);
             System.out.println("Employee deleted");
+        } else {
+            System.out.println("Not available\n");
+
         } 
     }
 
-    public void updateEmployeeDetail(String emailId) {
+    public void updateEmployeeDetail(int employeeId) throws CustomException {
         System.out.println("Choose what details you want to change.\n1. Batch.\n2. First Name. \n3. Subject. \n4. Gender."
             + "\n5. Date of birth. \n6. Joining date. \n7. Email Id. \n8. Mobile Number.");
         int employeeChoice = scanner.nextInt();
         switch(employeeChoice) {
             case 1: 
-                employeeService.updateEmployeeDetail(emailId, gettingUpdatedValue("First Name"), "first_name");
+                employeeService.updateEmployeeDetail(employeeId, gettingUpdatedValue("First Name"), "first_name");
                 break;
         }
     }

@@ -18,85 +18,55 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;  
-import java.text.SimpleDateFormat;  
-import java.util.Date;  
+import java.text.SimpleDateFormat;   
 import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.sql.Date;
+import java.sql.SQLException;
 
 public class EmployeeDao extends BaseDao {
     private Connection connection = databaseConnection();
+
     public int insertEmployee(Employee employee) throws CustomException {
-        int employeeId = 0;
         try {
-            Date date = Calendar.getInstance().getTime(); 
-            PreparedStatement preparedStatement; 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
-            String currentDate = dateFormat.format(date);  
-            String query = " insert into employee(batch, first_name, subject, gender, dob, joining_date, email, mobile_no, create_date, modified_date, delete_status)"
-                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; 
-            preparedStatement = connection.prepareStatement(query);
+            Date date = new Date(0);
+            PreparedStatement preparedStatement;
+            String query = " insert into employee(batch, first_name, subject, gender, dob, joining_date, email, mobile_no, status)"
+                + " values (?, ?, ?, ?, ?, ?, ?, ?, 'active')"; 
+            preparedStatement = connection.prepareStatement(query); 
             preparedStatement.setInt(1, employee.getBatch());
             preparedStatement.setString(2, employee.getFirstName());
             preparedStatement.setString(3, employee.getSubject());
             preparedStatement.setString(4, employee.getGender());
-            preparedStatement.setString(5, employee.getDateOfBirth());
-            preparedStatement.setString(6, employee.getDateOfJoining());
+            preparedStatement.setDate(5, date.valueOf(employee.getDateOfBirth()));
+            preparedStatement.setDate(6, date.valueOf(employee.getDateOfJoining()));
             preparedStatement.setString(7, employee.getEmailId());
             preparedStatement.setLong(8, employee.getMobileNumber());
-            preparedStatement.setString(9, currentDate);
-            preparedStatement.setString(10, currentDate);
-            preparedStatement.setInt(11, 1);
-            preparedStatement.execute();
-            String sqlquery = "select last_insert_id()";        
-            preparedStatement = connection.prepareStatement(sqlquery);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                employeeId = resultSet.getInt("last_insert_id()");
-                return employeeId;
-            }        
+            preparedStatement.execute();            
+            return getLastInsertId(preparedStatement);
+                 
 
-        } catch(Exception e) {
+        } catch(SQLException e) {
             throw new CustomException(e.getMessage());
         }
-        return employeeId;
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
  
-    public List<Employee> retriveEmployees() {
+    public List<Employee> retriveEmployees() throws CustomException {
         List<Employee> employees = new ArrayList<Employee>();
         try {
-            String query = "select * from employee where delete_status = 1";
+            String query = "select * from  employee where status = 'active'";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                int employeeId = resultSet.getInt("id");
-                int batch = resultSet.getInt("batch");
-                String firstName = resultSet.getString("first_name");
-                String subject = resultSet.getString("subject");
-                String gender = resultSet.getString("gender");
-                String dateOfBirth = resultSet.getString("dob");
-                String joiningDate = resultSet.getString("joining_date");
-                String emailId = resultSet.getString("email");
-                Long mobileNo = resultSet.getLong("mobile_no");
-                String createDate = resultSet.getString("create_date");
-                String modifiedDate = resultSet.getString("modified_date");
-                Employee employee = new Employee(employeeId, batch, firstName, subject, gender, dateOfBirth, joiningDate, 
-                    emailId, mobileNo, createDate,modifiedDate);
-                employees.add(employee);
-            }
 
-        } catch(Exception e) {
-
-        }
-        return employees;           
-    }
-
-    public List<Employee> retriveEmployeeByrole(int roleId) {
-        List<Employee> employees = new ArrayList<Employee>();
-        try{
-            String sql = "select employee.id, employee.batch, employee.first_name, employee.subject, employee.gender, employee.dob, employee.joining_date, employee.email, employee.mobile_no, employee.create_date, employee.modified_date from employee, employee_roles where employee.id = employee_roles.employee_id and employee_roles.role_id = '" + roleId + "' and delete_status = 1";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 Employee employee = new Employee();
                 employee.setEmployeeId(resultSet.getInt("id"));
@@ -104,81 +74,188 @@ public class EmployeeDao extends BaseDao {
                 employee.setFirstName(resultSet.getString("first_name"));
                 employee.setSubject(resultSet.getString("subject"));
                 employee.setGender(resultSet.getString("gender"));
-                employee.setDateOfBirth(resultSet.getString("dob"));
-                employee.setDateOfJoining(resultSet.getString("joining_date"));
+                employee.setDateOfBirth(resultSet.getDate("dob").toLocalDate());
+                employee.setDateOfJoining(resultSet.getDate("joining_date").toLocalDate());
                 employee.setEmailId(resultSet.getString("email"));
                 employee.setMobileNumber(resultSet.getLong("mobile_no"));
-                employee.setCreateDate(resultSet.getString("create_date"));
-                employee.setUpdateDate(resultSet.getString("modified_date"));
+                employee.setCreateDate(resultSet.getDate("created_date").toLocalDate());
+                employee.setUpdateDate(resultSet.getDate("modified_date").toLocalDate());
+                employees.add(employee);
+            }
+
+        } catch(SQLException e) {
+            throw new CustomException(e.getMessage());
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return employees;           
+    }
+
+    public List<Employee> retriveEmployeeByRole(int roleId) throws CustomException {
+        List<Employee> employees = new ArrayList<Employee>();
+        try{
+            String sql = "select employee.id, employee.batch, employee.first_name, employee.subject, employee.gender,"
+                + "employee.dob, employee.joining_date, employee.email, employee.mobile_no, employee.created_date,"
+                + "employee.modified_date from employee, employee_roles where employee.id = employee_roles.employee_id"
+                + "and employee_roles.role_id = '" + roleId + "' and status = 'active'";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                Employee employee = new Employee(); 
+                employee.setEmployeeId(resultSet.getInt("id"));
+                employee.setBatch(resultSet.getInt("batch"));
+                employee.setFirstName(resultSet.getString("first_name"));
+                employee.setSubject(resultSet.getString("subject"));
+                employee.setGender(resultSet.getString("gender"));
+                employee.setDateOfBirth(resultSet.getDate("dob").toLocalDate());
+                employee.setDateOfJoining(resultSet.getDate("joining_date").toLocalDate());
+                employee.setEmailId(resultSet.getString("email"));
+                employee.setMobileNumber(resultSet.getLong("mobile_no"));
+                employee.setCreateDate(resultSet.getDate("created_date").toLocalDate());
+                employee.setUpdateDate(resultSet.getDate("modified_date").toLocalDate());
                 employees.add(employee);
                               
             }
-        } catch (Exception e) {
-            
+        } catch (SQLException e) {
+            throw new CustomException(e.getMessage());
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return employees;
     }  
 
-    public boolean deleteEmployee(String email) {
+    public boolean deleteEmployeeById(int employeeId) throws CustomException {
         try {
             connection = databaseConnection();
-            String sql = "update employee set delete_status = 0  where email = '" + email + "'";
+            String sql = "update employee set status = 'inactive'  where id = '" + employeeId + "'";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate(sql);
             return true;
-       } catch (Exception e) {
-
+       } catch (SQLException e) {
+            throw new CustomException(e.getMessage());
        } 
-       return false;
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }  
     
-    public boolean updateEmployeeDetails(Employee employee, String email) {
+    public boolean updateEmployeeDetailsById(Employee employee, int employeeId) throws CustomException {
         try {
-            PreparedStatement preparedStatement; 
-            Date date = Calendar.getInstance().getTime(); 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
-            String currentDate = dateFormat.format(date);  
+            PreparedStatement preparedStatement;  
             connection = databaseConnection();
+            Date date = new Date(0);
             String query = "update employee set batch = ?, first_name = ?, subject = ?, gender = ?, dob = ?,"
-                + "joining_date = ?, email = ?, mobile_no = ?, modified_date = ? where email = ?";
+                + "joining_date = ?, email = ?, mobile_no = ?, modified_date = current_timestamp where id = ?";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, employee.getBatch());
             preparedStatement.setString(2, employee.getFirstName());
             preparedStatement.setString(3, employee.getSubject());
             preparedStatement.setString(4, employee.getGender());
-            preparedStatement.setString(5, employee.getDateOfBirth()); 
-            preparedStatement.setString(6, employee.getDateOfJoining());
+            preparedStatement.setDate(5, date.valueOf(employee.getDateOfBirth())); 
+            preparedStatement.setDate(6, date.valueOf(employee.getDateOfJoining()));
             preparedStatement.setString(7, employee.getEmailId());
             preparedStatement.setLong(8, employee.getMobileNumber());
-            preparedStatement.setString(9, currentDate);
-            preparedStatement.setString(10, email);
+            preparedStatement.setInt(9, employeeId);
             preparedStatement.executeUpdate();
             return true;
-        } catch(Exception exception) {
-            exception.printStackTrace();
+        } catch(SQLException e) {
+            throw new CustomException(e.getMessage());
         }
-    return false;
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public boolean updateEmployeeDetail(String email, String value, String fieldName) {
+    public boolean updateEmployeeDetailById(int employeeId, String value, String fieldName) throws CustomException {
         try {
             PreparedStatement preparedStatement;
-            Date date = Calendar.getInstance().getTime();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            String currentDate = dateFormat.format(date);
-            connection = databaseConnection();
-            String query = "update employee set " + fieldName + " = ?, modified_date = ? where email = ?";
+            Date date = new Date(0);
+            String query = "update employee set " + fieldName + " = ?, modified_date = current_timestamp where id = ?";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
-            preparedStatement.setString(2, currentDate);
-            preparedStatement.setString(3, email);
+            preparedStatement.setInt(2, employeeId);
             preparedStatement.executeUpdate();
             return true;
 
-        } catch (Exception e) {
-
+        } catch (SQLException e) {
+            throw new CustomException(e.getMessage());
         }
-        return false;
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+  
+    public Employee retriveEmployeeById(int employeeId) throws CustomException {
+        try {
+            String query = "select * from employee where id = '" + employeeId + "'";
+            Employee employee = new Employee(); 
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                employee.setEmployeeId(resultSet.getInt("id"));
+                employee.setBatch(resultSet.getInt("batch"));
+                employee.setFirstName(resultSet.getString("first_name"));
+                employee.setSubject(resultSet.getString("subject"));
+                employee.setGender(resultSet.getString("gender"));
+                employee.setDateOfBirth(resultSet.getDate("dob").toLocalDate());
+                employee.setDateOfJoining(resultSet.getDate("joining_date").toLocalDate());
+                employee.setEmailId(resultSet.getString("email"));
+                employee.setMobileNumber(resultSet.getLong("mobile_no"));
+                employee.setCreateDate(resultSet.getDate("created_date").toLocalDate());
+                employee.setUpdateDate(resultSet.getDate("modified_date").toLocalDate()); 
+                                       
+            }
+         return employee;
+        } catch (SQLException e) {
+            throw new CustomException(e.getMessage());
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+   
+    public int getLastInsertId(PreparedStatement preparedStatement) throws CustomException {
+        int employeeId = 0;
+        try {
+            String sqlquery = "select last_insert_id()";        
+            preparedStatement = connection.prepareStatement(sqlquery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                 employeeId = resultSet.getInt("last_insert_id()");
+                return employeeId;
+            }
+        } catch (SQLException e) {
+            throw new CustomException(e.getMessage());
+        }      
+    return employeeId;
+
     }
 }
 

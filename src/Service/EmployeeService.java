@@ -17,6 +17,7 @@ import com.ideas2it.exception.CustomException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
    
 public class EmployeeService {   
     private EmployeeDao employeeDao = new EmployeeDao();
@@ -24,7 +25,7 @@ public class EmployeeService {
     private RoleDao roleDao = new RoleDao();
 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
-        if(isEmployeeAvailable(employeeDto.getEmailId())) {
+        if(checkEmployeeByEmailId(employeeDto.getEmailId())) {
             System.out.println("Given email id is already exist please choose different Email");
         } else {
             Employee employee = employeeMapper.fromDto(employeeDto);
@@ -35,49 +36,65 @@ public class EmployeeService {
         return false;
     }
 
-    public List<Employee> getAllEmployees() {
+    public List<Employee> getEmployees() throws CustomException {
         List<Employee> employees = employeeDao.retriveEmployees();
         for (Employee employee : employees) {
-            System.out.println(employee.getFirstName());
         }
         return employees;
     }
 
-    public List<EmployeeDto> getEmployeesByRole(String userRole) {
+    public List<EmployeeDto> getEmployeesByRole(String userRole) throws CustomException {
          int roleId = roleDao.retriveRoleIdByName(userRole);
-         List<EmployeeDto> employeesDto = new ArrayList<EmployeeDto>();
-         List<Employee> employees = employeeDao.retriveEmployeeByrole(roleId);
+         List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
+         List<Employee> employees = employeeDao.retriveEmployeeByRole(roleId);
          for (Employee employee : employees) {
-            System.out.println(employee.getFirstName());
             EmployeeDto employeeDto = employeeMapper.toDto(employee);
-            employeesDto.add(employeeDto);
+            employeeDtos.add(employeeDto);
          }
-         return employeesDto;
+         return employeeDtos;
     }
     
-    public boolean isEmployeeAvailable(String emailId) {
+    public boolean checkEmployeeById(int employeeId) throws CustomException {
         for (Employee employee : employeeDao.retriveEmployees()) {
-            if(employee.getEmailId().equals(emailId)){
+            System.out.println(employee.getEmployeeId());
+            if(employee.getEmployeeId() == employeeId){
                 return true;
             }
         }
         return false;
     }
+  
+    public boolean checkEmployeeByEmailId(String emailId) throws CustomException {
+        for(Employee employee : employeeDao.retriveEmployees()) {
+            if(employee.getEmailId().equals(emailId)) {
+                return true;
+            } 
+        }
+        return false;
+    }
  
-    public boolean deleteEmployee(String email) {
-        if(employeeDao.deleteEmployee(email)) {
+    public boolean deleteEmployeeById(int employeeId) throws CustomException {
+        if(employeeDao.deleteEmployeeById(employeeId)) {
             return true;
         }
         return false;
     }
-    public boolean updateEmployeeDetails(EmployeeDto employeeDto, String email) {
+    public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId) throws CustomException {
         Employee employee = employeeMapper.fromDto(employeeDto);
-        return employeeDao.updateEmployeeDetails(employee, email);
+        return employeeDao.updateEmployeeDetailsById(employee, employeeId);
     }
     
-    public boolean updateEmployeeDetail(String email, String value, String fieldName) {
-        return employeeDao.updateEmployeeDetail(email, value, fieldName);
+    public boolean updateEmployeeDetail(int employeeId, String value, String fieldName) throws CustomException {
+        return employeeDao.updateEmployeeDetailById(employeeId, value, fieldName);
 
+    }
+
+    public EmployeeDto getEmployeeById(int employeeId) throws CustomException {
+       if(checkEmployeeById(employeeId)) {
+           Employee employee = employeeDao.retriveEmployeeById(employeeId);
+           return employeeMapper.toDto(employeeDao.retriveEmployeeById(employeeId));
+       }
+       return null;
     }
 }
 

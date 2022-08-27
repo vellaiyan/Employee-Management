@@ -7,6 +7,7 @@
  */
 
 package com.ideas2it.controller;
+
 import com.ideas2it.controller.SignInAndLogInController;
 import com.ideas2it.dto.EmployeeDto;
 import com.ideas2it.service.EmployeeService;
@@ -17,6 +18,7 @@ import com.ideas2it.utilitis.Constants;
 import java.util.concurrent.TimeUnit;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.TimeZone;
 
 public class EmployeeController {
     private static boolean isFlow = true;
@@ -27,6 +29,8 @@ public class EmployeeController {
         EmployeeController employeeController = new EmployeeController();      
         do {
             try {
+                TimeZone timeZone = TimeZone.getDefault();
+                System.out.println(timeZone);
                 employeeController.showOptions();
             } catch (InputMismatchException e) {
                 System.out.println("********************************** INVALID OPTION ************************************");
@@ -103,7 +107,7 @@ public class EmployeeController {
  
     public void userSignIn(String userType) {
         try {
-            signInController.signIn(userType,"add", null);
+            signInController.signIn(userType,"add", 0);
         } catch (CustomException e) {
             System.out.println("\n"+ e.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
         }

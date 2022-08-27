@@ -16,12 +16,16 @@ import java.sql.DriverManager;
 
 public class BaseDao {
 
-    public Connection databaseConnection() throws CustomException {
+    public static Connection databaseConnection() {
         try {
             Connection connection = DriverManager.getConnection(Constants.DATABASE_URL,Constants.USER_NAME, Constants.PASSWORD);	
             return connection;
         } catch(Exception e) {
-            throw new CustomException("Connection Failed");            
+            System.out.println("Connection Failed"); 
+            return null;           
         }  
     }
 }
+
+
+
