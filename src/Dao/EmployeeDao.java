@@ -26,6 +26,16 @@ import java.time.LocalDate;
 import java.sql.Date;
 import java.sql.SQLException;
 
+/**
+ * The {@code EmployeeDao} class implemented to insert, retrive, update, delete all employees.
+ * 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 Retrive empoyee by EmployeeId.
+ */
+
 public class EmployeeDao extends BaseDao {
     private Connection connection = databaseConnection();
 

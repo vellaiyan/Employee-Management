@@ -18,6 +18,17 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.text.ParseException;
 
+/**
+ * The {@code DateUtil} class represents Date of birth validation. This
+ * class is implemented to avoid child labours and future date of birth
+ * and invalid dates as well months. 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 Leap year handling
+ */
+
 public class DateUtil {
     public static String dateOfBirthValidation(String dob, String choosenDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

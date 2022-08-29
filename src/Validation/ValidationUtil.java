@@ -11,6 +11,15 @@ package com.ideas2it.utilitis;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The {@code ValidationUtil} class represents validation. This class is implemented to avoid wrong name, phone number, emails.
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 PinCode validation.
+ */
+
 public class ValidationUtil {
     public static String EMPLOYEE_ID_PATTERN = "^[0-9][0-9]$";
     public static String NAME_PATTERN = "^[a-zA-Z]{1,9}$";                                                     /* name valemployeeIdation     */

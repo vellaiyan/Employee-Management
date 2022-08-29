@@ -14,6 +14,8 @@ import com.ideas2it.utilitis.DateUtil;
 import com.ideas2it.dto.EmployeeDto;
 import com.ideas2it.utilitis.Constants;
 import com.ideas2it.exception.CustomException;
+import com.ideas2it.dto.ProjectDto;
+import com.ideas2it.service.ProjectService;
  
 import java.util.List;
 import java.util.LinkedList;
@@ -29,32 +31,39 @@ import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
+/**
+ * The {@code SignInAndLogInController} class helps all employees to signin or login to their account. 
+ * This class also provides modification support aswell. 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 Showing details in table format.
+ */
+
 public class SignInAndLogInController { 
     private Scanner scanner = new Scanner(System.in);
     private EmployeeService employeeService = new EmployeeService();
-    public void signIn(String userRole, String operation, int employeeId) throws CustomException{
-    EmployeeDto employeeDto;
-        try { 
-            employeeDto = new EmployeeDto();      
-            employeeDto.setEmployeeId(0);
-            employeeDto.setFirstName(getInput("First Name", ValidationUtil.NAME_PATTERN));
-            employeeDto.setSubject(getInput("Subject", ValidationUtil.NAME_PATTERN));
-            employeeDto.setDateOfBirth(LocalDate.parse(getDateOfBirthAndJoining("Enter your date of birth (yyy-MM-dd)", "dob")));
-            employeeDto.setDateOfJoining(LocalDate.parse(getDateOfBirthAndJoining("Enter your date of joining (yyyy-MM-dd)", "joining")));
-            employeeDto.setBatch(Integer.parseInt((getInput("batch Number", ValidationUtil.EMPLOYEE_ID_PATTERN))));
-            employeeDto.setGender(getInput("Gender", ValidationUtil.GENDER_PATTERN));
-            employeeDto.setEmailId(getInput("Email-Id", ValidationUtil.EMAIL_PATTERN));
-            employeeDto.setMobileNumber(Long.parseLong(getInput("Mobile Number", ValidationUtil.PHONE_PATTERN)));
-            employeeDto.setCreateDate(LocalDate.parse("2000-02-28"));
-            employeeDto.setUpdateDate(LocalDate.parse("2000-02-28"));
-        } catch(CustomException e) {
-            throw new CustomException("invalid input");
-        }
-      
-        if (operation.equals("add")) {
-            boolean isAdded = employeeService.addEmployee(employeeDto, userRole);
-            System.out.println("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");                         
-        } else {
+    private ProjectService projectService = new ProjectService();
+
+    public void signIn(String userRole, String processToBeProceed, int employeeId) throws CustomException{
+    EmployeeDto employeeDto = new EmployeeDto();      
+    employeeDto.setEmployeeId(0);
+    employeeDto.setFirstName(getInput("First Name", ValidationUtil.NAME_PATTERN));
+    employeeDto.setSubject(getInput("Subject", ValidationUtil.NAME_PATTERN));
+    employeeDto.setDateOfBirth(LocalDate.parse(getDateOfBirthAndJoining("Enter your date of birth (yyy-MM-dd)", "dob")));
+    employeeDto.setDateOfJoining(LocalDate.parse(getDateOfBirthAndJoining("Enter your date of joining (yyyy-MM-dd)", "joining")));
+    employeeDto.setBatch(Integer.parseInt((getInput("batch Number", ValidationUtil.EMPLOYEE_ID_PATTERN))));
+    employeeDto.setGender(getInput("Gender", ValidationUtil.GENDER_PATTERN));
+    employeeDto.setEmailId(getInput("Email-Id", ValidationUtil.EMAIL_PATTERN));
+    employeeDto.setMobileNumber(Long.parseLong(getInput("Mobile Number", ValidationUtil.PHONE_PATTERN)));
+    employeeDto.setCreateDate(LocalDate.parse("2000-02-28"));
+    employeeDto.setUpdateDate(LocalDate.parse("2000-02-28"));
+
+    if (processToBeProceed.equals("add")) {
+        boolean isAdded = employeeService.addEmployee(employeeDto, userRole);
+        System.out.println("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");                         
+    } else {
             boolean isUpdated = employeeService.updateEmployeeDetails(employeeDto, employeeId);
         }
     }
@@ -113,6 +122,21 @@ public class SignInAndLogInController {
         }
         return initialUserInput;
     }   
+    
+    public void gettingInputToassignEmployees(String userType, String processToBeProcced) throws CustomException {
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setProjectId(0);
+        projectDto.setProjectName(getInput("Project Name", ValidationUtil.NAME_PATTERN));
+        projectDto.setProjectDescription(getInput("Project Description", ValidationUtil.NAME_PATTERN));
+        projectDto.setClientName(getInput("Cient Name", ValidationUtil.NAME_PATTERN));
+        projectDto.setCompanyName(getInput("Company Name", ValidationUtil.NAME_PATTERN));
+        projectDto.setStartingDate(LocalDate.parse(getDateOfBirthAndJoining("Enter project starting date", "dob")));
+        projectDto.setEstimatedEndingDate(LocalDate.parse(getDateOfBirthAndJoining("Estimated ending date", "joining"))); 
+        projectService.addProject(projectDto);
+    }
+
+
+
 
     public void traineeOperations(String name, String password) {
         Scanner scannerInput = new Scanner(System.in);

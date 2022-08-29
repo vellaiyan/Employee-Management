@@ -20,6 +20,16 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.TimeZone;
 
+/**
+ * The {@code EmployeeController} class is to show and control the 
+ * employee options.
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1  Additional option to trainees to trainers.
+ */
+
 public class EmployeeController {
     private static boolean isFlow = true;
     private EmployeeService employeeService = new EmployeeService();
@@ -44,8 +54,8 @@ public class EmployeeController {
         System.out.println("\nPlease choose the option below\n");
         Scanner scanner = new Scanner(System.in);
         while (isFlow) {
-            System.out.println("1. Trainee SignIn. \n2. Trainer SignIn. \n\nIf you have an account Choose below : \n\n"
-                + "3.Trainee LogIn. \n4. Trainer LogIn To Modify Trainee Details.  \n5. HR Management. \n6. Store default trainee."
+            System.out.println("1. Trainee SignIn. \n2. Trainer SignIn."
+                + "\n3. Projct Manager SignIn .\n4. To assign projects for employees.  \n5. HR Management. \n6. Store default trainee."
                 + "\n7. Store default trainers.\n8. Exit");
             userOption = scanner.nextInt();
             switch (userOption) {
@@ -58,22 +68,11 @@ public class EmployeeController {
                     break;
 
                 case 3:
-                    System.out.println("\n Enter the detials to access your account\n");
-                    System.out.println("Enter your name : ");
-                    String traineeName = scanner.next();
-                    System.out.println("Enter yor email-id : ");
-                    String traineeEmail = scanner.next();
-                    DateUtil.timeDelay(500);
-                    //signinController.displayTraineeByNameAndEmail(traineeName, traineeEmail);
+                    userSignIn(Constants.PROJECT_MANAGER);
                     break;
 
                 case 4:
-                    System.out.print("Enter User Name : ");
-                    String logInName = scanner.next();
-                    System.out.print("Enter Password : ");
-                    String logInPassword = scanner.next();
-                    DateUtil.timeDelay(500);
-                    signInController.traineeOperations(logInName, logInPassword);
+                    assigningEmployesForProjects(Constants.PROJECT_MANAGER);
                     break;
  
                 case 5:
@@ -110,6 +109,14 @@ public class EmployeeController {
             signInController.signIn(userType,"add", 0);
         } catch (CustomException e) {
             System.out.println("\n"+ e.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
+        }
+    }
+
+    public void assigningEmployesForProjects(String userType) {
+        try {
+            signInController.gettingInputToassignEmployees(userType, "add");
+        } catch(CustomException e) {
+            System.out.println("assigning is not working properly");
         }
     }
 }

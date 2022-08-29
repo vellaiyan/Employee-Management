@@ -10,6 +10,16 @@ package com.ideas2it.model;
 
 import java.time.LocalDate;
 
+/**
+ * The {@code Employee} class represents the all  fields  of employees.
+ * 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 Adding EmployeeId
+ */  
+
 public class Employee { 
     protected int employeeId;
     protected int batch;

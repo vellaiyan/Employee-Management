@@ -8,10 +8,20 @@
 
 package com.ideas2it.utilitis;
 
+/**
+ * The {@code Constants} class implemented to hold the constants values to be use in other functions.
+ * 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ *
+ */
 public class Constants {
     public static String TRAINEE = "Trainee";
     public static String TRAINER = "Trainer";
     public static String DATABASE_URL = "jdbc:mysql://localhost/employeedatabase?verifyServerCertificate=false&useSSL=true";
     public static String USER_NAME = "root";
-    public static String PASSWORD = "VellaiyanI22146";    
+    public static String PASSWORD = "VellaiyanI22146";  
+    public static String PROJECT_MANAGER = "Project Manager";  
 }

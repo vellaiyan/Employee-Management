@@ -14,6 +14,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * The {@code BaseDao} class implemented to insert, retrive, update, delete all employees roles.
+ * 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * 
+ */
+
 public class RoleDao extends BaseDao {
     Connection connection = databaseConnection();
      

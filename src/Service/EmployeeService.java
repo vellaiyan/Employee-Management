@@ -18,7 +18,16 @@ import com.ideas2it.exception.CustomException;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
-   
+
+/**
+ * The {@code EmployeeService} class implemented to support add, get, delete, functionalities to Employee.
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 Get employee by employee id.
+ */
+
 public class EmployeeService {   
     private EmployeeDao employeeDao = new EmployeeDao();
     private EmployeeMapper employeeMapper = new EmployeeMapper();

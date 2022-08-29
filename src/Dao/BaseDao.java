@@ -14,6 +14,16 @@ import com.ideas2it.exception.CustomException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * The {@code BaseDao} class implemented to connect the SQL database using username and password.
+ * 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ *
+ */
+
 public class BaseDao {
 
     public static Connection databaseConnection() {
