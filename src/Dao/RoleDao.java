@@ -1,9 +1,6 @@
 /*
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
  */
 
 package com.ideas2it.dao;
@@ -15,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
- * The {@code BaseDao} class implemented to insert, retrive, update, delete all employees roles.
+ * The {@code RoleDao} class implemented to insert, retrive, update, delete all employees roles.
  * 
  *
  * @author Vellaiyan
@@ -29,7 +26,7 @@ public class RoleDao extends BaseDao {
      
     public boolean assignEmployeeRole(int employeeId, int roleId) {
         try {
-            String query = " insert into employee_roles(employee_id, role_id)" + " values (?, ?)";
+            String query = "insert into employee_roles(employee_id, role_id)" + " values (?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, employeeId);
             preparedStatement.setInt(2, roleId);

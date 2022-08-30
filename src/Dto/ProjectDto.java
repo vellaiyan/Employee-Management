@@ -1,9 +1,6 @@
 /*
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
  */
 
 package com.ideas2it.dto;
@@ -29,20 +26,23 @@ public class ProjectDto {
     protected String companyName;
     protected LocalDate startingDate;
     protected LocalDate estimatedEndingDate;
+    protected String deleteStatus;
 
     public ProjectDto() {
     
     }
 
     public ProjectDto(int projectId, String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
-            LocalDate estimatedEndingDate) {
+            LocalDate estimatedEndingDate, String deleteStatus) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
         this.clientName = clientName;
         this.companyName = companyName;
         this.startingDate = startingDate;
-        this.estimatedEndingDate = estimatedEndingDate;    
+        this.estimatedEndingDate = estimatedEndingDate; 
+        this.deleteStatus = deleteStatus;  
+      
     }
 
     public int getProjectId() {
@@ -67,6 +67,10 @@ public class ProjectDto {
 
     public LocalDate getStartingDate() {
         return startingDate;
+    }
+
+    public String getDeleteStatus() {
+        return deleteStatus;
     }
 
     public LocalDate getEstimatedEndingDate() {
@@ -99,5 +103,9 @@ public class ProjectDto {
 
     public void setEstimatedEndingDate(LocalDate estimatedEndingDate) {
         this.estimatedEndingDate = estimatedEndingDate;
+    }
+  
+    public void setDeleteStatus(String deleteStatus) {
+        this.deleteStatus = deleteStatus;
     }
 }

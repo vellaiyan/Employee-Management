@@ -1,9 +1,6 @@
  /*
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
  */
 
 package com.ideas2it.utilitis;
@@ -30,7 +27,7 @@ import java.text.ParseException;
  */
 
 public class DateUtil {
-    public static String dateOfBirthValidation(String dob, String choosenDate) {
+    public static String validateDateOfBirth(String dob, String choosenDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         simpleDateFormat.setLenient(false);
         String dateOfBirth = "";
@@ -45,7 +42,6 @@ public class DateUtil {
                 boolean leapYear = (((birthYear % 4 == 0) && (birthYear % 100!= 0)) || (birthYear%400 == 0));
                 int currentYear = LocalDate.now().getYear();    
 
-            //find given date of birth is valid or not.   
                 if (birthYear > currentYear) {
                     dateOfBirth = "max";
                 } else if (birthYear <= 1950) {
@@ -65,6 +61,30 @@ public class DateUtil {
             dateOfBirth = "invalid";            
         }
         return dateOfBirth;
+    }
+
+    public static String validateAssignAndCompletionDate(String date, String type) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        simpleDateFormat.setLenient(false);
+        String assignDate = "";
+        try {
+            Date AssignDateParse = simpleDateFormat.parse(date);
+            return date;
+        } catch(ParseException e) {
+            return "Not valid";
+        }
+    }
+
+    public static String validateCompleteDate(String date, String type) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        simpleDateFormat.setLenient(false);
+        String assignDate = "";
+        try {
+            Date AssignDateParse = simpleDateFormat.parse(date);
+            return date;
+        } catch(ParseException e) {
+            return "Not valid";
+        }
     }
   
     public static void timeDelay(int delay) {

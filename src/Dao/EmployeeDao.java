@@ -1,9 +1,6 @@
 /*
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
  */
  
 package com.ideas2it.dao;
@@ -28,7 +25,6 @@ import java.sql.SQLException;
 
 /**
  * The {@code EmployeeDao} class implemented to insert, retrive, update, delete all employees.
- * 
  *
  * @author Vellaiyan
  *
@@ -56,17 +52,9 @@ public class EmployeeDao extends BaseDao {
             preparedStatement.setLong(8, employee.getMobileNumber());
             preparedStatement.execute();            
             return getLastInsertId(preparedStatement);
-                 
-
+ 
         } catch(SQLException e) {
             throw new CustomException(e.getMessage());
-        }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
  
@@ -95,13 +83,6 @@ public class EmployeeDao extends BaseDao {
 
         } catch(SQLException e) {
             throw new CustomException(e.getMessage());
-        }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return employees;           
     }
@@ -134,13 +115,6 @@ public class EmployeeDao extends BaseDao {
             }
         } catch (SQLException e) {
             throw new CustomException(e.getMessage());
-        }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return employees;
     }  
@@ -186,13 +160,6 @@ public class EmployeeDao extends BaseDao {
         } catch(SQLException e) {
             throw new CustomException(e.getMessage());
         }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public boolean updateEmployeeDetailById(int employeeId, String value, String fieldName) throws CustomException {
@@ -209,13 +176,7 @@ public class EmployeeDao extends BaseDao {
         } catch (SQLException e) {
             throw new CustomException(e.getMessage());
         }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+
     }
   
     public Employee retriveEmployeeById(int employeeId) throws CustomException {
@@ -242,13 +203,7 @@ public class EmployeeDao extends BaseDao {
         } catch (SQLException e) {
             throw new CustomException(e.getMessage());
         }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+
     }
    
     public int getLastInsertId(PreparedStatement preparedStatement) throws CustomException {
@@ -263,9 +218,9 @@ public class EmployeeDao extends BaseDao {
             }
         } catch (SQLException e) {
             throw new CustomException(e.getMessage());
-        }      
-    return employeeId;
-
+        } 
+     
+        return employeeId;
     }
 }
 

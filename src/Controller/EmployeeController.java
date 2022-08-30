@@ -1,9 +1,6 @@
 /*
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
  */
 
 package com.ideas2it.controller;
@@ -21,8 +18,7 @@ import java.util.Scanner;
 import java.util.TimeZone;
 
 /**
- * The {@code EmployeeController} class is to show and control the 
- * employee options.
+ * The {@code EmployeeController} class is to show and control the employee options.
  *
  * @author Vellaiyan
  *
@@ -55,8 +51,8 @@ public class EmployeeController {
         Scanner scanner = new Scanner(System.in);
         while (isFlow) {
             System.out.println("1. Trainee SignIn. \n2. Trainer SignIn."
-                + "\n3. Projct Manager SignIn .\n4. To assign projects for employees.  \n5. HR Management. \n6. Store default trainee."
-                + "\n7. Store default trainers.\n8. Exit");
+                + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add projects. \n6. Assigning projects."
+                + "\n7. Assigning trainees for trainers.\n8. Exit");
             userOption = scanner.nextInt();
             switch (userOption) {
                 case 1:
@@ -72,24 +68,20 @@ public class EmployeeController {
                     break;
 
                 case 4:
-                    assigningEmployesForProjects(Constants.PROJECT_MANAGER);
+                    userSignIn(Constants.HUMAN_RESOURCE);
                     break;
  
                 case 5:
-                    System.out.print("Enter User Name : ");
-                    String HrName = scanner.next();
-                    System.out.print("Enter Password :");
-                    String HrPassword = scanner.next();
-                    DateUtil.timeDelay(500);
-                    //signinController.hrOperationsByNameAndPassword(HrName, HrPassword);
+                    addProject(Constants.PROJECT_MANAGER);
                     break;
                 
                 case 6:
-                    //if (traineeService.defaultTrainees()) {
-                    //    DateUtil.timeDelay(500);
-                    //    System.out.println("\nTrainees added successfully\n");
-                    //}
-                    //break;
+                    try {
+                        signInController.assignEmployees();
+                    } catch (CustomException e) {
+ 
+                    }
+                    break;
  
                 case 7:
                     //if (trainerService.defaultTrainers()) {
@@ -112,11 +104,14 @@ public class EmployeeController {
         }
     }
 
-    public void assigningEmployesForProjects(String userType) {
+    public void addProject(String userType) {
         try {
-            signInController.gettingInputToassignEmployees(userType, "add");
+            signInController.addProject(userType, "add");
         } catch(CustomException e) {
             System.out.println("assigning is not working properly");
         }
     }
 }
+
+
+
