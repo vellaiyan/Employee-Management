@@ -6,6 +6,7 @@
 package com.ideas2it.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * The {@code Employee} class represents the all  fields  of employees.
@@ -29,10 +30,17 @@ public class Employee {
     protected String timeZone;
     protected String emailId;
     protected long mobileNumber;  
+    protected List<Integer> trainerIds;
 
     public Employee() {
 
     }
+
+    public Employee(int employeeId, List<Integer> trainerIds) {
+        this.employeeId = employeeId;
+        this.trainerIds = trainerIds;
+    }
+
 
     public Employee(int employeeId, int batch , String firstName, String subject, String gender,
             LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber, LocalDate createDate, LocalDate updateDate) {
@@ -72,6 +80,10 @@ public class Employee {
 
     public String getEmailId() {
          return emailId;
+    }
+
+    public List<Integer> getTrainerIds() {
+        return trainerIds;
     }
 
     public String getGender() {
@@ -145,6 +157,10 @@ public class Employee {
 
     public void getTimeZone(String timeZone) {
         this.timeZone = timeZone; 
+    }
+
+    public void getTrainerIds(List<Integer> trainerIds) {
+        this.trainerIds = trainerIds;
     }
 }
 

@@ -27,6 +27,14 @@ public class Project {
     protected LocalDate startingDate;
     protected LocalDate estimatedEndingDate;
     protected String deleteStatus;
+ 
+    public Project() {
+
+    }
+
+    public Project (int projectId) {
+        this.projectId = projectId;
+    }
 
     public Project(int projectId, String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
             LocalDate estimatedEndingDate, String deleteStatus) {

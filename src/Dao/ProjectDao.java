@@ -29,27 +29,39 @@ public class ProjectDao extends BaseDao {
     public int insertProject(Project project) throws CustomException {
         try {
             Date date = new Date(0);
-            PreparedStatement preparedStatement;
-            String query = "insert into project(project_name, project_description, client_name, company_name, starting_date, ending_date)"
-                + "values(?, ?, ?, ?, ?, ?)";
-            preparedStatement = connection.prepareStatement(query);
+            String query = "insert into project(project_name, project_description, client_name, company_name, starting_date, ending_date, status)"
+                + "values(?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, project.getProjectName());
             preparedStatement.setString(2, project.getProjectDescription());
             preparedStatement.setString(3, project.getClientName());
             preparedStatement.setString(4, project.getCompanyName());
             preparedStatement.setDate(5, date.valueOf(project.getStartingDate()));
             preparedStatement.setDate(6, date.valueOf(project.getEstimatedEndingDate()));
+            preparedStatement.setString(7, "active");
             preparedStatement.execute();
             return getLastInsertId(preparedStatement);
         } catch(SQLException e) {
             throw new CustomException(e.getMessage());
-        } finally {
-            try { 
-                connection.close();
-            } catch(SQLException e) {
-                e.printStackTrace();
-            }
         }
+    }
+
+    public List<Project> getAllProjectIds() throws CustomException {
+        List<Project> projects = new ArrayList<Project>();
+        try {
+            String sqlquery = "select id from project where status = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlquery);
+            preparedStatement.setString(1, "active");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                Project project = new Project();
+                project.setProjectId(resultSet.getInt("id"));
+                projects.add(project);
+            } 
+        } catch(SQLException e) {
+            throw new CustomException(e.getMessage());
+        } 
+        return projects;
     }
 
     public int getLastInsertId(PreparedStatement preparedStatement) throws CustomException {

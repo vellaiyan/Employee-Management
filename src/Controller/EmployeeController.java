@@ -52,7 +52,7 @@ public class EmployeeController {
         while (isFlow) {
             System.out.println("1. Trainee SignIn. \n2. Trainer SignIn."
                 + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add projects. \n6. Assigning projects."
-                + "\n7. Assigning trainees for trainers.\n8. Exit");
+                + "\n7. Trianer Options\n8. Exit");
             userOption = scanner.nextInt();
             switch (userOption) {
                 case 1:
@@ -79,15 +79,20 @@ public class EmployeeController {
                     try {
                         signInController.assignEmployees();
                     } catch (CustomException e) {
- 
+                        
                     }
                     break;
- 
+
                 case 7:
-                    //if (trainerService.defaultTrainers()) {
-                    //    DateUtil.timeDelay(500);
-                    //    System.out.println("\nTrainers added successfully\n");
-                    //}
+                    try {
+                        System.out.print("Enter the user name : ");
+                        String userName = scanner.next();
+                        System.out.print("Enter the password : ");
+                        String password = scanner.next();
+                        signInController.trainerOperations(userName, password);
+                    } catch(CustomException e) {
+                    
+                    }
                     break;
 
                 default:
@@ -108,10 +113,8 @@ public class EmployeeController {
         try {
             signInController.addProject(userType, "add");
         } catch(CustomException e) {
+            System.out.println(e);
             System.out.println("assigning is not working properly");
         }
     }
 }
-
-
-

@@ -6,6 +6,7 @@
 package com.ideas2it.controller;
 
 import com.ideas2it.service.EmployeeService;
+import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.utilitis.ValidationUtil;
 import com.ideas2it.utilitis.DateUtil;
 import com.ideas2it.dto.EmployeeDto;
@@ -73,7 +74,7 @@ public class SignInAndLogInController {
         for (int checkingLoop = 0; checkingLoop < 5; checkingLoop++) {
             System.out.println(input);
             dateOfBirthAndJoining = scanner.next();
-            String date = DateUtil.dateOfBirthValidation(dateOfBirthAndJoining, choosenDate);
+            String date = DateUtil.validateDateOfBirth(dateOfBirthAndJoining, choosenDate);
             //Check the user input is valid or not.
             if (date.equals(dateOfBirthAndJoining)) {
                 isValidDate = false;
@@ -133,13 +134,13 @@ public class SignInAndLogInController {
         projectService.addProject(projectDto);
     }
 
-    public void traineeOperations(String name, String password) {
+    public void trainerOperations(String name, String password) throws CustomException {
         Scanner scannerInput = new Scanner(System.in);
         boolean isContinue = true;
         if (name.equals("ideas2it") && password.equals("admin")) {
             System.out.println("1. View all trainee details. \n2. View all trainer details. \n3. View all project managers."
                 +"\n4. Update employee details. \n5. Delete employee \n6. Update employee particular detail. \n7. View particular employee"
-                +"\n8. Exit");
+                +"\n8. View all assigned projects \n9. Exit");
             String userOption = scannerInput.next();
                 switch (userOption) {
                     case "1":
@@ -215,6 +216,24 @@ public class SignInAndLogInController {
 
                         }
                         break;
+
+                    case "8":
+                        try {
+                            boolean isValid= true;
+                            while(isValid) {
+                                System.out.println("Enter the project Id: ");
+                                int projectId = scanner.nextInt();
+                                if(projectService.checkProjectById(projectId)){
+                                    List<EmployeeProjectDto> projects = projectService.getAssignedEmployeesById(projectId);
+                                    displayAssignedProjects(projects);
+                                    isValid = false;
+                                } else {
+                                    System.out.println("Project is not available. Enter valid project Id");  
+                                }
+                            }
+                        } catch(Exception e) {
+              
+                        }
                     default:
                         isContinue = false;
                 }        
@@ -276,29 +295,38 @@ public class SignInAndLogInController {
     }
 
     public void assignEmployees() throws CustomException {
-        boolean isValid = true;
-        int projectId = validateAndGetProjectId();
-        int employeeId = validateAndGetEmployeeId();
-        LocalDate assignDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("assign"));
-        LocalDate completionDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("completion"));
-        projectService.assginProjectToEmployee(projectId, employeeId, assignDate, completionDate);
-
+        boolean isContinue = true;
+        while(isContinue) {
+            int projectId = validateAndGetProjectId();
+            int employeeId = validateAndGetEmployeeId();
+            LocalDate assignDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("assign"));
+            LocalDate completionDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("completion"));
+            projectService.assignProjectToEmployee(employeeId, projectId, assignDate, completionDate);
+            System.out.println("Do you want to continue (y/n)");
+            Scanner scanner1 = new Scanner(System.in);
+            String userOption = scanner1.next();
+            if(userOption.equals("n")) {
+                isContinue = false;
+            }
+        }
     }
                 
     public int validateAndGetProjectId() {
         boolean isValidProjectId = true;
         int projectId;
+        Scanner scanner1 = new Scanner(System.in);
         while(isValidProjectId) {
             System.out.println("Enter the project Id");
             try {
-                projectId = scanner.nextInt();
+                projectId = scanner1.nextInt();
                 if(projectService.checkProjectById(projectId)) {
                     isValidProjectId = false;
                     return projectId;
+                } else {
+                    System.out.println("Enter correct project Id");
                 }
             } catch (Exception e) {
-                System.out.println("You gave wrong input please give correct input");
-                validateAndGetProjectId();
+                System.out.println("You gave wrong project Id please give correct input");
             }
 
         }
@@ -314,6 +342,7 @@ public class SignInAndLogInController {
                 employeeId = scanner.nextInt();
                 if(employeeService.checkEmployeeById(employeeId)) {
                     isValidEmployeeId = false;
+                    return employeeId;
                 }
             } catch(Exception e) {
                 System.out.println("You gave wroing input please give correct input");
@@ -351,6 +380,14 @@ public class SignInAndLogInController {
             }
         }     
         return "";       
+    }
+
+    public void displayAssignedProjects(List<EmployeeProjectDto> employeeProjectDtos) {
+        for(EmployeeProjectDto employeeProjectDto : employeeProjectDtos) {
+            System.out.println(employeeProjectDto);
+            System.out.println(employeeProjectDto.getProjectName());
+        }
+
     }
     
 }
