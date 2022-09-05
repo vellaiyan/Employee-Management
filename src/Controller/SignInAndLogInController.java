@@ -55,8 +55,11 @@ public class SignInAndLogInController {
         employeeDto.setGender(getInput("Gender", ValidationUtil.GENDER_PATTERN));
         employeeDto.setEmailId(getInput("Email-Id", ValidationUtil.EMAIL_PATTERN));
         employeeDto.setMobileNumber(Long.parseLong(getInput("Mobile Number", ValidationUtil.PHONE_PATTERN)));
+        employeeDto.setRole(userRole);
         employeeDto.setCreateDate(LocalDate.parse("2000-02-28"));
         employeeDto.setUpdateDate(LocalDate.parse("2000-02-28"));
+        
+        employeeDto.setStatus("active");
 
         if (processToBeProceed.equals("add")) {
             boolean isAdded = employeeService.addEmployee(employeeDto, userRole);
@@ -387,7 +390,5 @@ public class SignInAndLogInController {
             System.out.println(employeeProjectDto);
             System.out.println(employeeProjectDto.getProjectName());
         }
-
-    }
-    
+    }    
 }

@@ -23,6 +23,18 @@ import java.sql.ResultSet;
 
 public class RoleDao extends BaseDao {
     Connection connection = databaseConnection();
+
+    public boolean insertRoles() {
+        try { 
+            String query = "insert into role(role_name) values('Trainee'), ('Trainer'), ('Project Manager'), ('Human Resource')";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.execute();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
      
     public boolean assignEmployeeRole(int employeeId, int roleId) {
         try {
@@ -33,7 +45,7 @@ public class RoleDao extends BaseDao {
             preparedStatement.execute();
             return true;
         } catch (Exception e) {
-
+            
         }
         return false;
     }   

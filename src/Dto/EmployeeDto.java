@@ -17,6 +17,7 @@ import java.time.LocalDate;
  * @jls    1.1 Adding EmployeeId
  */
 
+
 public class EmployeeDto { 
     protected int employeeId;
     protected int batch;
@@ -25,18 +26,20 @@ public class EmployeeDto {
     protected String gender;
     protected LocalDate dateOfBirth;
     protected LocalDate dateOfJoining;
-    protected LocalDate createDate;
-    protected LocalDate updateDate;
-    protected String timeZone;
     protected String emailId;
     protected long mobileNumber;  
+    protected LocalDate createDate;
+    protected LocalDate modifiedDate;
+    protected String role;
+    protected String status;
 
     public EmployeeDto() {
 
     }
 
     public EmployeeDto(int employeeId, int batch , String firstName, String subject, String gender,
-            LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber, LocalDate createDate, LocalDate updateDate) {
+            LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber,
+            LocalDate createDate, LocalDate modifiedDate, String role, String status) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
@@ -47,16 +50,22 @@ public class EmployeeDto {
         this.emailId = emailId;
         this.mobileNumber = mobileNumber;
         this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.modifiedDate = modifiedDate;
+        this.status = status;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public String getSubject() {
         return subject;
     }
-
-    public String getTimeZone() {
-        return timeZone;
+  
+    public String getStatus() {
+        return status;
     }
+
  
     public LocalDate getDateOfJoining() {
         return dateOfJoining;
@@ -75,6 +84,7 @@ public class EmployeeDto {
          return emailId;
     }
 
+
     public String getGender() {
         return gender;
     }
@@ -92,7 +102,7 @@ public class EmployeeDto {
     }
   
     public LocalDate getUpdateDate() {
-        return updateDate;
+        return modifiedDate;
     }
   
     public LocalDate getDateOfBirth() {
@@ -132,8 +142,8 @@ public class EmployeeDto {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
-        this.updateDate = updateDate;
+    public void setUpdateDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public void setEmployeeId(int employeeId) {
@@ -143,15 +153,19 @@ public class EmployeeDto {
     public void setBatch(int batch) {
         this.batch = batch;
     }
-
-    public void getTimeZone(String timeZone) {
-        this.timeZone = timeZone; 
+ 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+   
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
     public String toString() { 
         String output = String.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s\n", employeeId, batch, firstName, subject, gender, dateOfBirth,
-            dateOfJoining, createDate, updateDate, emailId, mobileNumber);    
+            dateOfJoining, createDate, modifiedDate, emailId, mobileNumber);    
         return output;   
     }
 }

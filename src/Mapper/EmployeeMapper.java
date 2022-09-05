@@ -23,7 +23,7 @@ public class EmployeeMapper {
     public Employee fromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee(employeeDto.getEmployeeId(), employeeDto.getBatch(), employeeDto.getFirstName(),
             employeeDto.getSubject(), employeeDto.getGender(),employeeDto.getDateOfBirth(), employeeDto.getDateOfJoining(),
-            employeeDto.getEmailId(), employeeDto.getMobileNumber(), employeeDto.getCreateDate(), employeeDto.getUpdateDate());
+            employeeDto.getEmailId(), employeeDto.getMobileNumber(), employeeDto.getCreateDate(), employeeDto.getUpdateDate(),employeeDto.getRole(),             employeeDto.getStatus());
 
         return employee;
     }
@@ -31,7 +31,8 @@ public class EmployeeMapper {
     public EmployeeDto toDto(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto(employee.getEmployeeId(), employee.getBatch(), employee.getFirstName(),
             employee.getSubject(), employee.getGender(), employee.getDateOfBirth(), employee.getDateOfJoining(), 
-            employee.getEmailId(), employee.getMobileNumber(), employee.getCreateDate(), employee.getUpdateDate());
+            employee.getEmailId(), employee.getMobileNumber(), employee.getCreateDate(), employee.getModifiedDate(), employee.getRole(),
+            employee.getStatus());
 
             return employeeDto;
     }

@@ -16,6 +16,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.TimeZone;
+import org.hibernate.HibernateException; 
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  * The {@code EmployeeController} class is to show and control the employee options.
@@ -30,13 +35,12 @@ public class EmployeeController {
     private static boolean isFlow = true;
     private EmployeeService employeeService = new EmployeeService();
     private SignInAndLogInController signInController = new SignInAndLogInController();
+    private static SessionFactory factory;
 
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();      
         do {
             try {
-                TimeZone timeZone = TimeZone.getDefault();
-                System.out.println(timeZone);
                 employeeController.showOptions();
             } catch (InputMismatchException e) {
                 System.out.println("********************************** INVALID OPTION ************************************");
@@ -52,7 +56,7 @@ public class EmployeeController {
         while (isFlow) {
             System.out.println("1. Trainee SignIn. \n2. Trainer SignIn."
                 + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add projects. \n6. Assigning projects."
-                + "\n7. Trianer Options\n8. Exit");
+                + "\n7. Trianer Options\n8. Add roles into database. \n9. Exit.");
             userOption = scanner.nextInt();
             switch (userOption) {
                 case 1:
@@ -92,6 +96,14 @@ public class EmployeeController {
                         signInController.trainerOperations(userName, password);
                     } catch(CustomException e) {
                     
+                    }
+                    break;
+                
+                case 8:
+                    if(employeeService.addRoles()) {
+                        System.out.println("Roles added successfully\n");
+                    } else {
+                        System.out.println("Failed\n");
                     }
                     break;
 

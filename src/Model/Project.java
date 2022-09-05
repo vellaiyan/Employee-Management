@@ -76,7 +76,7 @@ public class Project {
         return estimatedEndingDate;
     }
 
-    public String setDeleteStatus() {
+    public String getDeleteStatus() {
         return deleteStatus;
     }
 

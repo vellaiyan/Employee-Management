@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate Configuration DTD 3.0//EN" 
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-mapping>
+    <class table = "project" name = "com.ideas2it.model.Project">
+    
+        <meta attribute = "class-description"> </meta>
+
+        <id name = "projectId" column = "id" type = "int">
+            <generator class = "increment"/>
+        </id>
+
+        <property name = "projectName" column = "project_name" type = "string"/>
+        <property name = "projectDescription" column = "project_description" type = "string"/>
+        <property name = "clientName" column = "clinent_name" type = "string"/>
+        <property name = "companyName" column = "company_name" type = "string"/>
+        <property name = "startingDate" column = "starting_date" type = "date"/>
+        <property name = "estimatedEndingDate" column = "ending_date" type = "date"/>
+        <property name = "deleteStatus" column = "status" type = "string"/>
+    </class>
+</hibernate-mapping>

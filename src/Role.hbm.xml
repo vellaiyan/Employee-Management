@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate Configuration DTD 3.0//EN" 
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-mapping>
+    <class table = "role" name = "com.ideas2it.model.Role">
+    
+        <meta attribute = "class-description"> </meta>
+
+        <id name = "roleId" column = "role_id">
+            <generator class="native"/>
+        </id>
+
+        <property name = "roleName" column = "role_name" />
+        
+        <bag name = "employees" cascade = "all" table = "employee_role" fetch = "select">
+        <key column = "role_id"/>
+        <many-to-many column = "employee_id" class = "com.ideas2it.model.Role"/>
+        </bag>
+    </class>
+</hibernate-mapping>

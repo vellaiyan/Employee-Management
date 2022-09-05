@@ -31,14 +31,8 @@ public class EmployeeService {
     private RoleDao roleDao = new RoleDao();
 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
-        if(checkEmployeeByEmailId(employeeDto.getEmailId())) {
-            System.out.println("Given email id is already exist please choose different Email");
-        } else {
-            Employee employee = employeeMapper.fromDto(employeeDto);
-            int roleId = roleDao.retriveRoleIdByName(userRole);
-            int employeeId = employeeDao.insertEmployee(employee);
-            return roleDao.assignEmployeeRole(employeeId, roleId);
-        }
+         Employee employee = employeeMapper.fromDto(employeeDto);
+        int employeeId = employeeDao.insertEmployee(employee);
         return false;
     }
 
@@ -101,6 +95,10 @@ public class EmployeeService {
            return employeeMapper.toDto(employeeDao.retriveEmployeeById(employeeId));
        }
        return null;
+    }
+
+    public boolean addRoles() {
+        return roleDao.insertRoles();
     }
 }
 

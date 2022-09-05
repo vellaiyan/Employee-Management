@@ -22,6 +22,16 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.sql.SQLException;
+import org.hibernate.HibernateException; 
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException; 
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  * The {@code EmployeeDao} class implemented to insert, retrive, update, delete all employees.
@@ -34,26 +44,29 @@ import java.sql.SQLException;
 
 public class EmployeeDao extends BaseDao {
     private Connection connection = databaseConnection();
+    private static SessionFactory factory =  new Configuration().configure().buildSessionFactory();
 
     public int insertEmployee(Employee employee) throws CustomException {
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        Integer employeeId = null;
         try {
             Date date = new Date(0);
-            PreparedStatement preparedStatement;
-            String query = " insert into employee(batch, first_name, subject, gender, dob, joining_date, email, mobile_no, status)"
-                + " values (?, ?, ?, ?, ?, ?, ?, ?, 'active')"; 
-            preparedStatement = connection.prepareStatement(query); 
-            preparedStatement.setInt(1, employee.getBatch());
-            preparedStatement.setString(2, employee.getFirstName());
-            preparedStatement.setString(3, employee.getSubject());
-            preparedStatement.setString(4, employee.getGender());
-            preparedStatement.setDate(5, date.valueOf(employee.getDateOfBirth()));
-            preparedStatement.setDate(6, date.valueOf(employee.getDateOfJoining()));
-            preparedStatement.setString(7, employee.getEmailId());
-            preparedStatement.setLong(8, employee.getMobileNumber());
-            preparedStatement.execute();            
-            return getLastInsertId(preparedStatement);
+            System.out.println("reached");
+            Session newSession = factory.openSession();
+            transaction = session.beginTransaction();
+            
+            //employeeId = (Integer) session.save(employee);
+            session.save(employee);
+            transaction.commit();
+            session.close();
+            //System.out.println(employeeId);
+            return 0;
+            //return getLastInsertId(preparedStatement);
  
-        } catch(SQLException e) {
+        } catch(HibernateException e) {
+            e.printStackTrace();
+            System.out.println("two");
             throw new CustomException(e.getMessage());
         }
     }
@@ -77,7 +90,7 @@ public class EmployeeDao extends BaseDao {
                 employee.setEmailId(resultSet.getString("email"));
                 employee.setMobileNumber(resultSet.getLong("mobile_no"));
                 employee.setCreateDate(resultSet.getDate("created_date").toLocalDate());
-                employee.setUpdateDate(resultSet.getDate("modified_date").toLocalDate());
+                employee.setModifiedDate(resultSet.getDate("modified_date").toLocalDate());
                 employees.add(employee);
             }
 
@@ -109,7 +122,7 @@ public class EmployeeDao extends BaseDao {
                 employee.setEmailId(resultSet.getString("email"));
                 employee.setMobileNumber(resultSet.getLong("mobile_no"));
                 employee.setCreateDate(resultSet.getDate("created_date").toLocalDate());
-                employee.setUpdateDate(resultSet.getDate("modified_date").toLocalDate());
+                employee.setModifiedDate(resultSet.getDate("modified_date").toLocalDate());
                 employees.add(employee);
                               
             }
@@ -196,7 +209,7 @@ public class EmployeeDao extends BaseDao {
                 employee.setEmailId(resultSet.getString("email"));
                 employee.setMobileNumber(resultSet.getLong("mobile_no"));
                 employee.setCreateDate(resultSet.getDate("created_date").toLocalDate());
-                employee.setUpdateDate(resultSet.getDate("modified_date").toLocalDate()); 
+                employee.setModifiedDate(resultSet.getDate("modified_date").toLocalDate()); 
                                        
             }
          return employee;
@@ -218,8 +231,7 @@ public class EmployeeDao extends BaseDao {
             }
         } catch (SQLException e) {
             throw new CustomException(e.getMessage());
-        } 
-     
+        }      
         return employeeId;
     }
 }
