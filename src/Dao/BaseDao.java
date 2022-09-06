@@ -10,6 +10,17 @@ import com.ideas2it.exception.CustomException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import org.hibernate.HibernateException; 
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException; 
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 
 /**
  * The {@code BaseDao} class implemented to connect the SQL database using username and password.
@@ -22,7 +33,7 @@ import java.sql.DriverManager;
  */
 
 public class BaseDao {
-
+    protected static SessionFactory factory =  new Configuration().configure().buildSessionFactory();
     public static Connection databaseConnection() {
         try {
             Connection connection = DriverManager.getConnection(Constants.DATABASE_URL,Constants.USER_NAME, Constants.PASSWORD);	

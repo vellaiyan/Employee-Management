@@ -7,15 +7,37 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Entity;  
+import javax.persistence.Id;  
+import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Table; 
+import javax.persistence.Column;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.GeneratedValue;
 
-public class Role {
+@Entity
+@Table(name = "role")
+public class Role {    
+    @Id
+    @Column(name = "id")
     protected int roleId;
-    protected String roleName;
+    
+    @Column(name = "name")
+    protected String name;
+
+    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
     protected List<Employee> employees = new ArrayList<Employee>();
 
-    public Role(int roleId, String roleName) {
+    public Role(int roleId, String name) {
         this.roleId = roleId;
-        this.roleName = roleName;
+        this.name = name;
+    }
+ 
+    public Role() {
+  
     }
 
     public void setEmployees(List<Employee> employees) {
@@ -26,19 +48,29 @@ public class Role {
         this.roleId = roleId;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getRoleId() {
         return roleId;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
     public List<Employee> getEmployees() {
         return employees;
     }
+
+    public List<Role> defaultRoles() {
+        List<Role> roles = new ArrayList<Role>();
+        roles.add(new Role(1,"Trainee"));
+        roles.add(new Role(2, "Trainer"));
+        roles.add(new Role(3, "Project Manager"));
+        roles.add(new Role(4, "Human Resource"));
+        return roles;
+    }   
+ 
 }

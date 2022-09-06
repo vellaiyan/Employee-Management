@@ -35,7 +35,6 @@ public class EmployeeController {
     private static boolean isFlow = true;
     private EmployeeService employeeService = new EmployeeService();
     private SignInAndLogInController signInController = new SignInAndLogInController();
-    private static SessionFactory factory;
 
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();      

@@ -8,9 +8,17 @@ package com.ideas2it.model;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.ArrayList;
+import javax.persistence.Entity;  
+import javax.persistence.Id;  
+import javax.persistence.CascadeType;
+import javax.persistence.Table; 
+import javax.persistence.Column;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.GeneratedValue;
+import com.ideas2it.model.Role;
 
 /**
  * The {@code Employee} class represents the all  fields  of employees.
@@ -21,20 +29,52 @@ import java.util.ArrayList;
  * @jls    1.1 Adding EmployeeId
  */  
 
+@Entity
+@Table(name = "employee")
 public class Employee { 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     protected int employeeId;
+
+    @Column(name = "batch")
     protected int batch;
+
+    @Column(name = "first_name")
     protected String firstName;
+
+    @Column(name = "subject")
     protected String subject;
+
+    @Column(name = "gender")
     protected String gender;
+
+    @Column(name = "date_Of_birth")
     protected LocalDate dateOfBirth;
+
+    @Column(name = "date_of_joining")
     protected LocalDate dateOfJoining;
+
+    @Column(name = "email_id")
     protected String emailId;
+
+    @Column(name = "mobile_number")
     protected long mobileNumber;  
+
+    @Column(name = "create_date")
     protected LocalDate createDate;
+
+    @Column(name = "modified_date")
     protected LocalDate modifiedDate;
+
+    @Column(name = "status")
     protected String status;
+
+    @Column(name = "role")
     protected String role;
+
+    @ManyToMany()
+    @JoinTable(name="employee_roles", joinColumns = {@JoinColumn(name = "employee_id") }, inverseJoinColumns =     {@JoinColumn(name = "role_id")})
     protected List<Role> roles = new ArrayList<Role>();
 
     public Employee() {

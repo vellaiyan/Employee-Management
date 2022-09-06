@@ -143,13 +143,14 @@ public class SignInAndLogInController {
         if (name.equals("ideas2it") && password.equals("admin")) {
             System.out.println("1. View all trainee details. \n2. View all trainer details. \n3. View all project managers."
                 +"\n4. Update employee details. \n5. Delete employee \n6. Update employee particular detail. \n7. View particular employee"
-                +"\n8. View all assigned projects \n9. Exit");
+                +"\n8. View all assigned projects \n9. Display all employees. \n10. Exit");
             String userOption = scannerInput.next();
                 switch (userOption) {
                     case "1":
                         try {
                             displayEmployees(Constants.TRAINEE);
                         } catch(Exception e) {
+                            System.out.println(e);
                             System.out.println("Can't able to display");
                         }
                         break;
@@ -174,7 +175,7 @@ public class SignInAndLogInController {
                          try {
                              updateEmployeeDetails();
                          } catch(Exception e) {
-                             System.out.println("sorry");
+                             System.out.println(e);
                          }
                          break;
                     
@@ -182,7 +183,7 @@ public class SignInAndLogInController {
                         try {
                             deleteEmployee();
                         } catch(Exception e) {
-                            System.out.println("Sorry");
+                            System.out.println(e);
                
                         }
 
@@ -199,7 +200,7 @@ public class SignInAndLogInController {
                             }
                             
                         } catch (Exception e) {
-                            System.out.println("sorry");
+                            System.out.println(e);
 
                         }
                         break;
@@ -215,7 +216,7 @@ public class SignInAndLogInController {
                             }
 
                         } catch(Exception e) {
-                            System.out.println("sorry");
+                            System.out.println(e);
 
                         }
                         break;
@@ -237,12 +238,27 @@ public class SignInAndLogInController {
                         } catch(Exception e) {
               
                         }
+
+                    case "9":
+                        displayAllEmployees(employeeService.getEmployees());
                     default:
                         isContinue = false;
                 }        
         }
     } 
 
+    public void displayAllEmployees(List<EmployeeDto> employeeDtos) {
+        System.out.println("---------------------------------------------------------------------------------"
+            +"------------------------------------------------------------------------------------------");  
+        System.out.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s \n", "Id", "Batch", "First Name", 
+            "Subject", "Gender", "Date Of Birth", "Date Of Joining", "Create Date", "Update Date", "email Id", "Mobile Number"); 
+        System.out.println("------------------------------------------------------------------------------------"
+            +"---------------------------------------------------------------------------------------");  
+        for(EmployeeDto employeeDto : employeeDtos) {
+            System.out.println(employeeDto);
+        }  
+    }
+        
     public void displayEmployees(String userRole) throws CustomException {
         List<EmployeeDto> employees = employeeService.getEmployeesByRole(userRole);
         System.out.println("---------------------------------------------------------------------------------"

@@ -7,6 +7,7 @@ package com.ideas2it.service;
 
 import com.ideas2it.dao.EmployeeDao;
 import com.ideas2it.model.Employee;
+import com.ideas2it.model.Role;
 import com.ideas2it.dto.EmployeeDto;
 import com.ideas2it.dao.RoleDao;
 import com.ideas2it.mapper.EmployeeMapper;
@@ -31,22 +32,25 @@ public class EmployeeService {
     private RoleDao roleDao = new RoleDao();
 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
+         List<Role> roles = roleDao.retrieveRoleByName(userRole);
          Employee employee = employeeMapper.fromDto(employeeDto);
-        int employeeId = employeeDao.insertEmployee(employee);
+        int employeeId = employeeDao.insertEmployee(employee, roles);
         return false;
     }
 
-    public List<Employee> getEmployees() throws CustomException {
+    public List<EmployeeDto> getEmployees() throws CustomException {
         List<Employee> employees = employeeDao.retriveEmployees();
+        List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
         for (Employee employee : employees) {
+            EmployeeDto employeeDto = employeeMapper.toDto(employee);
+            employeeDtos.add(employeeDto);    
         }
-        return employees;
+        return employeeDtos;    
     }
 
     public List<EmployeeDto> getEmployeesByRole(String userRole) throws CustomException {
-         int roleId = roleDao.retriveRoleIdByName(userRole);
          List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
-         List<Employee> employees = employeeDao.retriveEmployeeByRole(roleId);
+         List<Employee> employees = employeeDao.retriveEmployeeByRole(userRole);
          for (Employee employee : employees) {
             EmployeeDto employeeDto = employeeMapper.toDto(employee);
             employeeDtos.add(employeeDto);
@@ -55,8 +59,7 @@ public class EmployeeService {
     }
     
     public boolean checkEmployeeById(int employeeId) throws CustomException {
-        for (Employee employee : employeeDao.retriveEmployees()) {
-            System.out.println(employee.getEmployeeId());
+        for (Employee employee : employeeDao.retriveEmployees()) { 
             if(employee.getEmployeeId() == employeeId){
                 return true;
             }
@@ -83,7 +86,7 @@ public class EmployeeService {
         Employee employee = employeeMapper.fromDto(employeeDto);
         return employeeDao.updateEmployeeDetailsById(employee, employeeId);
     }
-    
+
     public boolean updateEmployeeDetail(int employeeId, String value, String fieldName) throws CustomException {
         return employeeDao.updateEmployeeDetailById(employeeId, value, fieldName);
 
