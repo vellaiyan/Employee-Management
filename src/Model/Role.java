@@ -3,20 +3,20 @@ package com.ideas2it.model;
 
 import com.ideas2it.model.Employee;
 
-import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity; 
+import javax.persistence.GeneratedValue; 
+import javax.persistence.Id;  
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table; 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import javax.persistence.Entity;  
-import javax.persistence.Id;  
-import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Table; 
-import javax.persistence.Column;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.GeneratedValue;
 
 @Entity
 @Table(name = "role")
@@ -28,7 +28,7 @@ public class Role {
     @Column(name = "name")
     protected String name;
 
-    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+    @ManyToMany(fetch=FetchType.EAGER, mappedBy = "roles")
     protected List<Employee> employees = new ArrayList<Employee>();
 
     public Role(int roleId, String name) {

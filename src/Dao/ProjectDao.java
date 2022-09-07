@@ -5,8 +5,8 @@
  
 package com.ideas2it.dao;
 
-import com.ideas2it.model.Project;
 import com.ideas2it.exception.CustomException;
+import com.ideas2it.model.Project;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,6 +22,14 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.sql.SQLException;
+import org.hibernate.HibernateException; 
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException; 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 
 public class ProjectDao extends BaseDao {  
     private Connection connection = databaseConnection();
@@ -41,8 +49,8 @@ public class ProjectDao extends BaseDao {
             preparedStatement.setString(7, "active");
             preparedStatement.execute();
             return getLastInsertId(preparedStatement);
-        } catch(SQLException e) {
-            throw new CustomException(e.getMessage());
+        } catch(SQLException sqlException) {
+            throw new CustomException(sqlException.getMessage());
         }
     }
 
@@ -58,8 +66,8 @@ public class ProjectDao extends BaseDao {
                 project.setProjectId(resultSet.getInt("id"));
                 projects.add(project);
             } 
-        } catch(SQLException e) {
-            throw new CustomException(e.getMessage());
+        } catch(SQLException sqlException) {
+            throw new CustomException(sqlException.getMessage());
         } 
         return projects;
     }
@@ -74,11 +82,9 @@ public class ProjectDao extends BaseDao {
                  employeeId = resultSet.getInt("last_insert_id()");
                 return employeeId;
             }
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
+        } catch (SQLException sqlException) {
+            throw new CustomException(sqlException.getMessage());
         }      
-    return employeeId;
-
+        return employeeId;
     }
-
 }

@@ -5,20 +5,22 @@
 
 package com.ideas2it.model;
 
-import java.time.LocalDate;
+import com.ideas2it.model.Role;
+
 import java.sql.Date;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.persistence.Entity;  
-import javax.persistence.Id;  
+import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Table; 
 import javax.persistence.Column;
+import javax.persistence.Entity;  
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;  
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.GeneratedValue;
-import com.ideas2it.model.Role;
+import javax.persistence.Table; 
+import javax.persistence.*;
 
 /**
  * The {@code Employee} class represents the all  fields  of employees.
@@ -70,10 +72,7 @@ public class Employee {
     @Column(name = "status")
     protected String status;
 
-    @Column(name = "role")
-    protected String role;
-
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="employee_roles", joinColumns = {@JoinColumn(name = "employee_id") }, inverseJoinColumns =     {@JoinColumn(name = "role_id")})
     protected List<Role> roles = new ArrayList<Role>();
 
@@ -83,7 +82,7 @@ public class Employee {
 
     public Employee(int employeeId, int batch , String firstName, String subject, String gender,
             LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber,
-            LocalDate createDate, LocalDate modifiedDate, String role, String status) {
+            LocalDate createDate, LocalDate modifiedDate, String status) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
@@ -95,35 +94,15 @@ public class Employee {
         this.mobileNumber = mobileNumber;
         this.createDate = createDate;
         this.modifiedDate = modifiedDate;
-        this.role = role;
         this.status = status;
     }
 
-    public Employee(int batch , String firstName, String subject, String gender,
-            LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber,
-            LocalDate createDate, LocalDate modifiedDate, String role, String status) {
-        
-        this.batch = batch;
-        this.firstName = firstName;
-        this.subject = subject;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.dateOfJoining = dateOfJoining;
-        this.emailId = emailId;
-        this.mobileNumber = mobileNumber;
-        this.createDate = createDate;
-        this.modifiedDate = modifiedDate;
-        this.status = status;
-        this.role = role;
-    }
+
     
     public List<Role> getRoles() {
         return roles;
     }
 
-    public String getRole() {
-        return role;
-    }
 
     public String getSubject() {
         return subject;
@@ -228,11 +207,6 @@ public class Employee {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
 }
 
 

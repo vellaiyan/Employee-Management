@@ -7,20 +7,15 @@ package com.ideas2it.controller;
 
 import com.ideas2it.controller.SignInAndLogInController;
 import com.ideas2it.dto.EmployeeDto;
+import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
 import com.ideas2it.utilitis.DateUtil;
-import com.ideas2it.exception.CustomException;
 import com.ideas2it.utilitis.Constants;
 
 import java.util.concurrent.TimeUnit;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.TimeZone;
-import org.hibernate.HibernateException; 
-import org.hibernate.Session; 
-import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
 /**
  * The {@code EmployeeController} class is to show and control the employee options.
@@ -41,7 +36,7 @@ public class EmployeeController {
         do {
             try {
                 employeeController.showOptions();
-            } catch (InputMismatchException e) {
+            } catch (InputMismatchException inputMismatchException) {
                 System.out.println("********************************** INVALID OPTION ************************************");
                 System.out.println("\nPlease choose valid option");
             }
@@ -93,8 +88,8 @@ public class EmployeeController {
                         System.out.print("Enter the password : ");
                         String password = scanner.next();
                         signInController.trainerOperations(userName, password);
-                    } catch(CustomException e) {
-                    
+                    } catch(CustomException exception) {
+                        System.out.println(exception);
                     }
                     break;
                 
@@ -115,16 +110,16 @@ public class EmployeeController {
     public void userSignIn(String userType) {
         try {
             signInController.signIn(userType,"add", 0);
-        } catch (CustomException e) {
-            System.out.println("\n"+ e.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
+        } catch (CustomException exception) {
+            System.out.println("\n"+ exception.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
         }
     }
 
     public void addProject(String userType) {
         try {
             signInController.addProject(userType, "add");
-        } catch(CustomException e) {
-            System.out.println(e);
+        } catch(CustomException exception) {
+            System.out.println(exception);
             System.out.println("assigning is not working properly");
         }
     }

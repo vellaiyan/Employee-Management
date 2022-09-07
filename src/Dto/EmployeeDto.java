@@ -39,7 +39,7 @@ public class EmployeeDto {
 
     public EmployeeDto(int employeeId, int batch , String firstName, String subject, String gender,
             LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber,
-            LocalDate createDate, LocalDate modifiedDate, String role, String status) {
+            LocalDate createDate, LocalDate modifiedDate, String status) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
@@ -164,8 +164,8 @@ public class EmployeeDto {
 
     @Override
     public String toString() { 
-        String output = String.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s\n", employeeId, batch, firstName, subject, gender, dateOfBirth,
-            dateOfJoining, createDate, modifiedDate, emailId, mobileNumber);    
+        String output = String.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s %10s\n", employeeId, batch, firstName, subject, gender, dateOfBirth,
+            dateOfJoining, createDate, modifiedDate, emailId, mobileNumber, role);    
         return output;   
     }
 }

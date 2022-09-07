@@ -5,19 +5,19 @@
 
 package com.ideas2it.service;
 
-import com.ideas2it.dao.ProjectDao;
 import com.ideas2it.dao.EmployeeProjectDao;
-import com.ideas2it.model.EmployeeProject;
+import com.ideas2it.dao.ProjectDao;
 import com.ideas2it.dto.EmployeeProjectDto;
-import com.ideas2it.model.Project;
 import com.ideas2it.dto.ProjectDto;
-import com.ideas2it.mapper.ProjectMapper;
-import com.ideas2it.mapper.EmployeeProjectMapper;
 import com.ideas2it.exception.CustomException;
+import com.ideas2it.mapper.EmployeeProjectMapper;
+import com.ideas2it.mapper.ProjectMapper;
+import com.ideas2it.model.EmployeeProject;
+import com.ideas2it.model.Project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 /**
  * The {@code ProjcetService} class implemented to support add, get, delete, projects to Project Manager.

@@ -5,29 +5,29 @@
 
 package com.ideas2it.controller;
 
-import com.ideas2it.service.EmployeeService;
-import com.ideas2it.dto.EmployeeProjectDto;
-import com.ideas2it.utilitis.ValidationUtil;
-import com.ideas2it.utilitis.DateUtil;
 import com.ideas2it.dto.EmployeeDto;
-import com.ideas2it.utilitis.Constants;
-import com.ideas2it.exception.CustomException;
+import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.dto.ProjectDto;
+import com.ideas2it.exception.CustomException;
+import com.ideas2it.service.EmployeeService;
 import com.ideas2it.service.ProjectService;
+import com.ideas2it.utilitis.Constants;
+import com.ideas2it.utilitis.DateUtil;
+import com.ideas2it.utilitis.ValidationUtil;
  
-import java.util.List;
-import java.util.LinkedList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Date;
-import java.util.Scanner;
-import java.time.LocalDate;
 import java.text.DateFormat;  
-import java.text.SimpleDateFormat;   
-import java.util.Calendar;
-import java.util.List;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat; 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;  
 
 /**
  * The {@code SignInAndLogInController} class helps all employees to signin or login to their account. 
@@ -46,7 +46,7 @@ public class SignInAndLogInController {
 
     public void signIn(String userRole, String processToBeProceed, int employeeId) throws CustomException{
         EmployeeDto employeeDto = new EmployeeDto();      
-        employeeDto.setEmployeeId(0);
+        //employeeDto.setEmployeeId(0);
         employeeDto.setFirstName(getInput("First Name", ValidationUtil.NAME_PATTERN));
         employeeDto.setSubject(getInput("Subject", ValidationUtil.NAME_PATTERN));
         employeeDto.setDateOfBirth(LocalDate.parse(getDateOfBirthAndDateOfJoining("Enter your date of birth (yyy-MM-dd)", "dob")));
@@ -55,17 +55,34 @@ public class SignInAndLogInController {
         employeeDto.setGender(getInput("Gender", ValidationUtil.GENDER_PATTERN));
         employeeDto.setEmailId(getInput("Email-Id", ValidationUtil.EMAIL_PATTERN));
         employeeDto.setMobileNumber(Long.parseLong(getInput("Mobile Number", ValidationUtil.PHONE_PATTERN)));
-        employeeDto.setRole(userRole);
         employeeDto.setCreateDate(LocalDate.parse("2000-02-28"));
-        employeeDto.setUpdateDate(LocalDate.parse("2000-02-28"));
-        
+        employeeDto.setUpdateDate(LocalDate.parse("2000-02-28"));        
         employeeDto.setStatus("active");
 
         if (processToBeProceed.equals("add")) {
             boolean isAdded = employeeService.addEmployee(employeeDto, userRole);
             System.out.println("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");                         
         } else {
-            boolean isUpdated = employeeService.updateEmployeeDetails(employeeDto, employeeId);
+            System.out.println("Enter the new role you want to assign for this employee. \n1. Trainee."
+                +"\n2. Trainer. \n3. Project Manager. \n4. Human Resource");
+            int newRole = scanner.nextInt();
+            String role = "";
+            switch(newRole) {
+                case 1: 
+                    role = Constants.TRAINEE;
+                    break;
+                case 2:
+                    role = Constants.TRAINER;
+                    break;
+                case 3:
+                    role = Constants.PROJECT_MANAGER;
+                    break;
+                case 4: 
+                    role = Constants.HUMAN_RESOURCE;
+                    break;
+            }
+                    
+            boolean isUpdated = employeeService.updateEmployeeDetails(employeeDto, employeeId, role);
         }
     }
 
@@ -149,8 +166,7 @@ public class SignInAndLogInController {
                     case "1":
                         try {
                             displayEmployees(Constants.TRAINEE);
-                        } catch(Exception e) {
-                            System.out.println(e);
+                        } catch(InputMismatchException inputMismatchException) {
                             System.out.println("Can't able to display");
                         }
                         break;
@@ -158,7 +174,7 @@ public class SignInAndLogInController {
                     case "2":
                         try {
                             displayEmployees(Constants.TRAINER);
-                        } catch(Exception e) {
+                        } catch(InputMismatchException inputMismatchException) {
                             System.out.println("Can't able to display");
                         }
                         break;
@@ -166,7 +182,7 @@ public class SignInAndLogInController {
                     case "3":
                          try {
                              displayEmployees(Constants.PROJECT_MANAGER);
-                         } catch(Exception e) {
+                         } catch(InputMismatchException inputMismatchException) {
                              System.out.println("Can't Able to display");
                          }
                          break;
@@ -174,16 +190,16 @@ public class SignInAndLogInController {
                     case "4":
                          try {
                              updateEmployeeDetails();
-                         } catch(Exception e) {
-                             System.out.println(e);
+                         } catch(InputMismatchException inputMismatchException) {
+                             System.out.println(inputMismatchException);
                          }
                          break;
                     
                     case "5":
                         try {
                             deleteEmployee();
-                        } catch(Exception e) {
-                            System.out.println(e);
+                        } catch(InputMismatchException inputMismatchException) {
+                            System.out.println(inputMismatchException);
                
                         }
 
@@ -199,8 +215,8 @@ public class SignInAndLogInController {
                                 updateEmployeeDetail(employeeId);
                             }
                             
-                        } catch (Exception e) {
-                            System.out.println(e);
+                        } catch (InputMismatchException inputMismatchException) {
+                            System.out.println(inputMismatchException);
 
                         }
                         break;
@@ -215,8 +231,8 @@ public class SignInAndLogInController {
                                 System.out.println(employeeService.getEmployeeById(traineeId));
                             }
 
-                        } catch(Exception e) {
-                            System.out.println(e);
+                        } catch(InputMismatchException inputMismatchException) {
+                            System.out.println(inputMismatchException);
 
                         }
                         break;
@@ -235,9 +251,10 @@ public class SignInAndLogInController {
                                     System.out.println("Project is not available. Enter valid project Id");  
                                 }
                             }
-                        } catch(Exception e) {
-              
+                        } catch(InputMismatchException inputMismatchException) {
+                            throw new CustomException(inputMismatchException);
                         }
+                        break;
 
                     case "9":
                         displayAllEmployees(employeeService.getEmployees());
@@ -344,7 +361,7 @@ public class SignInAndLogInController {
                 } else {
                     System.out.println("Enter correct project Id");
                 }
-            } catch (Exception e) {
+            } catch (CustomException customException) {
                 System.out.println("You gave wrong project Id please give correct input");
             }
 
@@ -363,7 +380,7 @@ public class SignInAndLogInController {
                     isValidEmployeeId = false;
                     return employeeId;
                 }
-            } catch(Exception e) {
+            } catch(CustomException customException) {
                 System.out.println("You gave wroing input please give correct input");
                 validateAndGetEmployeeId();
             }
@@ -379,7 +396,7 @@ public class SignInAndLogInController {
             if(modeOfValidation == "assign") {
                 System.out.println("Enter the date of assigning (yyyy-MM-dd)");
                 date = scanner.next();
-                String assignDate = DateUtil.validateAssignAndCompletionDate(date, "assign");
+                String assignDate = DateUtil.validateAssignDateAndCompletionDate(date, "assign");
                 if(assignDate == "Not valid") {
                     System.out.println("Invalid date");
                     validateAndGetBothAssignedAndCompletionDate("assign");
@@ -389,7 +406,7 @@ public class SignInAndLogInController {
             } else {
                 System.out.println("Enter the date of estimated completion date (yyyy-MM-dd)");
                 date = scanner.next();
-                String completionDate = DateUtil.validateAssignAndCompletionDate(date, "completion");
+                String completionDate = DateUtil.validateAssignDateAndCompletionDate(date, "completion");
                 if(completionDate == "Not valid") {
                     System.out.println("Invalid date");
                     validateAndGetBothAssignedAndCompletionDate("completion");

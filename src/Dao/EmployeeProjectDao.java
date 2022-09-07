@@ -5,23 +5,21 @@
 
 package com.ideas2it.dao;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.text.DateFormat;  
-import java.text.SimpleDateFormat;   
-import java.util.Calendar;
-import java.util.List;
-import java.util.ArrayList;
-import java.time.LocalDate;
-import java.sql.Date;
-import java.sql.SQLException;
-
 import com.ideas2it.model.EmployeeProject;
 import com.ideas2it.exception.CustomException;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat; 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate; 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;   
 
 /**
  * The {@code } class implemented to insert, retrive, update, delete all employees roles.
@@ -47,8 +45,8 @@ public class EmployeeProjectDao extends BaseDao {
             preparedStatement.setDate(4, date.valueOf(completionDate));
             preparedStatement.setString(5, "active");
             preparedStatement.execute();
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
+        } catch (SQLException sqlException) {
+            throw new CustomException(sqlException.getMessage());
         }
         return true;
     } 
@@ -85,11 +83,9 @@ public class EmployeeProjectDao extends BaseDao {
             }
             System.out.println(projects);
             return projects;
-        } catch(Exception e) {
+        } catch(SQLException sqlException) {
     
         }
         return projects;
-     
-    }
-            
+    }            
 }

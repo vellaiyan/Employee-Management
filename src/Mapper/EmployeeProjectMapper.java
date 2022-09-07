@@ -5,8 +5,8 @@
 
 package com.ideas2it.mapper;
 
-import com.ideas2it.model.EmployeeProject;
 import com.ideas2it.dto.EmployeeProjectDto;
+import com.ideas2it.model.EmployeeProject;
 
 public class EmployeeProjectMapper {
 

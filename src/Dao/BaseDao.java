@@ -5,22 +5,17 @@
 
 package com.ideas2it.dao;
 
-import com.ideas2it.utilitis.Constants;
 import com.ideas2it.exception.CustomException;
+import com.ideas2it.utilitis.Constants;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import org.hibernate.HibernateException; 
-import org.hibernate.Session; 
-import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException; 
 import org.hibernate.Session; 
-import org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
 
 /**
  * The {@code BaseDao} class implemented to connect the SQL database using username and password.

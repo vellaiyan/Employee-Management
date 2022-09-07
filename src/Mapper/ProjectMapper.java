@@ -5,8 +5,8 @@
 
 package com.ideas2it.mapper;
 
-import com.ideas2it.model.Project;
 import com.ideas2it.dto.ProjectDto;
+import com.ideas2it.model.Project;
 
 /**
  * The {@code ProjectMapper} class implemented to convert projectDto into project vice versa.

@@ -5,15 +5,15 @@
 
 package com.ideas2it.utilitis;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.Month;
-import java.text.SimpleDateFormat;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.text.ParseException;
+import java.util.Date;
 
 /**
  * The {@code DateUtil} class represents Date of birth validation. This
@@ -57,20 +57,20 @@ public class DateUtil {
             } else {
                 return dateOfBirth = dob;
             }
-        } catch (ParseException e) {
+        } catch (ParseException parseException) {
             dateOfBirth = "invalid";            
         }
         return dateOfBirth;
     }
 
-    public static String validateAssignAndCompletionDate(String date, String type) {
+    public static String validateAssignDateAndCompletionDate(String date, String type) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         simpleDateFormat.setLenient(false);
         String assignDate = "";
         try {
             Date AssignDateParse = simpleDateFormat.parse(date);
             return date;
-        } catch(ParseException e) {
+        } catch(ParseException parseException) {
             return "Not valid";
         }
     }
@@ -82,7 +82,7 @@ public class DateUtil {
         try {
             Date AssignDateParse = simpleDateFormat.parse(date);
             return date;
-        } catch(ParseException e) {
+        } catch(ParseException parseException) {
             return "Not valid";
         }
     }
@@ -100,7 +100,7 @@ public class DateUtil {
             System.out.print("\b\b\b\b\b\b\b\b\b\b\b");
             Thread.sleep(delay);
             System.out.println("                       ");
-        } catch (Exception e) {
+        } catch (Exception exception) {
 
         }
     }

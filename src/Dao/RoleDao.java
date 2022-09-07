@@ -6,30 +6,28 @@
 package com.ideas2it.dao;
 
 
-import java.sql.Statement;
+import com.ideas2it.model.Role;
+import com.ideas2it.exception.CustomException;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.List;
+import java.text.DateFormat;  
+import java.text.SimpleDateFormat; 
+import java.time.LocalDate;
 import java.util.ArrayList;
-
-import org.hibernate.HibernateException; 
-import org.hibernate.Session; 
-import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.HibernateException; 
-import org.hibernate.Session; 
-import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;  
+import java.sql.Date;
+import java.sql.SQLException;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import com.ideas2it.exception.CustomException;
-import org.hibernate.*;
-
-import com.ideas2it.model.Role;
+import org.hibernate.HibernateException; 
+import org.hibernate.SessionFactory;
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
 
 /**
  * The {@code RoleDao} class implemented to insert, retrive, update, delete all employees roles.
@@ -62,7 +60,6 @@ public class RoleDao extends BaseDao {
         }
         return false;
     }
-     
    
     public List<Role> retrieveRoleByName(String name) throws CustomException {
         try {
@@ -70,9 +67,8 @@ public class RoleDao extends BaseDao {
             Criteria criteria = session.createCriteria(Role.class);
             criteria.add(Restrictions.eq("name", name));
             return criteria.list();
-        } catch(Exception exception) {
-            exception.printStackTrace(); 
-            throw new CustomException(exception); 
+        } catch(HibernateException hibernateException) { 
+            throw new CustomException(hibernateException); 
         }   
     }
 

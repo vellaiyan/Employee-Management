@@ -9,33 +9,27 @@ import com.ideas2it.model.Employee;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.model.Role;
  
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;  
-import java.text.SimpleDateFormat;   
-import java.util.Calendar;
-import java.util.List;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat; 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;  
 import java.sql.Date;
 import java.sql.SQLException;
-import org.hibernate.HibernateException; 
-import org.hibernate.Session; 
-import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.HibernateException; 
-import org.hibernate.Session; 
-import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.*;
+import org.hibernate.HibernateException; 
+import org.hibernate.SessionFactory;
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+
 
 /**
  * The {@code EmployeeDao} class implemented to insert, retrive, update, delete all employees.
@@ -50,93 +44,84 @@ public class EmployeeDao extends BaseDao {
     private Connection connection = databaseConnection();
     private Employee employee;
 
-    public int insertEmployee(Employee employee, List<Role> roles) throws CustomException {
-        employee.setRoles(roles);
-        Session session = factory.openSession();
+    public int insertEmployee(Employee employee) throws CustomException {
         Transaction transaction = null;
+        Session session = null;
         Integer employeeId = null;
         try {
-            Session newSession = factory.openSession();
+            session = factory.openSession();
             transaction = session.beginTransaction();
-            
-            //employeeId = (Integer) session.save(employee);
-            session.save(employee);
+            employeeId = (Integer) session.save(employee);
             transaction.commit();
             session.close();
-            //System.out.println(employeeId);
-            return 0;
-            //return getLastInsertId(preparedStatement);
- 
-        } catch(HibernateException e) {
-            e.printStackTrace();
-            System.out.println("two");
-            throw new CustomException(e.getMessage());
+        } catch(HibernateException hibernateException) {
+            throw new CustomException(hibernateException.getMessage());
+        } finally {
+            if(transaction != null || session != null) {
+                session.close();
+            }
         }
+        return employeeId;
     }
  
     public List<Employee> retriveEmployees() throws CustomException {
-        Session session = factory.openSession();
+        Session session = null;
+        Transaction transaction = null;
         try {
-            return session.createQuery("SELECT a FROM Employee a", Employee.class).getResultList();  
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+            transaction.commit();
+            return session.createQuery("FROM Employee where status = 'active'").getResultList();  
         } finally {
-            session.close();
+            if(transaction !=null || session != null) {
+                session.close();
+            }
         }     
     }
 
-    public List<Employee> retriveEmployeeByRole(String role) throws CustomException {
-        Session session = factory.openSession();
+    public Role retriveEmployeeByRole(String role) throws CustomException {
+        Session session = null;
         try {
-            Criteria criteria = session.createCriteria(Employee.class);
-            criteria.add(Restrictions.eq("role", role));
-            List<Employee> employees = criteria.list();
-            return employees;
+            session = factory.openSession();
+            Criteria criteria = session.createCriteria(Role.class);
+            criteria.add(Restrictions.eq("name", role));
+            List<Role> roles = criteria.list();
+            return roles.get(0);            
         } finally {
-            session.close();
+            if(session != null) {
+                session.close();
+            }
         }
     }
 
     public boolean deleteEmployeeById(int employeeId) throws CustomException {
+        Session session = null;
+        Transaction transaction = null;
         try {
-            connection = databaseConnection();
-            String sql = "update employee set status = 'inactive'  where id = '" + employeeId + "'";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate(sql);
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+            Query query  = session.createQuery("update Employee set status = 'inactive' where id = " + employeeId);         
+            query.executeUpdate();
+            transaction.commit();
             return true;
-       } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
-       } 
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
     }  
     
-    public boolean updateEmployeeDetailsById(Employee employee, int employeeId) throws CustomException {
+    public boolean updateEmployeeDetailsById(Employee employee) throws CustomException {
+        Session session = factory.openSession();
+        Transaction transaction = null;
         try {
-            Session session = factory.openSession();
-            String query = "UPDATE Employee SET batch = :employee.getBatch where id = :employeeId";
-            
-            session.createQuery(query).executeUpdate();
-
-            /*String query = "update employee set batch = ?, first_name = ?, subject = ?, gender = ?, dob = ?,"
-                + "joining_date = ?, email = ?, mobile_no = ?, modified_date = current_timestamp where id = ?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, employee.getBatch());
-            preparedStatement.setString(2, employee.getFirstName());
-            preparedStatement.setString(3, employee.getSubject());
-            preparedStatement.setString(4, employee.getGender());
-            preparedStatement.setDate(5, date.valueOf(employee.getDateOfBirth())); 
-            preparedStatement.setDate(6, date.valueOf(employee.getDateOfJoining()));
-            preparedStatement.setString(7, employee.getEmailId());
-            preparedStatement.setLong(8, employee.getMobileNumber());
-            preparedStatement.setInt(9, employeeId);
-            preparedStatement.executeUpdate();*/
+            session.update(employee);
+            transaction = session.beginTransaction();
+            transaction.commit();
+            session.close();
             return true;
-        } catch(Exception e) {
-            throw new CustomException(e.getMessage());
+        } catch(HibernateException hibernateException) {
+            throw new CustomException(hibernateException.getMessage());
         }
     }
 
@@ -151,53 +136,25 @@ public class EmployeeDao extends BaseDao {
             preparedStatement.executeUpdate();
             return true;
 
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
+        } catch (SQLException sqlException) {
+            throw new CustomException(sqlException.getMessage());
         }
-
     }
   
     public Employee retriveEmployeeById(int employeeId) throws CustomException {
+        Session session = null;
+        Transaction transaction = null;
         try {
-            String query = "select * from employee where id = '" + employeeId + "'";
-            Employee employee = new Employee(); 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                employee.setEmployeeId(resultSet.getInt("id"));
-                employee.setBatch(resultSet.getInt("batch"));
-                employee.setFirstName(resultSet.getString("first_name"));
-                employee.setSubject(resultSet.getString("subject"));
-                employee.setGender(resultSet.getString("gender"));
-                employee.setDateOfBirth(resultSet.getDate("dob").toLocalDate());
-                employee.setDateOfJoining(resultSet.getDate("joining_date").toLocalDate());
-                employee.setEmailId(resultSet.getString("email"));
-                employee.setMobileNumber(resultSet.getLong("mobile_no"));
-                employee.setCreateDate(resultSet.getDate("created_date").toLocalDate());
-                employee.setModifiedDate(resultSet.getDate("modified_date").toLocalDate()); 
-                                       
-            }
-         return employee;
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+            List<Employee> employees = session.createQuery("FROM Employee where id = " + employeeId).getResultList();         
+            transaction.commit();
+            return employees.get(0);       
+        } finally {
+             if(session != null || transaction !=null) {
+                 session.close();
+             }
         }
-
-    }
-   
-    public int getLastInsertId(PreparedStatement preparedStatement) throws CustomException {
-        int employeeId = 0;
-        try {
-            String sqlquery = "select last_insert_id()";        
-            preparedStatement = connection.prepareStatement(sqlquery);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                 employeeId = resultSet.getInt("last_insert_id()");
-                return employeeId;
-            }
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
-        }      
-        return employeeId;
     }
 }
 

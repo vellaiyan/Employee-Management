@@ -6,16 +6,16 @@
 package com.ideas2it.service;
 
 import com.ideas2it.dao.EmployeeDao;
+import com.ideas2it.dao.RoleDao;
+import com.ideas2it.dto.EmployeeDto;
+import com.ideas2it.exception.CustomException;
+import com.ideas2it.mapper.EmployeeMapper;
 import com.ideas2it.model.Employee;
 import com.ideas2it.model.Role;
-import com.ideas2it.dto.EmployeeDto;
-import com.ideas2it.dao.RoleDao;
-import com.ideas2it.mapper.EmployeeMapper;
-import com.ideas2it.exception.CustomException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 /**
  * The {@code EmployeeService} class implemented to support add, get, delete, functionalities to Employee.
@@ -32,9 +32,10 @@ public class EmployeeService {
     private RoleDao roleDao = new RoleDao();
 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
-         List<Role> roles = roleDao.retrieveRoleByName(userRole);
-         Employee employee = employeeMapper.fromDto(employeeDto);
-        int employeeId = employeeDao.insertEmployee(employee, roles);
+        List<Role> roles = roleDao.retrieveRoleByName(userRole);
+        Employee employee = employeeMapper.fromDto(employeeDto);
+        employee.setRoles(roles);
+        int employeeId = employeeDao.insertEmployee(employee);
         return false;
     }
 
@@ -50,9 +51,11 @@ public class EmployeeService {
 
     public List<EmployeeDto> getEmployeesByRole(String userRole) throws CustomException {
          List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
-         List<Employee> employees = employeeDao.retriveEmployeeByRole(userRole);
+         Role role = employeeDao.retriveEmployeeByRole(userRole);
+         List<Employee> employees = role.getEmployees();
          for (Employee employee : employees) {
             EmployeeDto employeeDto = employeeMapper.toDto(employee);
+            employeeDto.setRole(userRole);
             employeeDtos.add(employeeDto);
          }
          return employeeDtos;
@@ -82,9 +85,15 @@ public class EmployeeService {
         }
         return false;
     }
-    public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId) throws CustomException {
+
+    public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId, String userRole) throws CustomException {
         Employee employee = employeeMapper.fromDto(employeeDto);
-        return employeeDao.updateEmployeeDetailsById(employee, employeeId);
+        Employee employeeFromDatabase = employeeDao.retriveEmployeeById(employeeId);
+        List<Role> roles = roleDao.retrieveRoleByName(userRole);
+        roles.addAll(employeeFromDatabase.getRoles());
+        employee.setRoles(roles);
+        employee.setEmployeeId(employeeId);
+        return employeeDao.updateEmployeeDetailsById(employee);
     }
 
     public boolean updateEmployeeDetail(int employeeId, String value, String fieldName) throws CustomException {
