@@ -40,36 +40,66 @@ import org.hibernate.Transaction;
  */
 
 public class RoleDao extends BaseDao {
-    Connection connection = databaseConnection();
-    Role role = new Role();
+    private Role role = new Role();
 
-    public boolean insertRoles() {
-        Session session = factory.openSession();
-        Transaction transaction = session.beginTransaction();
+    public boolean insertRoles() throws CustomException {
+        Transaction transaction = null;
+        Session session = null;
         List<Role> roles = role.defaultRoles();
-        try { 
-            for(Role role : roles) {
-                
+        try {
+            SessionFactory factory = databaseConnection();
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+            for(Role role : roles) {                
                 session.save(role); 
             }
+        
             transaction.commit(); 
-            session.close(); 
             return true; 
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (Exception exception) {
+            throw new CustomException("Error while insert roles", exception);
+        } finally {
+            if(session != null || transaction != null) {
+                session.close();
+            }
         }
-        return false;
     }
    
-    public List<Role> retrieveRoleByName(String name) throws CustomException {
+    public List<Role> retrieveRolesByRoleName(String name) throws CustomException {
+        Session session = null;
+        Transaction transaction = null;
+        
         try {
-            Session session = factory.openSession(); 
+            SessionFactory factory = databaseConnection();
+            session = factory.openSession(); 
             Criteria criteria = session.createCriteria(Role.class);
             criteria.add(Restrictions.eq("name", name));
             return criteria.list();
         } catch(HibernateException hibernateException) { 
-            throw new CustomException(hibernateException); 
-        }   
+            throw new CustomException("Error while retrieve roles by role name", hibernateException); 
+        } finally {
+            if(session != null || transaction != null) {
+                session.close();
+            }
+        } 
     }
 
+    public Role retriveRoleByRoleName(String name) throws CustomException {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            SessionFactory factory = databaseConnection();
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+            transaction.commit();
+            Role role = (Role)session.createQuery("FROM Role where name = :name").setString("name", name).uniqueResult(); 
+            return role;          
+        } catch (HibernateException hibernateException) {
+            throw new CustomException("Error while retrieve role by role name", hibernateException);
+        } finally {
+            if(session != null) {
+                session.close();
+            }
+        }
+    }
 }

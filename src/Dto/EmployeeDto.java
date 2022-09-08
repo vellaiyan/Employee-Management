@@ -164,8 +164,8 @@ public class EmployeeDto {
 
     @Override
     public String toString() { 
-        String output = String.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s %10s\n", employeeId, batch, firstName, subject, gender, dateOfBirth,
-            dateOfJoining, createDate, modifiedDate, emailId, mobileNumber, role);    
+        String output = String.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s %10s\n", employeeId, batch, firstName, 
+            subject, gender, dateOfBirth, dateOfJoining, createDate, modifiedDate, emailId, mobileNumber, role);    
         return output;   
     }
 }

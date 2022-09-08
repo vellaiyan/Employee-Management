@@ -28,16 +28,18 @@ import org.hibernate.Transaction;
  */
 
 public class BaseDao {
-    protected static SessionFactory factory =  new Configuration().configure().buildSessionFactory();
-    public static Connection databaseConnection() {
+    static SessionFactory sessionFactory = null;
+
+    public SessionFactory databaseConnection() throws CustomException {
         try {
-            Connection connection = DriverManager.getConnection(Constants.DATABASE_URL,Constants.USER_NAME, Constants.PASSWORD);	
-            return connection;
-        } catch(Exception e) {
-            System.out.println("Connection Failed"); 
-            return null;           
-        }  
-    }
+            if (sessionFactory == null) {
+                sessionFactory = new Configuration().configure().buildSessionFactory();
+            }
+        } catch (HibernateException hibernateException) {
+            throw new CustomException("Error occured while creating session factory", hibernateException);
+        }        
+        return sessionFactory;
+    }    
 }
 
 

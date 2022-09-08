@@ -42,11 +42,10 @@ import java.util.Scanner;
 public class SignInAndLogInController { 
     private Scanner scanner = new Scanner(System.in);
     private EmployeeService employeeService = new EmployeeService();
-    private ProjectService projectService = new ProjectService();
+    //private ProjectService projectService = new ProjectService();
 
-    public void signIn(String userRole, String processToBeProceed, int employeeId) throws CustomException{
+    public void signIn(String userRole, String processToBeProceed, int employeeId) throws CustomException {
         EmployeeDto employeeDto = new EmployeeDto();      
-        //employeeDto.setEmployeeId(0);
         employeeDto.setFirstName(getInput("First Name", ValidationUtil.NAME_PATTERN));
         employeeDto.setSubject(getInput("Subject", ValidationUtil.NAME_PATTERN));
         employeeDto.setDateOfBirth(LocalDate.parse(getDateOfBirthAndDateOfJoining("Enter your date of birth (yyy-MM-dd)", "dob")));
@@ -151,7 +150,7 @@ public class SignInAndLogInController {
         projectDto.setStartingDate(LocalDate.parse(getDateOfBirthAndDateOfJoining("Enter project starting date", "dob")));
         projectDto.setEstimatedEndingDate(LocalDate.parse(getDateOfBirthAndDateOfJoining("Estimated ending date", "joining"))); 
         projectDto.setDeleteStatus("Active");
-        projectService.addProject(projectDto);
+        //projectService.addProject(projectDto);
     }
 
     public void trainerOperations(String name, String password) throws CustomException {
@@ -166,40 +165,40 @@ public class SignInAndLogInController {
                     case "1":
                         try {
                             displayEmployees(Constants.TRAINEE);
-                        } catch(InputMismatchException inputMismatchException) {
-                            System.out.println("Can't able to display");
+                        } catch(CustomException customException) {
+                            System.out.println(customException);
                         }
                         break;
  
                     case "2":
                         try {
                             displayEmployees(Constants.TRAINER);
-                        } catch(InputMismatchException inputMismatchException) {
-                            System.out.println("Can't able to display");
+                        } catch(CustomException customException) {
+                            System.out.println(customException);
                         }
                         break;
 
                     case "3":
                          try {
                              displayEmployees(Constants.PROJECT_MANAGER);
-                         } catch(InputMismatchException inputMismatchException) {
-                             System.out.println("Can't Able to display");
+                         } catch(CustomException customException) {
+                             System.out.println(customException);
                          }
                          break;
 
                     case "4":
                          try {
                              updateEmployeeDetails();
-                         } catch(InputMismatchException inputMismatchException) {
-                             System.out.println(inputMismatchException);
+                         } catch(CustomException customException) {
+                             System.out.println(customException);
                          }
                          break;
                     
                     case "5":
                         try {
                             deleteEmployee();
-                        } catch(InputMismatchException inputMismatchException) {
-                            System.out.println(inputMismatchException);
+                        } catch(CustomException customException) {
+                            System.out.println(customException);
                
                         }
 
@@ -217,7 +216,8 @@ public class SignInAndLogInController {
                             
                         } catch (InputMismatchException inputMismatchException) {
                             System.out.println(inputMismatchException);
-
+                        } catch (CustomException customException) {
+                            System.out.println(customException);
                         }
                         break;
 
@@ -225,33 +225,34 @@ public class SignInAndLogInController {
                         try {
                             System.out.println("Enter the trainee Id you want to see");
                             int traineeId = scanner.nextInt();
-                            if(!employeeService.checkEmployeeById(traineeId)) {
+                            if (!employeeService.checkEmployeeById(traineeId)) {
                                 System.out.println("\nInvalid Employe Id\n");   
                             } else {
                                 System.out.println(employeeService.getEmployeeById(traineeId));
                             }
 
-                        } catch(InputMismatchException inputMismatchException) {
+                        } catch (InputMismatchException inputMismatchException) {
                             System.out.println(inputMismatchException);
-
+                        } catch (CustomException customException) {
+                            System.out.println(customException);
                         }
                         break;
 
                     case "8":
                         try {
                             boolean isValid= true;
-                            while(isValid) {
+                            while (isValid) {
                                 System.out.println("Enter the project Id: ");
                                 int projectId = scanner.nextInt();
-                                if(projectService.checkProjectById(projectId)){
+                                /* if(projectService.checkProjectById(projectId)){
                                     List<EmployeeProjectDto> projects = projectService.getAssignedEmployeesById(projectId);
                                     displayAssignedProjects(projects);
                                     isValid = false;
                                 } else {
                                     System.out.println("Project is not available. Enter valid project Id");  
-                                }
+                                } */
                             }
-                        } catch(InputMismatchException inputMismatchException) {
+                        } catch (InputMismatchException inputMismatchException) {
                             throw new CustomException(inputMismatchException);
                         }
                         break;
@@ -292,7 +293,7 @@ public class SignInAndLogInController {
     public void updateEmployeeDetails() throws CustomException {
         System.out.println("Enter the Employee Id you want to update");
         int employeeId = scanner.nextInt();
-        if(employeeService.checkEmployeeById(employeeId)) {
+        if (employeeService.checkEmployeeById(employeeId)) {
             signIn("employee", "update", employeeId);
         } else {
             System.out.println("\n not available \n");
@@ -304,7 +305,7 @@ public class SignInAndLogInController {
     public void deleteEmployee() throws CustomException{
         System.out.println("Enter the employee Id you want to delete");
         int employeeId = scanner.nextInt();
-        if(employeeService.checkEmployeeById(employeeId)) {
+        if (employeeService.checkEmployeeById(employeeId)) {
             boolean isDeleted = employeeService.deleteEmployeeById(employeeId);
             System.out.println("Employee deleted");
         } else {
@@ -319,7 +320,7 @@ public class SignInAndLogInController {
         int employeeChoice = scanner.nextInt();
         switch(employeeChoice) {
             case 1: 
-                employeeService.updateEmployeeDetail(employeeId, gettingUpdatedValue("First Name"), "first_name");
+                //employeeService.updateEmployeeDetail(employeeId, gettingUpdatedValue("First Name"), "first_name");
                 break;
         }
     }
@@ -332,12 +333,12 @@ public class SignInAndLogInController {
 
     public void assignEmployees() throws CustomException {
         boolean isContinue = true;
-        while(isContinue) {
+        while (isContinue) {
             int projectId = validateAndGetProjectId();
             int employeeId = validateAndGetEmployeeId();
             LocalDate assignDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("assign"));
             LocalDate completionDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("completion"));
-            projectService.assignProjectToEmployee(employeeId, projectId, assignDate, completionDate);
+            //projectService.assignProjectToEmployee(employeeId, projectId, assignDate, completionDate);
             System.out.println("Do you want to continue (y/n)");
             Scanner scanner1 = new Scanner(System.in);
             String userOption = scanner1.next();
@@ -353,17 +354,17 @@ public class SignInAndLogInController {
         Scanner scanner1 = new Scanner(System.in);
         while(isValidProjectId) {
             System.out.println("Enter the project Id");
-            try {
+            /*try {
                 projectId = scanner1.nextInt();
                 if(projectService.checkProjectById(projectId)) {
                     isValidProjectId = false;
                     return projectId;
                 } else {
                     System.out.println("Enter correct project Id");
-                }
+                } 
             } catch (CustomException customException) {
                 System.out.println("You gave wrong project Id please give correct input");
-            }
+            }*/
 
         }
         return 0;
@@ -372,7 +373,7 @@ public class SignInAndLogInController {
     public int validateAndGetEmployeeId() {
         boolean isValidEmployeeId = true;
         int employeeId;
-        while(isValidEmployeeId) {
+        while (isValidEmployeeId) {
             System.out.println("Enter EmployeeId want to assign");
             try {
                 employeeId = scanner.nextInt();

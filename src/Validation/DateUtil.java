@@ -32,7 +32,7 @@ public class DateUtil {
         simpleDateFormat.setLenient(false);
         String dateOfBirth = "";
         try {
-            if(choosenDate.equals("dob")) {
+            if (choosenDate.equals("dob")) {
                 Date dateOfBirthParse = simpleDateFormat.parse(dob);            
                 Instant instant = dateOfBirthParse.toInstant();
                 ZonedDateTime timeZone = instant.atZone(ZoneId.systemDefault());
@@ -48,7 +48,7 @@ public class DateUtil {
                     dateOfBirth = "low";
                 } else if ((currentYear - birthYear) <= 18 ) {
                     dateOfBirth = "min";
-                } else if(((leapYear == true) &&((givenDate.getMonth().toString().equals("FEBRUARY")) == true)) && (givenDay>29)) {
+                } else if (((leapYear == true) &&((givenDate.getMonth().toString().equals("FEBRUARY")) == true)) && (givenDay>29)) {
                     dateOfBirth = "low";
                 }
                 else {
@@ -70,7 +70,7 @@ public class DateUtil {
         try {
             Date AssignDateParse = simpleDateFormat.parse(date);
             return date;
-        } catch(ParseException parseException) {
+        } catch (ParseException parseException) {
             return "Not valid";
         }
     }
@@ -82,7 +82,7 @@ public class DateUtil {
         try {
             Date AssignDateParse = simpleDateFormat.parse(date);
             return date;
-        } catch(ParseException parseException) {
+        } catch (ParseException parseException) {
             return "Not valid";
         }
     }

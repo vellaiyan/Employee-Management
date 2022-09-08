@@ -11,6 +11,8 @@ import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
 import com.ideas2it.utilitis.DateUtil;
 import com.ideas2it.utilitis.Constants;
+import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 
 import java.util.concurrent.TimeUnit;
 import java.util.InputMismatchException;
@@ -30,15 +32,16 @@ public class EmployeeController {
     private static boolean isFlow = true;
     private EmployeeService employeeService = new EmployeeService();
     private SignInAndLogInController signInController = new SignInAndLogInController();
+    private static Logger logger = Logger.getLogger(EmployeeController.class);
 
     public static void main(String[] args) {
-        EmployeeController employeeController = new EmployeeController();      
+        EmployeeController employeeController = new EmployeeController();  
+        BasicConfigurator.configure();
         do {
             try {
                 employeeController.showOptions();
             } catch (InputMismatchException inputMismatchException) {
-                System.out.println("********************************** INVALID OPTION ************************************");
-                System.out.println("\nPlease choose valid option");
+                logger.error("\nPlease choose valid option");
             }
         } while (isFlow);
     }
@@ -88,16 +91,19 @@ public class EmployeeController {
                         System.out.print("Enter the password : ");
                         String password = scanner.next();
                         signInController.trainerOperations(userName, password);
-                    } catch(CustomException exception) {
+                    } catch (CustomException exception) {
                         System.out.println(exception);
                     }
                     break;
                 
                 case 8:
-                    if(employeeService.addRoles()) {
-                        System.out.println("Roles added successfully\n");
-                    } else {
-                        System.out.println("Failed\n");
+                    try {
+                        if (employeeService.addRoles()) {
+                            logger.info("Roles added successfully\n");
+                        } else {
+                            logger.error("Failed\n");
+                        } 
+                    } catch (CustomException custmoException) {
                     }
                     break;
 
@@ -111,14 +117,14 @@ public class EmployeeController {
         try {
             signInController.signIn(userType,"add", 0);
         } catch (CustomException exception) {
-            System.out.println("\n"+ exception.getMessage() + "\nSorry you gave wrong information please try again !!! \n");
+            logger.error(exception);
         }
     }
 
     public void addProject(String userType) {
         try {
             signInController.addProject(userType, "add");
-        } catch(CustomException exception) {
+        } catch (CustomException exception) {
             System.out.println(exception);
             System.out.println("assigning is not working properly");
         }

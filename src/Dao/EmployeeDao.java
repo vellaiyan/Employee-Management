@@ -30,7 +30,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session; 
 import org.hibernate.Transaction;
 
-
 /**
  * The {@code EmployeeDao} class implemented to insert, retrive, update, delete all employees.
  *
@@ -41,115 +40,99 @@ import org.hibernate.Transaction;
  */
 
 public class EmployeeDao extends BaseDao {
-    private Connection connection = databaseConnection();
     private Employee employee;
 
     public int insertEmployee(Employee employee) throws CustomException {
+        SessionFactory factory = databaseConnection();
         Transaction transaction = null;
         Session session = null;
-        Integer employeeId = null;
+        int employeeId = 0;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
             employeeId = (Integer) session.save(employee);
             transaction.commit();
-            session.close();
-        } catch(HibernateException hibernateException) {
-            throw new CustomException(hibernateException.getMessage());
+            return employeeId;
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while inserting employee", exception);
         } finally {
-            if(transaction != null || session != null) {
+            if (transaction != null || session != null) {
                 session.close();
             }
         }
-        return employeeId;
     }
  
     public List<Employee> retriveEmployees() throws CustomException {
+        SessionFactory factory = databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
             transaction.commit();
-            return session.createQuery("FROM Employee where status = 'active'").getResultList();  
+            Query query = session.createQuery("FROM Employee where status = :status");  
+            query.setString("status", "active");
+            return query.getResultList();
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while retrieving employees", exception);
         } finally {
-            if(transaction !=null || session != null) {
+            if (transaction !=null || session != null) {
                 session.close();
             }
         }     
     }
 
-    public Role retriveEmployeeByRole(String role) throws CustomException {
-        Session session = null;
-        try {
-            session = factory.openSession();
-            Criteria criteria = session.createCriteria(Role.class);
-            criteria.add(Restrictions.eq("name", role));
-            List<Role> roles = criteria.list();
-            return roles.get(0);            
-        } finally {
-            if(session != null) {
-                session.close();
-            }
-        }
-    }
-
-    public boolean deleteEmployeeById(int employeeId) throws CustomException {
+    public boolean deleteEmployee(Employee employee) throws CustomException {
+        SessionFactory factory = databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
-            Query query  = session.createQuery("update Employee set status = 'inactive' where id = " + employeeId);         
-            query.executeUpdate();
+            session.update(employee);
             transaction.commit();
             return true;
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while deleting employee", exception);
         } finally {
-            if (session != null) {
+            if (session != null || transaction != null) {
                 session.close();
             }
         }
     }  
     
-    public boolean updateEmployeeDetailsById(Employee employee) throws CustomException {
-        Session session = factory.openSession();
+    public boolean updateEmployeeDetails(Employee employee) throws CustomException {
+        SessionFactory factory = databaseConnection();
+        Session session = null;
         Transaction transaction = null;
         try {
+            session = factory.openSession();
             session.update(employee);
             transaction = session.beginTransaction();
             transaction.commit();
-            session.close();
             return true;
-        } catch(HibernateException hibernateException) {
-            throw new CustomException(hibernateException.getMessage());
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while updating employee details", exception);
+        } finally {
+            if (session != null || transaction != null) {
+                session.close();
+            }
         }
     }
 
-    public boolean updateEmployeeDetailById(int employeeId, String value, String fieldName) throws CustomException {
-        try {
-            PreparedStatement preparedStatement;
-            Date date = new Date(0);
-            String query = "update employee set " + fieldName + " = ?, modified_date = current_timestamp where id = ?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, value);
-            preparedStatement.setInt(2, employeeId);
-            preparedStatement.executeUpdate();
-            return true;
-
-        } catch (SQLException sqlException) {
-            throw new CustomException(sqlException.getMessage());
-        }
-    }
-  
     public Employee retriveEmployeeById(int employeeId) throws CustomException {
+        SessionFactory factory = databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
-            List<Employee> employees = session.createQuery("FROM Employee where id = " + employeeId).getResultList();         
+            Employee employee = (Employee) session.createQuery("FROM Employee where id = :id AND status = :status").setInteger("id", employeeId).setString  
+                ("status","active").uniqueResult();;         
             transaction.commit();
-            return employees.get(0);       
+            return employee;       
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while retrieve employee by employee Id", exception);
         } finally {
              if(session != null || transaction !=null) {
                  session.close();

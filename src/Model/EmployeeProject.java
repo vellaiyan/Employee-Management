@@ -88,7 +88,8 @@ public class EmployeeProject {
 
     @Override
     public String toString() { 
-        String output = String.format("%17s %17s %17s %15s %15s %15s %5s", employeeId, projectId, projectName, assignedOn, completedOn, relievedOn, status);    
+        String output = String.format("%17s %17s %17s %15s %15s %15s %5s", employeeId, projectId, projectName, 
+            assignedOn, completedOn, relievedOn, status);    
         return output;   
     }
 }

@@ -31,7 +31,7 @@ import java.util.List;
  * 
  */
 
-public class EmployeeProjectDao extends BaseDao {
+/*public class EmployeeProjectDao extends BaseDao {
     Connection connection = databaseConnection();
  
     public boolean assignEmployeeProject(int employeeId, int projectId, LocalDate assignDate, LocalDate completionDate) throws CustomException{
@@ -54,7 +54,6 @@ public class EmployeeProjectDao extends BaseDao {
     public List<EmployeeProject> retriveAssignedEmployees(int projectId) {
         List<EmployeeProject> projects = new ArrayList<EmployeeProject>();
         try {
-
             System.out.println("=======================entered====================");
             System.out.println(projectId);
             String query = "select employee_project.employee_id, employee_project.project_id, employee_project.assigned_on,"
@@ -88,4 +87,4 @@ public class EmployeeProjectDao extends BaseDao {
         }
         return projects;
     }            
-}
+}*/

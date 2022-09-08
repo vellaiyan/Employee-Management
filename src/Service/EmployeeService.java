@@ -32,10 +32,11 @@ public class EmployeeService {
     private RoleDao roleDao = new RoleDao();
 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
-        List<Role> roles = roleDao.retrieveRoleByName(userRole);
+        List<Role> roles = roleDao.retrieveRolesByRoleName(userRole);
         Employee employee = employeeMapper.fromDto(employeeDto);
         employee.setRoles(roles);
         int employeeId = employeeDao.insertEmployee(employee);
+
         return false;
     }
 
@@ -46,59 +47,64 @@ public class EmployeeService {
             EmployeeDto employeeDto = employeeMapper.toDto(employee);
             employeeDtos.add(employeeDto);    
         }
+
         return employeeDtos;    
     }
 
     public List<EmployeeDto> getEmployeesByRole(String userRole) throws CustomException {
          List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
-         Role role = employeeDao.retriveEmployeeByRole(userRole);
+         Role role = roleDao.retriveRoleByRoleName(userRole);
          List<Employee> employees = role.getEmployees();
          for (Employee employee : employees) {
             EmployeeDto employeeDto = employeeMapper.toDto(employee);
             employeeDto.setRole(userRole);
             employeeDtos.add(employeeDto);
          }
+
          return employeeDtos;
     }
     
     public boolean checkEmployeeById(int employeeId) throws CustomException {
         for (Employee employee : employeeDao.retriveEmployees()) { 
-            if(employee.getEmployeeId() == employeeId){
+            if (employee.getEmployeeId() == employeeId){
                 return true;
             }
         }
+
         return false;
     }
   
     public boolean checkEmployeeByEmailId(String emailId) throws CustomException {
         for(Employee employee : employeeDao.retriveEmployees()) {
-            if(employee.getEmailId().equals(emailId)) {
+            if (employee.getEmailId().equals(emailId)) {
                 return true;
             } 
         }
+
         return false;
     }
  
     public boolean deleteEmployeeById(int employeeId) throws CustomException {
-        if(employeeDao.deleteEmployeeById(employeeId)) {
+        List<Role> role = new ArrayList<Role>();
+        Employee employee = employeeDao.retriveEmployeeById(employeeId);
+        employee.setStatus("inactive");
+        employee.setRoles(role);
+        if (employeeDao.deleteEmployee(employee)) {
             return true;
         }
+
         return false;
     }
 
     public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId, String userRole) throws CustomException {
         Employee employee = employeeMapper.fromDto(employeeDto);
         Employee employeeFromDatabase = employeeDao.retriveEmployeeById(employeeId);
-        List<Role> roles = roleDao.retrieveRoleByName(userRole);
+        List<Role> roles = roleDao.retrieveRolesByRoleName(userRole);
         roles.addAll(employeeFromDatabase.getRoles());
         employee.setRoles(roles);
         employee.setEmployeeId(employeeId);
-        return employeeDao.updateEmployeeDetailsById(employee);
-    }
 
-    public boolean updateEmployeeDetail(int employeeId, String value, String fieldName) throws CustomException {
-        return employeeDao.updateEmployeeDetailById(employeeId, value, fieldName);
-
+        return employeeDao.updateEmployeeDetails(employee);
     }
 
     public EmployeeDto getEmployeeById(int employeeId) throws CustomException {
@@ -106,10 +112,11 @@ public class EmployeeService {
            Employee employee = employeeDao.retriveEmployeeById(employeeId);
            return employeeMapper.toDto(employeeDao.retriveEmployeeById(employeeId));
        }
+
        return null;
     }
 
-    public boolean addRoles() {
+    public boolean addRoles() throws CustomException {
         return roleDao.insertRoles();
     }
 }

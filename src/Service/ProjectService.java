@@ -36,6 +36,7 @@ public class ProjectService {
 
     public int addProject(ProjectDto projectDto) throws CustomException {
         Project project = projectMapper.fromDto(projectDto);
+
         return projectDao.insertProject(project);
     }
 
@@ -50,6 +51,7 @@ public class ProjectService {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -61,6 +63,7 @@ public class ProjectService {
             EmployeeProjectDto projectDto = employeeProjectMapper.toDto(employeeProjects);
             projectDtos.add(projectDto);
         }
+
         return projectDtos;
     }
 }

@@ -31,7 +31,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
-public class ProjectDao extends BaseDao {  
+/*public class ProjectDao extends BaseDao {  
     private Connection connection = databaseConnection();
 
     public int insertProject(Project project) throws CustomException {
@@ -66,7 +66,7 @@ public class ProjectDao extends BaseDao {
                 project.setProjectId(resultSet.getInt("id"));
                 projects.add(project);
             } 
-        } catch(SQLException sqlException) {
+        } catch (SQLException sqlException) {
             throw new CustomException(sqlException.getMessage());
         } 
         return projects;
@@ -87,4 +87,4 @@ public class ProjectDao extends BaseDao {
         }      
         return employeeId;
     }
-}
+}*/
