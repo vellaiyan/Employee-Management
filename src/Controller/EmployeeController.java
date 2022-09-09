@@ -9,6 +9,7 @@ import com.ideas2it.controller.SignInAndLogInController;
 import com.ideas2it.dto.EmployeeDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
+import com.ideas2it.service.ProjectService;
 import com.ideas2it.utilitis.DateUtil;
 import com.ideas2it.utilitis.Constants;
 import org.apache.log4j.Logger;
@@ -31,6 +32,7 @@ import java.util.TimeZone;
 public class EmployeeController {
     private static boolean isFlow = true;
     private EmployeeService employeeService = new EmployeeService();
+    private ProjectService projectService = new ProjectService();
     private SignInAndLogInController signInController = new SignInAndLogInController();
     private static Logger logger = Logger.getLogger(EmployeeController.class);
 
@@ -52,8 +54,8 @@ public class EmployeeController {
         Scanner scanner = new Scanner(System.in);
         while (isFlow) {
             System.out.println("1. Trainee SignIn. \n2. Trainer SignIn."
-                + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add projects. \n6. Assigning projects."
-                + "\n7. Trianer Options\n8. Add roles into database. \n9. Exit.");
+                + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add Or Update Or delete projects.  \n6. Assigning projects."
+                + "\n7. Trianer Options\n8. Add roles into database. \n9. getProject By project Id. \n10. Exit");
             userOption = scanner.nextInt();
             switch (userOption) {
                 case 1:
@@ -73,7 +75,7 @@ public class EmployeeController {
                     break;
  
                 case 5:
-                    addProject(Constants.PROJECT_MANAGER);
+                    addOrUpdateProject(Constants.PROJECT_MANAGER);
                     break;
                 
                 case 6:
@@ -106,7 +108,22 @@ public class EmployeeController {
                     } catch (CustomException custmoException) {
                     }
                     break;
-
+        
+                case 9:
+                    try {
+                        boolean isValidProjectId = true;
+                        while (isValidProjectId) {
+                            logger.info("Enter the project id you want to get");
+                            int projectId = scanner.nextInt();
+                            if (projectService.checkIsProjectAvailableById(projectId)) {
+                                isValidProjectId = false;
+                                System.out.println(projectService.getProjectById(projectId));
+                            }
+                        } 
+                    } catch (CustomException exception) {
+                        logger.error(exception);
+                    }
+                    break;
                 default:
                     isFlow = false;
             }
@@ -121,12 +138,40 @@ public class EmployeeController {
         }
     }
 
-    public void addProject(String userType) {
+    public void addOrUpdateProject(String userType) {
         try {
-            signInController.addProject(userType, "add");
+            logger.info("Choose the option below.\n 1. Add project. \n2. Update Project. \n3. delete project.");
+            Scanner scanner = new Scanner(System.in);
+            int userOption = scanner.nextInt();
+            switch (userOption) {
+                case 1:
+                    signInController.addOrUpdateProject(userType, "add", 0);
+                    break;
+                case 2:
+                    boolean isValidProjectId = true;
+                    while (isValidProjectId) {
+                        logger.info("Enter the project id you want to update");
+                        int projectId = scanner.nextInt();
+                        if (projectService.checkIsProjectAvailableById(projectId)) {
+                            isValidProjectId = false;
+                            signInController.addOrUpdateProject(userType, "update", projectId);
+                        } 
+                    }
+                    break;
+                case 3:
+                    boolean isValidId = true;
+                    while (isValidId) {
+                        logger.info("Enter the project id you want to delete");
+                        int projectId = scanner.nextInt();
+                        if (projectService.checkIsProjectAvailableById(projectId)) {
+                            isValidProjectId = false;
+                            projectService.deleteProject(projectId);
+                        }
+                    }    
+                    
+            }
         } catch (CustomException exception) {
-            System.out.println(exception);
-            System.out.println("assigning is not working properly");
+            logger.error(exception);
         }
     }
 }

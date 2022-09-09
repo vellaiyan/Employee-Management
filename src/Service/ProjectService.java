@@ -5,14 +5,11 @@
 
 package com.ideas2it.service;
 
-import com.ideas2it.dao.EmployeeProjectDao;
 import com.ideas2it.dao.ProjectDao;
-import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.dto.ProjectDto;
-import com.ideas2it.exception.CustomException;
-import com.ideas2it.mapper.EmployeeProjectMapper;
-import com.ideas2it.mapper.ProjectMapper;
 import com.ideas2it.model.EmployeeProject;
+import com.ideas2it.exception.CustomException;
+import com.ideas2it.mapper.ProjectMapper;
 import com.ideas2it.model.Project;
 
 import java.time.LocalDate;
@@ -29,41 +26,57 @@ import java.util.List;
  */
 
 public class ProjectService {
-    private ProjectDao projectDao = new ProjectDao();
-    private ProjectMapper projectMapper = new ProjectMapper();
-    private EmployeeProjectMapper employeeProjectMapper = new EmployeeProjectMapper();
-    private EmployeeProjectDao employeeProjectDao = new EmployeeProjectDao();
+    ProjectMapper projectMapper = new ProjectMapper();
+    ProjectDao projectDao = new ProjectDao();
 
-    public int addProject(ProjectDto projectDto) throws CustomException {
+    public boolean addProject(ProjectDto projectDto) throws CustomException {
         Project project = projectMapper.fromDto(projectDto);
+        int projectId = projectDao.insertProject(project);
 
-        return projectDao.insertProject(project);
+        return true;
     }
 
-    public void assignProjectToEmployee(int employeeId, int projectId, LocalDate assignDate, LocalDate completionDate) throws CustomException {
-        employeeProjectDao.assignEmployeeProject(employeeId, projectId, assignDate, completionDate);
-    }
-
-    public boolean checkProjectById(int projectId) throws CustomException {
-        for(Project project : projectDao.getAllProjectIds()) {
-            System.out.println(project.getProjectId());
-            if(project.getProjectId() == projectId) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public List<EmployeeProjectDto> getAssignedEmployeesById(int projectId) {
-        List<EmployeeProjectDto> projectDtos = new ArrayList<EmployeeProjectDto>();
-        List<EmployeeProject> projects = employeeProjectDao.retriveAssignedEmployees(projectId);
-        for(EmployeeProject employeeProjects : projects) {
-            System.out.println (employeeProjects.getProjectName() + "-----------");
-            EmployeeProjectDto projectDto = employeeProjectMapper.toDto(employeeProjects);
+    public List<ProjectDto> getProjects () throws CustomException {
+        List<Project> projects = projectDao.retrieveProjects();
+        List<ProjectDto> projectDtos = new ArrayList<ProjectDto>();
+        for (Project project : projects) {
+            ProjectDto projectDto = projectMapper.toDto(project);
             projectDtos.add(projectDto);
         }
 
         return projectDtos;
+    }
+        
+    public boolean checkIsProjectAvailableById(int projectId) throws CustomException {
+        for (Project project : projectDao.retrieveProjects()) {
+            if (project.getProjectId() == projectId) {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ProjectDto getProjectById(int projectId) throws CustomException {
+        return projectMapper.toDto(projectDao.retrieveProjectById(projectId));
+    }
+
+    public boolean updateProject(ProjectDto projectDto, int projectId) throws CustomException {        
+        Project project = projectMapper.fromDto(projectDto);
+        project.setProjectId(projectId);
+
+        return projectDao.updateProject(project);
+    }
+
+    public boolean deleteProject(int projectId) throws CustomException {
+        ProjectDto projectDto = getProjectById(projectId);
+        System.out.println(projectDto);
+        Project project = projectMapper.fromDto(projectDto);
+        List<EmployeeProject> employeeProject = new ArrayList<EmployeeProject>();
+        project.setEmployeeProjects(employeeProject);
+        project.setStatus("inactive");
+        System.out.println(project.getStatus());
+        
+        return projectDao.deleteProject(project);
     }
 }

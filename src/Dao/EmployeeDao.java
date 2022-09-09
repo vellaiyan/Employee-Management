@@ -40,7 +40,6 @@ import org.hibernate.Transaction;
  */
 
 public class EmployeeDao extends BaseDao {
-    private Employee employee;
 
     public int insertEmployee(Employee employee) throws CustomException {
         SessionFactory factory = databaseConnection();
@@ -134,7 +133,7 @@ public class EmployeeDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while retrieve employee by employee Id", exception);
         } finally {
-             if(session != null || transaction !=null) {
+             if (session != null || transaction != null) {
                  session.close();
              }
         }

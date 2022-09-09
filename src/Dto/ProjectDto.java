@@ -20,6 +20,7 @@ import java.time.LocalDate;
 
 public class ProjectDto {
     protected int projectId;
+    protected int employeeId;
     protected String projectName;
     protected String projectDescription;
     protected String clientName;
@@ -107,5 +108,11 @@ public class ProjectDto {
   
     public void setDeleteStatus(String deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    @Override
+    public String toString() {
+        String output = String.format("%15s %15s %15s %15s %15s %15s %15s", projectId, projectDescription, clientName, companyName, startingDate,                         estimatedEndingDate, deleteStatus);
+        return output;
     }
 }

@@ -6,7 +6,6 @@
 package com.ideas2it.controller;
 
 import com.ideas2it.dto.EmployeeDto;
-import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.dto.ProjectDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
@@ -42,7 +41,7 @@ import java.util.Scanner;
 public class SignInAndLogInController { 
     private Scanner scanner = new Scanner(System.in);
     private EmployeeService employeeService = new EmployeeService();
-    //private ProjectService projectService = new ProjectService();
+    private ProjectService projectService = new ProjectService();
 
     public void signIn(String userRole, String processToBeProceed, int employeeId) throws CustomException {
         EmployeeDto employeeDto = new EmployeeDto();      
@@ -140,9 +139,8 @@ public class SignInAndLogInController {
         return initialUserInput;
     }   
     
-    public void addProject(String userType, String processToBeProcced) throws CustomException {
+    public void addOrUpdateProject(String userType, String processToBeProcced, int projectId) throws CustomException {
         ProjectDto projectDto = new ProjectDto();
-        projectDto.setProjectId(0);
         projectDto.setProjectName(getInput("Project Name", ValidationUtil.NAME_PATTERN));
         projectDto.setProjectDescription(getInput("Project Description", ValidationUtil.NAME_PATTERN));
         projectDto.setClientName(getInput("Client Name", ValidationUtil.NAME_PATTERN));
@@ -150,7 +148,13 @@ public class SignInAndLogInController {
         projectDto.setStartingDate(LocalDate.parse(getDateOfBirthAndDateOfJoining("Enter project starting date", "dob")));
         projectDto.setEstimatedEndingDate(LocalDate.parse(getDateOfBirthAndDateOfJoining("Estimated ending date", "joining"))); 
         projectDto.setDeleteStatus("Active");
-        //projectService.addProject(projectDto);
+    
+        if (processToBeProcced.equals("add")) {
+            projectService.addProject(projectDto);
+        } else {
+            projectService.updateProject(projectDto, projectId);
+        }
+        
     }
 
     public void trainerOperations(String name, String password) throws CustomException {
@@ -159,12 +163,12 @@ public class SignInAndLogInController {
         if (name.equals("ideas2it") && password.equals("admin")) {
             System.out.println("1. View all trainee details. \n2. View all trainer details. \n3. View all project managers."
                 +"\n4. Update employee details. \n5. Delete employee \n6. Update employee particular detail. \n7. View particular employee"
-                +"\n8. View all assigned projects \n9. Display all employees. \n10. Exit");
+                +"\n8. View all assigned projects \n9. Display all employees. \n10. Display all projects. \n11. Exit");
             String userOption = scannerInput.next();
                 switch (userOption) {
                     case "1":
                         try {
-                            displayEmployees(Constants.TRAINEE);
+                            displayEmployeesByRole(Constants.TRAINEE);
                         } catch(CustomException customException) {
                             System.out.println(customException);
                         }
@@ -172,7 +176,7 @@ public class SignInAndLogInController {
  
                     case "2":
                         try {
-                            displayEmployees(Constants.TRAINER);
+                            displayEmployeesByRole(Constants.TRAINER);
                         } catch(CustomException customException) {
                             System.out.println(customException);
                         }
@@ -180,7 +184,7 @@ public class SignInAndLogInController {
 
                     case "3":
                          try {
-                             displayEmployees(Constants.PROJECT_MANAGER);
+                             displayEmployeesByRole(Constants.PROJECT_MANAGER);
                          } catch(CustomException customException) {
                              System.out.println(customException);
                          }
@@ -258,14 +262,28 @@ public class SignInAndLogInController {
                         break;
 
                     case "9":
-                        displayAllEmployees(employeeService.getEmployees());
+                        try {
+                            displayAllEmployees(employeeService.getEmployees());
+                        } catch (CustomException customException) {
+                            System.out.println(customException);
+                        }
+                        break;
+   
+                    case "10" :
+                        try {
+                            displayAllProjects(projectService.getProjects());
+                        } catch (CustomException customException) {
+                            System.out.println(customException);
+                        }
+                        break;
+                    
                     default:
                         isContinue = false;
                 }        
         }
     } 
 
-    public void displayAllEmployees(List<EmployeeDto> employeeDtos) {
+    public void displayAllEmployees(List<EmployeeDto> employeeDtos) throws CustomException {
         System.out.println("---------------------------------------------------------------------------------"
             +"------------------------------------------------------------------------------------------");  
         System.out.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s \n", "Id", "Batch", "First Name", 
@@ -276,8 +294,14 @@ public class SignInAndLogInController {
             System.out.println(employeeDto);
         }  
     }
+
+    public void displayAllProjects(List<ProjectDto> projectDtos) {
+        for(ProjectDto projectDto : projectDtos) {
+            System.out.println(projectDto);
+        }
+    }
         
-    public void displayEmployees(String userRole) throws CustomException {
+    public void displayEmployeesByRole(String userRole) throws CustomException {
         List<EmployeeDto> employees = employeeService.getEmployeesByRole(userRole);
         System.out.println("---------------------------------------------------------------------------------"
             +"------------------------------------------------------------------------------------------");  
@@ -300,6 +324,16 @@ public class SignInAndLogInController {
 
         }       
         
+    }
+
+    public void updateProjects() throws CustomException {
+        System.out.println("Enter the project Id you want to update");
+        int projectId = scanner.nextInt();
+        if (projectService.checkIsProjectAvailableById(projectId)) {
+            addOrUpdateProject(Constants.PROJECT_MANAGER, "update", 0);
+        } else {
+            System.out.println("\n Not available \n");
+        }
     }
    
     public void deleteEmployee() throws CustomException{
@@ -419,10 +453,11 @@ public class SignInAndLogInController {
         return "";       
     }
 
-    public void displayAssignedProjects(List<EmployeeProjectDto> employeeProjectDtos) {
+
+/*    public void displayAssignedProjects(List<EmployeeProjectDto> employeeProjectDtos) {
         for(EmployeeProjectDto employeeProjectDto : employeeProjectDtos) {
             System.out.println(employeeProjectDto);
             System.out.println(employeeProjectDto.getProjectName());
         }
-    }    
+    }   */ 
 }

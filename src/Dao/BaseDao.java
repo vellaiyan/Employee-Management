@@ -35,7 +35,7 @@ public class BaseDao {
             if (sessionFactory == null) {
                 sessionFactory = new Configuration().configure().buildSessionFactory();
             }
-        } catch (HibernateException hibernateException) {
+        } catch (HibernateException hibernateException) {             
             throw new CustomException("Error occured while creating session factory", hibernateException);
         }        
         return sessionFactory;

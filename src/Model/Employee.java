@@ -19,7 +19,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Table; 
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.FetchType; 
 import javax.persistence.*;
 
 /**
@@ -73,8 +75,11 @@ public class Employee {
     protected String status;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="employee_roles", joinColumns = {@JoinColumn(name = "employee_id") }, inverseJoinColumns =     {@JoinColumn(name = "role_id")})
+    @JoinTable(name = "employee_roles", joinColumns = {@JoinColumn(name = "employee_id") }, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     protected List<Role> roles = new ArrayList<Role>();
+
+    @OneToMany(mappedBy = "employee", fetch = FetchType.EAGER)
+    protected List<EmployeeProject> EmployeeProjects ;
 
     public Employee() {
 
@@ -103,6 +108,9 @@ public class Employee {
         return roles;
     }
 
+    public List<EmployeeProject> getEmployeeProjects() {
+        return EmployeeProjects;
+    }
 
     public String getSubject() {
         return subject;
@@ -207,7 +215,8 @@ public class Employee {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+
+    public void setEmployeeProjects(List<EmployeeProject> EmployeeProjects) {
+        this.EmployeeProjects = EmployeeProjects;
+    }
 }
-
-
-

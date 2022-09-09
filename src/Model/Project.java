@@ -5,12 +5,24 @@
 
 package com.ideas2it.model;
 
+import com.ideas2it.model.Employee;
+import com.ideas2it.model.EmployeeProject;
+
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;  
-import javax.persistence.GeneratedValue; 
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;  
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.FetchType;
 
 /**
  * The {@code Project} class represents the all  fields related to project.
@@ -25,9 +37,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "project")
 public class Project {
+
     @Id
     @GeneratedValue
-    @Column(name = "id", nullable = false, columnDefinition = "INT NOT NULL AUTO_INCREMENT")
+    @Column(name = "id")
     protected int projectId;
 
     @Column(name = "name")
@@ -49,7 +62,10 @@ public class Project {
     protected LocalDate estimatedEndingDate;
 
     @Column(name = "status")
-    protected String deleteStatus;
+    protected String status;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    protected List<EmployeeProject> employeeProjects ;
  
     public Project() {
 
@@ -59,16 +75,19 @@ public class Project {
         this.projectId = projectId;
     }
 
-    public Project(int projectId, String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
-            LocalDate estimatedEndingDate, String deleteStatus) {
-        this.projectId = projectId;
+    public Project(String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
+            LocalDate estimatedEndingDate, String status) {
         this.projectName = projectName;
         this.projectDescription = projectDescription;
         this.clientName = clientName;
         this.companyName = companyName;
         this.startingDate = startingDate;
         this.estimatedEndingDate = estimatedEndingDate;  
-        this.deleteStatus = deleteStatus;  
+        this.status = status;  
+    }
+
+    public List<EmployeeProject> getEmployeeProjects() {
+        return employeeProjects;
     }
 
     public int getProjectId() {
@@ -99,8 +118,8 @@ public class Project {
         return estimatedEndingDate;
     }
 
-    public String getDeleteStatus() {
-        return deleteStatus;
+    public String getStatus() {
+        return status;
     }
 
     public void setProjectId(int projectId) {
@@ -131,8 +150,11 @@ public class Project {
         this.estimatedEndingDate = estimatedEndingDate;
     }
 
-    public void setDeleteStatus(String deleteStatus) {
-        this.deleteStatus = deleteStatus;
+    public void setStatus(String deleteStatus) {
+        this.status = status;
     }
 
+    public void setEmployeeProjects (List<EmployeeProject> employeeProjects) {
+        this.employeeProjects = employeeProjects;
+    }
 }

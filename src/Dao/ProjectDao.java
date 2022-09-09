@@ -29,62 +29,108 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException; 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
-/*public class ProjectDao extends BaseDao {  
-    private Connection connection = databaseConnection();
+public class ProjectDao extends BaseDao {  
 
     public int insertProject(Project project) throws CustomException {
+        SessionFactory sessionFactory = databaseConnection();
+        Transaction transaction = null;
+        Session session = null;
+        int projectId = 0;
         try {
-            Date date = new Date(0);
-            String query = "insert into project(project_name, project_description, client_name, company_name, starting_date, ending_date, status)"
-                + "values(?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, project.getProjectName());
-            preparedStatement.setString(2, project.getProjectDescription());
-            preparedStatement.setString(3, project.getClientName());
-            preparedStatement.setString(4, project.getCompanyName());
-            preparedStatement.setDate(5, date.valueOf(project.getStartingDate()));
-            preparedStatement.setDate(6, date.valueOf(project.getEstimatedEndingDate()));
-            preparedStatement.setString(7, "active");
-            preparedStatement.execute();
-            return getLastInsertId(preparedStatement);
-        } catch(SQLException sqlException) {
-            throw new CustomException(sqlException.getMessage());
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            projectId = (Integer) session.save(project);
+            transaction.commit();
+            return projectId;
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while inserting porject", exception);
+        } finally {
+            if (transaction != null || session != null) {
+                session.close();
+            }
         }
     }
 
-    public List<Project> getAllProjectIds() throws CustomException {
-        List<Project> projects = new ArrayList<Project>();
-        try {
-            String sqlquery = "select id from project where status = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlquery);
-            preparedStatement.setString(1, "active");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                Project project = new Project();
-                project.setProjectId(resultSet.getInt("id"));
-                projects.add(project);
-            } 
-        } catch (SQLException sqlException) {
-            throw new CustomException(sqlException.getMessage());
-        } 
-        return projects;
+    public List<Project> retrieveProjects() throws CustomException {
+        SessionFactory sessionFactory = databaseConnection();
+        Session session = null;
+        Transaction transaction = null;
+        try { 
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("FROM Project where status = :status");
+            query.setString("status", "active");
+            transaction.commit();
+            return query.getResultList();
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while retrieving Projects", exception);
+        } finally {
+            if(transaction != null || session != null) {
+                session.close();
+            }
+        }
     }
 
-    public int getLastInsertId(PreparedStatement preparedStatement) throws CustomException {
-        int employeeId = 0;
+    public boolean updateProject(Project project) throws CustomException {
+        SessionFactory sessionFactory = databaseConnection();
+        Session session = null;
+        Transaction transaction = null;
         try {
-            String sqlquery = "select last_insert_id()";        
-            preparedStatement = connection.prepareStatement(sqlquery);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                 employeeId = resultSet.getInt("last_insert_id()");
-                return employeeId;
+            session = sessionFactory.openSession();
+            session.update(project);
+            transaction = session.beginTransaction();
+            transaction.commit();
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            System.out.println(exception);
+            throw new CustomException("Error occured while updating project details", exception);
+        } finally {
+            if (session != null || transaction != null) {
+                session.close();
             }
-        } catch (SQLException sqlException) {
-            throw new CustomException(sqlException.getMessage());
-        }      
-        return employeeId;
+        }  
     }
-}*/
+
+    public boolean deleteProject(Project project) throws CustomException {
+        SessionFactory factory = databaseConnection();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = factory.openSession();
+            session.update(project);
+            transaction = session.beginTransaction();
+            transaction.commit();
+            return true;
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while deleting project", exception);
+        } finally {
+            if (session != null || transaction != null) {
+                session.close();
+            }
+        }
+    }
+ 
+    public Project retrieveProjectById(int projectId) throws CustomException {
+        SessionFactory sessionFactory = databaseConnection();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            Project project = (Project) session.createQuery("FROM Project where id = :id AND status = :status")
+                .setInteger("id", projectId).setString("status", "active").uniqueResult();
+            transaction.commit();
+            return project;
+        } catch (Exception exception) {
+            throw new CustomException("Error occured while retrieve project by Id", exception);
+        } finally {
+            if (session != null || transaction != null) {
+                session.close();
+            }
+        }
+    }
+}
