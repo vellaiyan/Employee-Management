@@ -9,9 +9,11 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;  
+import javax.persistence.FetchType; 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;  
 import javax.persistence.JoinColumn;
@@ -19,8 +21,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.FetchType; 
-import javax.persistence.*;
 
 @Entity
 @Table(name = "employee_projects")
@@ -30,9 +30,12 @@ public class EmployeeProject {
     @GeneratedValue
     @Column(name = "id")
     protected int id;
- 
-    @Column(name = "project_name")
-    protected String projectName;
+
+    @Transient 
+    protected int employeeId;
+  
+    @Transient
+    protected int projectId;
 
     @Column(name = "assigned_on")
     protected LocalDate assignedOn;
@@ -46,11 +49,11 @@ public class EmployeeProject {
     @Column(name = "status")
     protected String status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
@@ -58,13 +61,30 @@ public class EmployeeProject {
     
     }
 
-    public EmployeeProject(String projectName,  LocalDate assignedOn, LocalDate completedOn,
+    public EmployeeProject(LocalDate assignedOn, LocalDate completedOn,
             LocalDate relievedOn, String status) {
-        this.projectName = projectName;
         this.assignedOn = assignedOn;
         this.completedOn = completedOn;
         this.relievedOn = relievedOn;
         this.status = status;    
+    }
+
+    public EmployeeProject(int employeeId, int projectId, LocalDate assignedOn, LocalDate completedOn,
+            LocalDate relievedOn, String status) {
+        this.employeeId = employeeId;
+        this.projectId = projectId;
+        this.assignedOn = assignedOn;
+        this.completedOn = completedOn;
+        this.relievedOn = relievedOn;
+        this.status = status;
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public int getProjectId() {
+        return projectId;
     }
 
     public Employee getEmployee() {
@@ -75,9 +95,6 @@ public class EmployeeProject {
         return project;
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
     public LocalDate getAssignedOn() {
         return assignedOn;
     }
@@ -110,15 +127,19 @@ public class EmployeeProject {
         this.relievedOn = relievedOn;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 }

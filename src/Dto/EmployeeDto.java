@@ -5,7 +5,10 @@
 
 package com.ideas2it.dto;
 
+import com.ideas2it.model.EmployeeProject;
+
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * The {@code Employee} class represents the all  fields  of employees.
@@ -32,6 +35,7 @@ public class EmployeeDto {
     protected LocalDate modifiedDate;
     protected String role;
     protected String status;
+    protected EmployeeProject employeeProjects;
 
     public EmployeeDto() {
 
@@ -52,6 +56,10 @@ public class EmployeeDto {
         this.createDate = createDate;
         this.modifiedDate = modifiedDate;
         this.status = status;
+    }
+
+    public EmployeeProject getEmployeeProjects() {
+        return employeeProjects;
     }
 
     public String getRole() {
@@ -160,6 +168,10 @@ public class EmployeeDto {
    
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void setEmployeeProjects(EmployeeProject employeeProjects) {
+        this.employeeProjects = employeeProjects;
     }
 
     @Override

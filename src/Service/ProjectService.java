@@ -6,11 +6,17 @@
 package com.ideas2it.service;
 
 import com.ideas2it.dao.ProjectDao;
+import com.ideas2it.dto.EmployeeDto;
+import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.dto.ProjectDto;
-import com.ideas2it.model.EmployeeProject;
 import com.ideas2it.exception.CustomException;
+import com.ideas2it.mapper.EmployeeMapper;
+import com.ideas2it.mapper.EmployeeProjectMapper;
 import com.ideas2it.mapper.ProjectMapper;
+import com.ideas2it.model.Employee;
+import com.ideas2it.model.EmployeeProject;
 import com.ideas2it.model.Project;
+import com.ideas2it.service.EmployeeService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,7 +33,11 @@ import java.util.List;
 
 public class ProjectService {
     ProjectMapper projectMapper = new ProjectMapper();
+    EmployeeProjectMapper employeeProjectMapper = new EmployeeProjectMapper();
     ProjectDao projectDao = new ProjectDao();
+    EmployeeService employeeService = new EmployeeService();
+    EmployeeMapper employeeMapper = new EmployeeMapper();
+    EmployeeProjectDto employeeProjectDto = new EmployeeProjectDto();
 
     public boolean addProject(ProjectDto projectDto) throws CustomException {
         Project project = projectMapper.fromDto(projectDto);
@@ -78,5 +88,50 @@ public class ProjectService {
         System.out.println(project.getStatus());
         
         return projectDao.deleteProject(project);
+    }
+
+    public boolean assignProjectToEmployee(EmployeeProjectDto employeeProjectDto) throws CustomException {
+        EmployeeProject employeeProject = employeeProjectMapper.fromDto(employeeProjectDto);
+        Employee employee = employeeService.getEmployeeDetailsById(employeeProjectDto.getEmployeeId());
+        ProjectDto projectDto = getProjectById(employeeProjectDto.getProjectId());
+        Project project = getProjectDetailsById(employeeProjectDto.getProjectId());
+        employeeProject.setEmployee(employee);
+        employeeProject.setProject(project);
+        return projectDao.assignProject(employeeProject);
+    }
+
+    public void setUpdatedProject(Project project) throws CustomException {
+        projectDao.updateProject(project);
+
+    }
+ 
+    public Project getProjectDetailsById(int projectId) throws CustomException {
+        return projectDao.retrieveProjectById(projectId);
+    }
+
+    public List<EmployeeProjectDto> getAllAssignedProjects() throws CustomException {
+        List<EmployeeProjectDto> employeeProjectDtos = new ArrayList<EmployeeProjectDto>();
+        for (EmployeeProject employeeProject : projectDao.retrieveAllAssignedProjects()) {
+            EmployeeProjectDto employeeProjectDto = employeeProjectMapper.toDto(employeeProject);
+            employeeProjectDtos.add(employeeProjectDto);
+       }
+
+        return employeeProjectDtos;
+    }
+
+    public List<EmployeeDto> getAssignedEmployeesForSingleProject(int projectId) throws CustomException {
+        Project project = getProjectDetailsById(projectId);
+        List<EmployeeProject> employeeProjects = project.getEmployeeProjects();
+        List<Employee> employees = new ArrayList<Employee>();
+ 
+        for (EmployeeProject employeeProject : employeeProjects) {
+            employees.add(employeeProject.getEmployee());
+        }        
+        List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
+        for (Employee employee : employees) {
+            employeeDtos.add(employeeMapper.toDto(employee));
+        }
+
+        return employeeDtos;
     }
 }

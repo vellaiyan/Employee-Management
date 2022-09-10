@@ -20,7 +20,7 @@ import com.ideas2it.model.Project;
 
 public class ProjectMapper {
     public Project fromDto(ProjectDto projectDto) {
-        Project project = new Project(projectDto.getProjectName(), projectDto.getProjectDescription(), 
+        Project project = new Project(projectDto.getProjectId(), projectDto.getProjectName(), projectDto.getProjectDescription(), 
             projectDto.getClientName(), projectDto.getCompanyName(), projectDto.getStartingDate(), projectDto.getEstimatedEndingDate(),                                  projectDto.getDeleteStatus());
 
         return project;

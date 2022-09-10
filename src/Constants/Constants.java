@@ -17,9 +17,9 @@ package com.ideas2it.utilitis;
 public class Constants {
     public static String TRAINEE = "Trainee";
     public static String TRAINER = "Trainer";
+    public static String PROJECT_MANAGER = "Project Manager"; 
+    public static String  HUMAN_RESOURCE = "Human Resource";
     public static String DATABASE_URL = "jdbc:mysql://localhost/hibernatedatabase?verifyServerCertificate=false&useSSL=true";
     public static String USER_NAME = "root";
     public static String PASSWORD = "VellaiyanI22146";  
-    public static String PROJECT_MANAGER = "Project Manager";  
-    public static String  HUMAN_RESOURCE = "Human Resource";
 }

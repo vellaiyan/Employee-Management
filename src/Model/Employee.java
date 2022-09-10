@@ -14,6 +14,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;  
+import javax.persistence.FetchType; 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;  
 import javax.persistence.JoinColumn;
@@ -21,8 +22,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.FetchType; 
-import javax.persistence.*;
 
 /**
  * The {@code Employee} class represents the all  fields  of employees.
@@ -78,7 +77,7 @@ public class Employee {
     @JoinTable(name = "employee_roles", joinColumns = {@JoinColumn(name = "employee_id") }, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     protected List<Role> roles = new ArrayList<Role>();
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
     protected List<EmployeeProject> EmployeeProjects ;
 
     public Employee() {
@@ -101,8 +100,6 @@ public class Employee {
         this.modifiedDate = modifiedDate;
         this.status = status;
     }
-
-
     
     public List<Role> getRoles() {
         return roles;
@@ -119,7 +116,6 @@ public class Employee {
     public String getStatus() {
         return status;
     }
-
  
     public LocalDate getDateOfJoining() {
         return dateOfJoining;

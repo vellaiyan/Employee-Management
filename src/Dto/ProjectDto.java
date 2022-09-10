@@ -6,7 +6,9 @@
 package com.ideas2it.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import com.ideas2it.model.EmployeeProject;
 
 /**
  * The {@code Employee} class represents the all  fields  of project.
@@ -28,6 +30,7 @@ public class ProjectDto {
     protected LocalDate startingDate;
     protected LocalDate estimatedEndingDate;
     protected String deleteStatus;
+    protected EmployeeProject employeeProjects;
 
     public ProjectDto() {
     
@@ -44,6 +47,10 @@ public class ProjectDto {
         this.estimatedEndingDate = estimatedEndingDate; 
         this.deleteStatus = deleteStatus;  
       
+    }
+
+    public EmployeeProject getEmployeeProjects() {
+        return employeeProjects;
     }
 
     public int getProjectId() {
@@ -108,6 +115,10 @@ public class ProjectDto {
   
     public void setDeleteStatus(String deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    public void setEmployeeProjects(EmployeeProject employeeProjects) {
+        this.employeeProjects = employeeProjects;
     }
 
     @Override

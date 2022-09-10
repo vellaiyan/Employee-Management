@@ -119,5 +119,14 @@ public class EmployeeService {
     public boolean addRoles() throws CustomException {
         return roleDao.insertRoles();
     }
+
+    public boolean setUpdatedEmployee(EmployeeDto employeeDto) throws CustomException {
+        Employee employee = employeeMapper.fromDto(employeeDto);
+        return employeeDao.updateEmployeeDetails(employee);
+    }
+
+    public Employee getEmployeeDetailsById(int employeeId) throws CustomException {
+        return employeeDao.retriveEmployeeById(employeeId);
+    }
 }
 

@@ -15,14 +15,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;  
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;  
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.FetchType;
+import javax.persistence.Table;
 
 /**
  * The {@code Project} class represents the all  fields related to project.
@@ -64,7 +64,7 @@ public class Project {
     @Column(name = "status")
     protected String status;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     protected List<EmployeeProject> employeeProjects ;
  
     public Project() {
@@ -75,8 +75,9 @@ public class Project {
         this.projectId = projectId;
     }
 
-    public Project(String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
+    public Project(int projectId, String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
             LocalDate estimatedEndingDate, String status) {
+        this.projectId = projectId;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
         this.clientName = clientName;

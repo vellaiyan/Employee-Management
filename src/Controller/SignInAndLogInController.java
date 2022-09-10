@@ -6,6 +6,7 @@
 package com.ideas2it.controller;
 
 import com.ideas2it.dto.EmployeeDto;
+import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.dto.ProjectDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
@@ -13,7 +14,7 @@ import com.ideas2it.service.ProjectService;
 import com.ideas2it.utilitis.Constants;
 import com.ideas2it.utilitis.DateUtil;
 import com.ideas2it.utilitis.ValidationUtil;
- 
+
 import java.text.DateFormat;  
 import java.text.SimpleDateFormat; 
 import java.time.LocalDate;
@@ -21,9 +22,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;  
@@ -141,6 +142,7 @@ public class SignInAndLogInController {
     
     public void addOrUpdateProject(String userType, String processToBeProcced, int projectId) throws CustomException {
         ProjectDto projectDto = new ProjectDto();
+        projectDto.setProjectId(0);
         projectDto.setProjectName(getInput("Project Name", ValidationUtil.NAME_PATTERN));
         projectDto.setProjectDescription(getInput("Project Description", ValidationUtil.NAME_PATTERN));
         projectDto.setClientName(getInput("Client Name", ValidationUtil.NAME_PATTERN));
@@ -321,7 +323,6 @@ public class SignInAndLogInController {
             signIn("employee", "update", employeeId);
         } else {
             System.out.println("\n not available \n");
-
         }       
         
     }
@@ -372,7 +373,16 @@ public class SignInAndLogInController {
             int employeeId = validateAndGetEmployeeId();
             LocalDate assignDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("assign"));
             LocalDate completionDate = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("completion"));
-            //projectService.assignProjectToEmployee(employeeId, projectId, assignDate, completionDate);
+            LocalDate relievedOn = LocalDate.parse(validateAndGetBothAssignedAndCompletionDate("completion"));
+            EmployeeProjectDto employeeProjectDto = new EmployeeProjectDto();
+            employeeProjectDto.setProjectId(projectId);
+            employeeProjectDto.setEmployeeId(employeeId);
+            employeeProjectDto.setAssignedOn(assignDate);
+            employeeProjectDto.setCompletedOn(completionDate);
+            employeeProjectDto.setRelievedOn(relievedOn);
+            employeeProjectDto.setStatus("active");
+            
+            projectService.assignProjectToEmployee(employeeProjectDto);
             System.out.println("Do you want to continue (y/n)");
             Scanner scanner1 = new Scanner(System.in);
             String userOption = scanner1.next();
@@ -388,9 +398,9 @@ public class SignInAndLogInController {
         Scanner scanner1 = new Scanner(System.in);
         while(isValidProjectId) {
             System.out.println("Enter the project Id");
-            /*try {
+            try {
                 projectId = scanner1.nextInt();
-                if(projectService.checkProjectById(projectId)) {
+                if(projectService.checkIsProjectAvailableById(projectId)) {
                     isValidProjectId = false;
                     return projectId;
                 } else {
@@ -398,7 +408,7 @@ public class SignInAndLogInController {
                 } 
             } catch (CustomException customException) {
                 System.out.println("You gave wrong project Id please give correct input");
-            }*/
+            }
 
         }
         return 0;

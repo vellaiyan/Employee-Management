@@ -13,8 +13,8 @@ import java.sql.DriverManager;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException; 
 import org.hibernate.Session; 
-import org.hibernate.SessionFactory;
 import org.hibernate.Session; 
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /**
@@ -28,7 +28,7 @@ import org.hibernate.Transaction;
  */
 
 public class BaseDao {
-    static SessionFactory sessionFactory = null;
+    private static SessionFactory sessionFactory = null;
 
     public SessionFactory databaseConnection() throws CustomException {
         try {
@@ -37,7 +37,8 @@ public class BaseDao {
             }
         } catch (HibernateException hibernateException) {             
             throw new CustomException("Error occured while creating session factory", hibernateException);
-        }        
+        }  
+      
         return sessionFactory;
     }    
 }

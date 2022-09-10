@@ -5,8 +5,8 @@
 
 package com.ideas2it.mapper;
 
-import com.ideas2it.model.Employee;
 import com.ideas2it.dto.EmployeeDto;
+import com.ideas2it.model.Employee;
 
 /**
  * The {@code EmployeeMapper} class implemented to convert employeeDto into employee vice versa.

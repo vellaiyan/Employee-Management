@@ -3,7 +3,7 @@
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.ideas2it.utilitis;
+package com.ideas2it.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,8 +11,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -27,6 +27,7 @@ import java.util.Date;
  */
 
 public class DateUtil {
+
     public static String validateDateOfBirth(String dob, String choosenDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         simpleDateFormat.setLenient(false);
