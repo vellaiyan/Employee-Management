@@ -11,8 +11,8 @@ import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
 import com.ideas2it.service.ProjectService;
-import com.ideas2it.utilitis.Constants;
-import com.ideas2it.utilitis.DateUtil;
+import com.ideas2it.utils.Constants;
+import com.ideas2it.utils.DateUtil;
 
 import java.util.concurrent.TimeUnit;
 import java.util.InputMismatchException;
@@ -36,7 +36,7 @@ public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
     private ProjectService projectService = new ProjectService();
     private SignInAndLogInController signInController = new SignInAndLogInController();
-    private static Logger logger = Logger.getLogger(EmployeeController.class);
+    public static Logger logger = Logger.getLogger(EmployeeController.class);
 
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();  
@@ -52,13 +52,13 @@ public class EmployeeController {
 
     public void showOptions() {
         int userOption;
-        System.out.println("\nPlease choose the option below\n");
-        Scanner scanner = new Scanner(System.in);
+        logger.info("\nPlease choose the option below\n");
+        Scanner scanner = new Scanner(System.in);        
         while (isFlow) {
-            System.out.println("1. Trainee SignIn. \n2. Trainer SignIn."
+            logger.info("1. Trainee SignIn. \n2. Trainer SignIn."
                 + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add Or Update Or delete projects.  \n6. Assigning projects."
                 + "\n7. Trianer Options\n8. Add roles into database. \n9. getProject By project Id. \n10. Get all assigned projects."
-                + "\n11. Get assigned of employees of particular project.");
+                + "\n11. Get assigned employees of particular project.");
             userOption = scanner.nextInt();
             switch (userOption) {
                 case 1:
@@ -84,8 +84,8 @@ public class EmployeeController {
                 case 6:
                     try {
                         signInController.assignEmployees();
-                    } catch (CustomException e) {
-                        
+                    } catch (CustomException exception) {
+                        logger.error(exception);   
                     }
                     break;
 
@@ -93,7 +93,7 @@ public class EmployeeController {
                     try {
                         trainerOptions();
                     } catch (CustomException exception) {
-                        System.out.println(exception);
+                        logger.error(exception);
                     }
                     break;
                 
@@ -177,8 +177,8 @@ public class EmployeeController {
                     while (isValidId) {
                         int projectId = getProjectId("Enter the projectId you want to delete");
                         if (projectService.checkIsProjectAvailableById(projectId)) {
-                            isValidProjectId = false;
                             projectService.deleteProject(projectId);
+                            isValidId = false;
                         }
                     }
                     break;                       
@@ -189,33 +189,36 @@ public class EmployeeController {
     }
 
     public void trainerOptions() throws CustomException {
+        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the user name : ");
         String userName = scanner.next();
-        System.out.print("Enter the password : ");
+        logger.info("Enter the password : ");
         String password = scanner.next();
         signInController.trainerOperations(userName, password);
     }
  
     public void getProjectById() throws CustomException {
         boolean isValidProjectId = true;
+        Scanner scanner = new Scanner(System.in);
         while (isValidProjectId) {
             logger.info("Enter the project id you want to get");
             int projectId = scanner.nextInt();
             if (projectService.checkIsProjectAvailableById(projectId)) {
                 isValidProjectId = false;
-                System.out.println(projectService.getProjectById(projectId));
+                logger.info(projectService.getProjectById(projectId));
             }
         }
     } 
 
     public void getAllAssignedProjects() throws CustomException {
         List<EmployeeProjectDto> employeeProjectDtos = projectService.getAllAssignedProjects();
-        for(EmployeeProjectDto employeeProjectDto : employeeProjectDtos) {
-            System.out.println(employeeProjectDto);   
+        for(EmployeeProjectDto employeeProjectDto: employeeProjectDtos) {
+            logger.info(employeeProjectDto);   
         }
     }
 
     public int getProjectId(String userNeed) throws CustomException {
+        Scanner scanner = new Scanner(System.in);
         logger.info(userNeed);
         int projectId = scanner.nextInt();
         

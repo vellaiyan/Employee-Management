@@ -6,8 +6,10 @@
 package com.ideas2it.dao;
 
 import com.ideas2it.exception.CustomException;
+import com.ideas2it.Costants;
 import com.ideas2it.model.Employee;
 import com.ideas2it.model.Role;
+import com.ideas2it.utils.Constants;
  
 import java.sql.Connection;
 import java.sql.Date;
@@ -42,12 +44,12 @@ import org.hibernate.Transaction;
 public class EmployeeDao extends BaseDao {
 
     public int insertEmployee(Employee employee) throws CustomException {
-        SessionFactory factory = databaseConnection();
+        SessionFactory sessionFactory = databaseConnection();
         Transaction transaction = null;
         Session session = null;
         int employeeId = 0;
         try {
-            session = factory.openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             employeeId = (Integer) session.save(employee);
             transaction.commit();
@@ -57,18 +59,18 @@ public class EmployeeDao extends BaseDao {
             System.out.println(exception);
             throw new CustomException("Error occured while inserting employee", exception);
         } finally {
-            if (transaction != null || session != null) {
+            if (transaction != null) {
                 session.close();
             }
         }
     }
  
     public List<Employee> retriveEmployees() throws CustomException {
-        SessionFactory factory = databaseConnection();
+        SessionFactory sessionFactory = databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
-            session = factory.openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             transaction.commit();
             Query query = session.createQuery("FROM Employee where status = :status");  
@@ -77,18 +79,18 @@ public class EmployeeDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while retrieving employees", exception);
         } finally {
-            if (transaction !=null || session != null) {
+            if (transaction !=null) {
                 session.close();
             }
         }     
     }
 
     public boolean deleteEmployee(Employee employee) throws CustomException {
-        SessionFactory factory = databaseConnection();
+        SessionFactory sessionFactory = databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
-            session = factory.openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.update(employee);
             transaction.commit();
@@ -96,18 +98,18 @@ public class EmployeeDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while deleting employee", exception);
         } finally {
-            if (session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         }
     }  
     
     public boolean updateEmployeeDetails(Employee employee) throws CustomException {
-        SessionFactory factory = databaseConnection();
+        SessionFactory sessionFactory = databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
-            session = factory.openSession();
+            session = sessionFactory.openSession();
             session.update(employee);
             transaction = session.beginTransaction();
             transaction.commit();
@@ -115,27 +117,27 @@ public class EmployeeDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while updating employee details", exception);
         } finally {
-            if (session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         }
     }
 
     public Employee retriveEmployeeById(int employeeId) throws CustomException {
-        SessionFactory factory = databaseConnection();
+        SessionFactory sessionFactory = databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
-            session = factory.openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            Employee employee = (Employee) session.createQuery("FROM Employee where id = :id AND status = :status").setInteger("id", employeeId).setString  
-                ("status","active").uniqueResult();;         
+            Employee employee = (Employee) session.createQuery("FROM Employee where id = :id AND status = :status")
+                .setInteger("id", employeeId).setString("status",Constants.DELETE_STATUS).uniqueResult();        
             transaction.commit();
             return employee;       
         } catch (Exception exception) {
             throw new CustomException("Error occured while retrieve employee by employee Id", exception);
         } finally {
-             if (session != null || transaction != null) {
+             if (session != null) {
                  session.close();
              }
         }

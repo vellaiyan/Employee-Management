@@ -9,7 +9,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;  
@@ -21,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "employee_projects")
@@ -29,25 +29,25 @@ public class EmployeeProject {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected int id;
+    private int id;
 
     @Transient 
-    protected int employeeId;
+    private int employeeId;
   
     @Transient
-    protected int projectId;
+    private int projectId;
 
     @Column(name = "assigned_on")
-    protected LocalDate assignedOn;
+    private LocalDate assignedOn;
 
     @Column(name = "completed_on")
-    protected LocalDate completedOn;
+    private LocalDate completedOn;
 
     @Column(name = "relieved_on")
-    protected LocalDate relievedOn;
+    private LocalDate relievedOn;
   
     @Column(name = "status")
-    protected String status;
+    private String status;
 
     @ManyToOne()
     @JoinColumn(name = "employee_id", nullable = false)

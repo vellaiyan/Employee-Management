@@ -39,26 +39,25 @@ import org.hibernate.Transaction;
  */
 
 public class RoleDao extends BaseDao {
-    private Role role = new Role();
 
     public boolean insertRoles() throws CustomException {
         Transaction transaction = null;
         Session session = null;
-        List<Role> roles = role.defaultRoles();
+        Role roleObject = new Role();
+        List<Role> roles = roleObject.defaultRoles();
         try {
             SessionFactory factory = databaseConnection();
             session = factory.openSession();
             transaction = session.beginTransaction();
-            for(Role role : roles) {                
+            for (Role role: roles) {                
                 session.save(role); 
-            }
-        
+            }        
             transaction.commit(); 
             return true; 
         } catch (Exception exception) {
             throw new CustomException("Error while insert roles", exception);
         } finally {
-            if(session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         }
@@ -74,10 +73,10 @@ public class RoleDao extends BaseDao {
             Criteria criteria = session.createCriteria(Role.class);
             criteria.add(Restrictions.eq("name", name));
             return criteria.list();
-        } catch(HibernateException hibernateException) { 
+        } catch (HibernateException hibernateException) { 
             throw new CustomException("Error while retrieve roles by role name", hibernateException); 
         } finally {
-            if(session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         } 
@@ -96,7 +95,7 @@ public class RoleDao extends BaseDao {
         } catch (HibernateException hibernateException) {
             throw new CustomException("Error while retrieve role by role name", hibernateException);
         } finally {
-            if(session != null) {
+            if (session != null) {
                 session.close();
             }
         }

@@ -3,7 +3,7 @@
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.ideas2it.utilitis; 
+package com.ideas2it.utils; 
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +33,7 @@ public class ValidationUtil {
         if (inputMatcher.find()) {
             isvalid = true;
         } 
+
         return isvalid;
     }
 }

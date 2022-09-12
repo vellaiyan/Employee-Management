@@ -8,6 +8,7 @@ package com.ideas2it.dao;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.model.EmployeeProject;
 import com.ideas2it.model.Project;
+import com.ideas2it.utils.Constants;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -49,7 +50,7 @@ public class ProjectDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while inserting porject", exception);
         } finally {
-            if (transaction != null || session != null) {
+            if (transaction != null) {
                 session.close();
             }
         }
@@ -69,7 +70,7 @@ public class ProjectDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while retrieving Projects", exception);
         } finally {
-            if(transaction != null || session != null) {
+            if (transaction != null) {
                 session.close();
             }
         }
@@ -90,7 +91,7 @@ public class ProjectDao extends BaseDao {
             System.out.println(exception);
             throw new CustomException("Error occured while updating project details", exception);
         } finally {
-            if (session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         }  
@@ -102,14 +103,14 @@ public class ProjectDao extends BaseDao {
         Transaction transaction = null;
         try {
             session = factory.openSession();
-            session.update(project);
+            session.saveOrUpdate(project);
             transaction = session.beginTransaction();
             transaction.commit();
             return true;
         } catch (Exception exception) {
             throw new CustomException("Error occured while deleting project", exception);
         } finally {
-            if (session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         }
@@ -129,7 +130,7 @@ public class ProjectDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while retrieve project by Id", exception);
         } finally {
-            if (session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         }
@@ -148,7 +149,7 @@ public class ProjectDao extends BaseDao {
         } catch (Exception exception) {
             throw new CustomException("Error occured while assigning project", exception);
         } finally {
-            if (session != null || transaction != null) {
+            if (session != null) {
                 session.close();
             }
         }
@@ -163,12 +164,12 @@ public class ProjectDao extends BaseDao {
             transaction = session.beginTransaction();
             transaction.commit();
             Query query = session.createQuery("FROM EmployeeProject where status = :status");
-            query.setString("status", "active");
+            query.setString("status", Constants.ACTIVE_STATUS);
             return query.getResultList();
         } catch (Exception exception) {
             throw new CustomException("Error occured while retrieving all assigned projects", exception);
         } finally {
-            if (transaction != null || session != null) {
+            if (transaction != null) {
                 session.close();
             }
         }   

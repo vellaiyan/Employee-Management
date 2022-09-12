@@ -8,6 +8,7 @@ package com.ideas2it.dto;
 import com.ideas2it.model.EmployeeProject;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -22,20 +23,20 @@ import java.util.List;
 
 
 public class EmployeeDto { 
-    protected int employeeId;
-    protected int batch;
-    protected String firstName;
-    protected String subject;
-    protected String gender;
-    protected LocalDate dateOfBirth;
-    protected LocalDate dateOfJoining;
-    protected String emailId;
-    protected long mobileNumber;  
-    protected LocalDate createDate;
-    protected LocalDate modifiedDate;
-    protected String role;
-    protected String status;
-    protected EmployeeProject employeeProjects;
+    private int employeeId;
+    private int batch;
+    private String firstName;
+    private String subject;
+    private String gender;
+    private LocalDate dateOfBirth;
+    private LocalDate dateOfJoining;
+    private String emailId;
+    private long mobileNumber;  
+    private LocalDateTime createDate;
+    private LocalDateTime modifiedDate;
+    private String role;
+    private String status;
+    private EmployeeProject employeeProjects;
 
     public EmployeeDto() {
 
@@ -43,7 +44,7 @@ public class EmployeeDto {
 
     public EmployeeDto(int employeeId, int batch , String firstName, String subject, String gender,
             LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber,
-            LocalDate createDate, LocalDate modifiedDate, String status) {
+            LocalDateTime createDate, LocalDateTime modifiedDate, String status) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
@@ -105,11 +106,11 @@ public class EmployeeDto {
         return employeeId;
     }
    
-    public LocalDate getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
   
-    public LocalDate getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return modifiedDate;
     }
   
@@ -146,11 +147,11 @@ public class EmployeeDto {
         this.dateOfJoining = dateOfJoining;
     }
 
-    public void setCreateDate(LocalDate createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(LocalDate modifiedDate) {
+    public void setUpdateDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

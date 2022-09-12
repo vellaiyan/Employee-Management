@@ -3,7 +3,7 @@
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.ideas2it.utilitis;
+package com.ideas2it.utils;
 
 /**
  * The {@code Constants} class implemented to hold the constants values to be use in other functions.
@@ -22,4 +22,6 @@ public class Constants {
     public static String DATABASE_URL = "jdbc:mysql://localhost/hibernatedatabase?verifyServerCertificate=false&useSSL=true";
     public static String USER_NAME = "root";
     public static String PASSWORD = "VellaiyanI22146";  
+    public static String ACTIVE_STATUS = "active";
+    public static String DELETE_STATUS = "inactive";
 }

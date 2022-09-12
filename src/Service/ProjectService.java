@@ -49,7 +49,7 @@ public class ProjectService {
     public List<ProjectDto> getProjects () throws CustomException {
         List<Project> projects = projectDao.retrieveProjects();
         List<ProjectDto> projectDtos = new ArrayList<ProjectDto>();
-        for (Project project : projects) {
+        for (Project project: projects) {
             ProjectDto projectDto = projectMapper.toDto(project);
             projectDtos.add(projectDto);
         }
@@ -58,7 +58,7 @@ public class ProjectService {
     }
         
     public boolean checkIsProjectAvailableById(int projectId) throws CustomException {
-        for (Project project : projectDao.retrieveProjects()) {
+        for (Project project: projectDao.retrieveProjects()) {
             if (project.getProjectId() == projectId) {
 
                 return true;
@@ -79,14 +79,13 @@ public class ProjectService {
     }
 
     public boolean deleteProject(int projectId) throws CustomException {
+        
         ProjectDto projectDto = getProjectById(projectId);
-        System.out.println(projectDto);
+        projectDto.setStatus("inactive");
         Project project = projectMapper.fromDto(projectDto);
         List<EmployeeProject> employeeProject = new ArrayList<EmployeeProject>();
         project.setEmployeeProjects(employeeProject);
-        project.setStatus("inactive");
-        System.out.println(project.getStatus());
-        
+      
         return projectDao.deleteProject(project);
     }
 
@@ -111,7 +110,7 @@ public class ProjectService {
 
     public List<EmployeeProjectDto> getAllAssignedProjects() throws CustomException {
         List<EmployeeProjectDto> employeeProjectDtos = new ArrayList<EmployeeProjectDto>();
-        for (EmployeeProject employeeProject : projectDao.retrieveAllAssignedProjects()) {
+        for (EmployeeProject employeeProject: projectDao.retrieveAllAssignedProjects()) {
             EmployeeProjectDto employeeProjectDto = employeeProjectMapper.toDto(employeeProject);
             employeeProjectDtos.add(employeeProjectDto);
        }
@@ -124,11 +123,11 @@ public class ProjectService {
         List<EmployeeProject> employeeProjects = project.getEmployeeProjects();
         List<Employee> employees = new ArrayList<Employee>();
  
-        for (EmployeeProject employeeProject : employeeProjects) {
+        for (EmployeeProject employeeProject: employeeProjects) {
             employees.add(employeeProject.getEmployee());
         }        
         List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
-        for (Employee employee : employees) {
+        for (Employee employee: employees) {
             employeeDtos.add(employeeMapper.toDto(employee));
         }
 

@@ -23,7 +23,7 @@ public class EmployeeMapper {
     public Employee fromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee(employeeDto.getEmployeeId(), employeeDto.getBatch(), employeeDto.getFirstName(),
             employeeDto.getSubject(), employeeDto.getGender(),employeeDto.getDateOfBirth(), employeeDto.getDateOfJoining(),
-            employeeDto.getEmailId(), employeeDto.getMobileNumber(), employeeDto.getCreateDate(), employeeDto.getUpdateDate(),                         employeeDto.getStatus());
+            employeeDto.getEmailId(), employeeDto.getMobileNumber(), employeeDto.getCreateDate(), employeeDto.getUpdateDate(),                                           employeeDto.getStatus());
 
         return employee;
     }

@@ -9,6 +9,7 @@ import com.ideas2it.model.Role;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -34,51 +35,52 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "employee")
-public class Employee { 
+public class Employee {
+ 
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected int employeeId;
+    private int employeeId;
 
     @Column(name = "batch")
-    protected int batch;
+    private int batch;
 
     @Column(name = "first_name")
-    protected String firstName;
+    private String firstName;
 
     @Column(name = "subject")
-    protected String subject;
+    private String subject;
 
     @Column(name = "gender")
-    protected String gender;
+    private String gender;
 
     @Column(name = "date_Of_birth")
-    protected LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "date_of_joining")
-    protected LocalDate dateOfJoining;
+    private LocalDate dateOfJoining;
 
     @Column(name = "email_id")
-    protected String emailId;
+    private String emailId;
 
     @Column(name = "mobile_number")
-    protected long mobileNumber;  
+    private long mobileNumber;  
 
     @Column(name = "create_date")
-    protected LocalDate createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "modified_date")
-    protected LocalDate modifiedDate;
+    private LocalDateTime modifiedDate;
 
     @Column(name = "status")
-    protected String status;
+    private String status;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "employee_roles", joinColumns = {@JoinColumn(name = "employee_id") }, inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    protected List<Role> roles = new ArrayList<Role>();
+    private List<Role> roles = new ArrayList<Role>();
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    protected List<EmployeeProject> EmployeeProjects ;
+    private List<EmployeeProject> EmployeeProjects ;
 
     public Employee() {
 
@@ -86,7 +88,7 @@ public class Employee {
 
     public Employee(int employeeId, int batch , String firstName, String subject, String gender,
             LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber,
-            LocalDate createDate, LocalDate modifiedDate, String status) {
+            LocalDateTime createDate, LocalDateTime modifiedDate, String status) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
@@ -147,11 +149,11 @@ public class Employee {
         return employeeId;
     }
    
-    public LocalDate getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
   
-    public LocalDate getModifiedDate() {
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
   
@@ -188,11 +190,11 @@ public class Employee {
         this.dateOfJoining = dateOfJoining;
     }
 
-    public void setCreateDate(LocalDate createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public void setModifiedDate(LocalDate modifiedDate) {
+    public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

@@ -64,7 +64,7 @@ public class Project {
     @Column(name = "status")
     protected String status;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     protected List<EmployeeProject> employeeProjects ;
  
     public Project() {

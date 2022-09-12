@@ -29,7 +29,7 @@ public class ProjectDto {
     protected String companyName;
     protected LocalDate startingDate;
     protected LocalDate estimatedEndingDate;
-    protected String deleteStatus;
+    protected String status;
     protected EmployeeProject employeeProjects;
 
     public ProjectDto() {
@@ -37,7 +37,7 @@ public class ProjectDto {
     }
 
     public ProjectDto(int projectId, String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
-            LocalDate estimatedEndingDate, String deleteStatus) {
+            LocalDate estimatedEndingDate, String status) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
@@ -45,7 +45,7 @@ public class ProjectDto {
         this.companyName = companyName;
         this.startingDate = startingDate;
         this.estimatedEndingDate = estimatedEndingDate; 
-        this.deleteStatus = deleteStatus;  
+        this.status = status;  
       
     }
 
@@ -77,8 +77,8 @@ public class ProjectDto {
         return startingDate;
     }
 
-    public String getDeleteStatus() {
-        return deleteStatus;
+    public String getStatus() {
+        return status;
     }
 
     public LocalDate getEstimatedEndingDate() {
@@ -113,8 +113,8 @@ public class ProjectDto {
         this.estimatedEndingDate = estimatedEndingDate;
     }
   
-    public void setDeleteStatus(String deleteStatus) {
-        this.deleteStatus = deleteStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setEmployeeProjects(EmployeeProject employeeProjects) {
@@ -123,7 +123,7 @@ public class ProjectDto {
 
     @Override
     public String toString() {
-        String output = String.format("%15s %15s %15s %15s %15s %15s %15s", projectId, projectDescription, clientName, companyName, startingDate,                         estimatedEndingDate, deleteStatus);
+        String output = String.format("%15s %15s %15s %15s %15s %15s %15s", projectId, projectDescription, clientName, companyName, startingDate,                         estimatedEndingDate, status);
         return output;
     }
 }
