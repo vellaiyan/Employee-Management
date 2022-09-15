@@ -34,10 +34,29 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-public class ProjectDao extends BaseDao {  
+/**
+ * The {@code ProjectDao} class implemented to insert, retrive, update, delete all projects.
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 Retrive project by projectId.
+ */
+public class ProjectDao {  
 
+    /**
+     * {@code insertProject} to insert the new project.
+     *
+     * @param project
+     *       project object to be insert.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public int insertProject(Project project) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Transaction transaction = null;
         Session session = null;
         int projectId = 0;
@@ -56,8 +75,16 @@ public class ProjectDao extends BaseDao {
         }
     }
 
+    /**
+     * {@code retrieveProjects} to retrieve all the projects.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */
     public List<Project> retrieveProjects() throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try { 
@@ -76,8 +103,19 @@ public class ProjectDao extends BaseDao {
         }
     }
 
+    /**
+     * {@code updateProject} to update project details.
+     *
+     * @param project
+     *       project need to be update.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean updateProject(Project project) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -97,8 +135,19 @@ public class ProjectDao extends BaseDao {
         }  
     }
 
+    /**
+     * {@code deleteProject} to delete the project
+     *
+     * @param project
+     *       Project to be deleted.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean deleteProject(Project project) throws CustomException {
-        SessionFactory factory = databaseConnection();
+        SessionFactory factory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -116,8 +165,19 @@ public class ProjectDao extends BaseDao {
         }
     }
  
+    /**
+     * {@code retrieveProjectById} to retrieve project based on the employee id.
+     *
+     * @param projectId
+     *       project id to be retrieve.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.1
+     * 
+     */ 
     public Project retrieveProjectById(int projectId) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -136,8 +196,19 @@ public class ProjectDao extends BaseDao {
         }
     }
 
-    public boolean assignProject(EmployeeProject employeeProject) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+    /**
+     * {@code insertAssignedProject} to insert the assigned project
+     *
+     * @param employeeProject
+     *       EmployeeProject to be insert.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
+    public boolean insertAssignedProject(EmployeeProject employeeProject) throws CustomException {
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -155,8 +226,16 @@ public class ProjectDao extends BaseDao {
         }
     }
 
+    /**
+     * {@code retrieveAllAssignedProjects} to retrieve  all the assigned projects.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public List<EmployeeProject> retrieveAllAssignedProjects() throws CustomException {
-        SessionFactory sesionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {

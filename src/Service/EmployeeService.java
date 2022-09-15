@@ -5,7 +5,7 @@
 
 package com.ideas2it.service;
 
-import com.ideaas2it.utils.Constants;
+import com.ideas2it.utils.Constants;
 import com.ideas2it.dao.EmployeeDao;
 import com.ideas2it.dao.RoleDao;
 import com.ideas2it.dto.EmployeeDto;
@@ -26,9 +26,24 @@ import java.util.List;
  * @since  1.0
  * @jls    1.1 Get employee by employee id.
  */
-
 public class EmployeeService {   
 
+    /**
+     * {@code addEmployee} to add new employee.
+     *
+     * @param employeeDto
+     *       EmployeeDto object to be add in the database.
+     *
+     * @param userRole
+     *       Role of the user/employee.
+     *
+     * @throws CustomException.
+     *
+     * @return boolean.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();
         EmployeeMapper employeeMapper = new EmployeeMapper();
@@ -41,6 +56,16 @@ public class EmployeeService {
         return false;
     }
 
+    /**
+     * {@code geEmployees} to get all employees.
+     *
+     * @throws CustomException.
+     *
+     * @return list of employeeDtos.
+     *
+     * @since 1.0
+     * 
+     */ 
     public List<EmployeeDto> getEmployees() throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();
         EmployeeMapper employeeMapper = new EmployeeMapper();
@@ -55,6 +80,19 @@ public class EmployeeService {
         return employeeDtos;    
     }
 
+    /**
+     * {@code getEmployeeByRole} to get employees based on the role.
+     *
+     * @param userRole
+     *       Role of the user/employee.
+     *
+     * @throws CustomException.
+     *
+     * @return List of employeeDtos.
+     *
+     * @since 1.0
+     * 
+     */ 
     public List<EmployeeDto> getEmployeesByRole(String userRole) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();    
         EmployeeMapper employeeMapper = new EmployeeMapper();
@@ -72,6 +110,19 @@ public class EmployeeService {
          return employeeDtos;
     }
     
+    /**
+     * {@code checkEmployeeById} to check employee is available or not by project id.
+     *
+     * @param employeeId
+     *       EmployeeId need to be check.
+     *
+     * @throws CustomException.
+     *
+     * @return boolean.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean checkEmployeeById(int employeeId) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();
         for (Employee employee: employeeDao.retriveEmployees()) { 
@@ -82,7 +133,20 @@ public class EmployeeService {
 
         return false;
     }
-  
+
+    /**
+     * {@code checkEmployeeByEmailId} to check is emploee emial id is available or not.
+     *
+     * @param emailId
+     *       emailId need to be check..
+     *
+     * @throws CustomException.
+     *
+     * @return boolean.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean checkEmployeeByEmailId(String emailId) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();
         for(Employee employee: employeeDao.retriveEmployees()) {
@@ -95,6 +159,19 @@ public class EmployeeService {
         return false;
     }
  
+    /**
+     * {@code deleteEmployeeById} to delete employee by employee Id.
+     *
+     * @param employeeId
+     *       Employee id need to be delete.
+     *
+     * @throws CustomException.
+     *
+     * @return boolean.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean deleteEmployeeById(int employeeId) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();
         List<Role> role = new ArrayList<Role>();
@@ -109,6 +186,25 @@ public class EmployeeService {
         return false;
     }
 
+    /**
+     * {@code updateEmployeeDetails} to update employee all details.
+     *
+     * @param empleeDto
+     *       EmployeeDto object to be update in the database.
+     *
+     * @employeeId
+     *       Employee id to be update.
+     *
+     * @param userRole
+     *       Role of the user/employee.
+     *
+     * @throws CustomException.
+     *
+     * @return boolean.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId, String userRole) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();        
         EmployeeMapper employeeMapper = new EmployeeMapper();
@@ -124,6 +220,19 @@ public class EmployeeService {
         return employeeDao.updateEmployeeDetails(employee);
     }
 
+    /**
+     * {@code getEmployeeById} to get employee based on the employee id.
+     *
+     * @param employeeId
+     *       Employee id need to be get.
+     *
+     * @throws CustomException.
+     *
+     * @return employeeDto.
+     *
+     * @since 1.0
+     * 
+     */ 
     public EmployeeDto getEmployeeById(int employeeId) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();        
         EmployeeMapper employeeMapper = new EmployeeMapper();
@@ -136,6 +245,16 @@ public class EmployeeService {
        return null;
     }
 
+    /**
+     * {@code addRoles} to add default roles in the database.
+     *
+     * @throws CustomException.
+     *
+     * @return boolean.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean addRoles() throws CustomException {
         RoleDao roleDao = new RoleDao();
 
@@ -150,6 +269,19 @@ public class EmployeeService {
         return employeeDao.updateEmployeeDetails(employee);
     }
 
+    /**
+     * {@code getEmployeeDetailsById} to get employeeDetails by Id.
+     *
+     * @param employeeId
+     *       Employee need to be get.
+     *
+     * @throws CustomException.
+     *
+     * @return employee.
+     *
+     * @since 1.0
+     * 
+     */ 
     public Employee getEmployeeDetailsById(int employeeId) throws CustomException {
         EmployeeDao employeeDao = new EmployeeDao();
 

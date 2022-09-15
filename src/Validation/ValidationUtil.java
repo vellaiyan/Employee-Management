@@ -19,13 +19,28 @@ import java.util.regex.Pattern;
 
 public class ValidationUtil {
     public static String EMPLOYEE_ID_PATTERN = "^[0-9][0-9]$";
-    public static String NAME_PATTERN = "^[a-zA-Z]{1,9}$";                                                     /* name valemployeeIdation     */
-    public static String GENDER_PATTERN = "^male|female$";                                                    /* gender valemployeeIdation   */
-    public static String PHONE_PATTERN = "^[6-9][0-9]{9}$";                                                  /* Phone no valemployeeIdation */
-    public static String DOOR_PATTERN = "^([0-9]+)/([0-9][0-9][0-9])$";                                     /* door no valemployeeIdation  */
-    public static String PIN_PATTERN = "^([6]+)([0-9][0-9][0-9][0-9][0-9])$";                              /* pin code valemployeeIdation */ 
-    public static String EMAIL_PATTERN = "^([\\w-\\.]+){1,64}@([\\w&&[^_]]+){2,255}.[a-z]{2,}$";          /* email valemployeeIdation    */
+    public static String NAME_PATTERN = "^[a-zA-Z]{1,9}$";               
+    public static String GENDER_PATTERN = "^male|female |others$";           
+    public static String PHONE_PATTERN = "^[6-9][0-9]{9}$";                            
+    public static String DOOR_PATTERN = "^([0-9]+)/([0-9][0-9][0-9])$";                                   
+    public static String PIN_PATTERN = "^([6]+)([0-9][0-9][0-9][0-9][0-9])$";                            
+    public static String EMAIL_PATTERN = "^([\\w-\\.]+){1,64}@([\\w&&[^_]]+){2,255}.[a-z]{2,}$";         
 
+    /**
+     * {@code inputCheckingByRegex} to check the given user input is valid or not.
+     *
+     * @param regex
+     *       regex for validation.
+     *
+     * @param value
+     *       User input need to be check.
+     *
+     *
+     * @return boolean.
+     *
+     * @since 1.0
+     * 
+     */ 
     public static boolean inputCheckingByRegex (String regex, String value) {
         boolean isvalid = false;
         Pattern inputPattern = Pattern.compile(regex);

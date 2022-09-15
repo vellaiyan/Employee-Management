@@ -21,6 +21,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * The {@code EmployeeProjectDto} class represents the all  fields to be accessable for front-end.
+ * 
+ *
+ * @author Vellaiyan
+ *
+ * @since  1.0
+ * @jls    1.1 Adding relievedOd.
+ */
 public class EmployeeProjectDto {
     private int projectId;
     private int employeeId;

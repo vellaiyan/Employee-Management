@@ -19,7 +19,18 @@ import com.ideas2it.model.Employee;
  */
 
 public class EmployeeMapper {
-     
+
+    /**
+     * {@code fromDto} to convert employeeDto object into employee object.
+     *
+     * @param employeeDto
+     *       EmployeeDto to be converted into Employee.
+     *
+     * @return employee.
+     *
+     * @since 1.0
+     * 
+     */ 
     public Employee fromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee(employeeDto.getEmployeeId(), employeeDto.getBatch(), employeeDto.getFirstName(),
             employeeDto.getSubject(), employeeDto.getGender(),employeeDto.getDateOfBirth(), employeeDto.getDateOfJoining(),
@@ -28,6 +39,17 @@ public class EmployeeMapper {
         return employee;
     }
    
+    /**
+     * {@code toDto} to convert employee object into EmployeeDto object.
+     *
+     * @param employee
+     *       Employee to be converted into employeeDto.
+     *
+     * @return employeeDto.
+     *
+     * @since 1.0
+     * 
+     */ 
     public EmployeeDto toDto(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto(employee.getEmployeeId(), employee.getBatch(), employee.getFirstName(),
             employee.getSubject(), employee.getGender(), employee.getDateOfBirth(), employee.getDateOfJoining(), 

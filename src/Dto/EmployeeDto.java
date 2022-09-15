@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * The {@code Employee} class represents the all  fields  of employees.
+ * The {@code EmployeeDto} class represents the all  fields to be accessable for front-end.
  * 
  *
  * @author Vellaiyan
@@ -20,8 +20,6 @@ import java.util.List;
  * @since  1.0
  * @jls    1.1 Adding EmployeeId
  */
-
-
 public class EmployeeDto { 
     private int employeeId;
     private int batch;

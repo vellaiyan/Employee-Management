@@ -16,25 +16,34 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
- * The {@code DateUtil} class represents Date of birth validation. This
- * class is implemented to avoid child labours and future date of birth
+ * The {@code DateUtil} class represents Date of birth validation. This class is implemented to avoid child labours and future date of birth
  * and invalid dates as well months. 
  *
  * @author Vellaiyan
  *
  * @since  1.0
+ *
  * @jls    1.1 Leap year handling
  */
-
 public class DateUtil {
 
-    public static String validateDateOfBirth(String dob, String choosenDate) {
+    /**
+     * {@code validateDateOfBirth} to validate date of birth.
+     *
+     * @param dateOfBirth
+     *       Date of birth need to be validate.
+     *
+     * @return dateOfBirth.
+     *
+     * @since 1.0
+     * 
+     */ 
+    public static String validateDateOfBirth(String dateOfBirth, String choosenDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        simpleDateFormat.setLenient(false);
-        String dateOfBirth = "";
+        String date = "";
         try {
             if (choosenDate.equals("dob")) {
-                Date dateOfBirthParse = simpleDateFormat.parse(dob);            
+                Date dateOfBirthParse = simpleDateFormat.parse(dateOfBirth);            
                 Instant instant = dateOfBirthParse.toInstant();
                 ZonedDateTime timeZone = instant.atZone(ZoneId.systemDefault());
                 LocalDate givenDate = timeZone.toLocalDate();
@@ -53,10 +62,10 @@ public class DateUtil {
                     dateOfBirth = "low";
                 }
                 else {
-                    dateOfBirth = dob;
+                    dateOfBirth = dateOfBirth;
                 }
             } else {
-                return dateOfBirth = dob;
+                return dateOfBirth = dateOfBirth;
             }
         } catch (ParseException parseException) {
             dateOfBirth = "invalid";            
@@ -64,6 +73,22 @@ public class DateUtil {
         return dateOfBirth;
     }
 
+    /**
+     * {@code validateAssignDateAndCompletionDate} to validate assigned and completion date.
+     *
+     * @param date
+     *       Date need to be validate.
+     * 
+     * @param type
+     *       Date type (assign date / completion date).
+     *
+     * @throws CustomException.
+     *
+     * @return date.
+     *
+     * @since 1.0
+     * 
+     */ 
     public static String validateAssignDateAndCompletionDate(String date, String type) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         simpleDateFormat.setLenient(false);
@@ -76,18 +101,16 @@ public class DateUtil {
         }
     }
 
-    public static String validateCompleteDate(String date, String type) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        simpleDateFormat.setLenient(false);
-        String assignDate = "";
-        try {
-            Date AssignDateParse = simpleDateFormat.parse(date);
-            return date;
-        } catch (ParseException parseException) {
-            return "Not valid";
-        }
-    }
-  
+
+    /**
+     * {@code timeDelay} to create a timedelay
+     *
+     * @param delay
+     *       delay in seconds.
+     *
+     * @since 1.0
+     * 
+     */ 
     public static void timeDelay(int delay) {
         try {
             System.out.print("Loading.");

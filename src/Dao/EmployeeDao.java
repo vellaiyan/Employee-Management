@@ -6,7 +6,6 @@
 package com.ideas2it.dao;
 
 import com.ideas2it.exception.CustomException;
-import com.ideas2it.Costants;
 import com.ideas2it.model.Employee;
 import com.ideas2it.model.Role;
 import com.ideas2it.utils.Constants;
@@ -41,10 +40,21 @@ import org.hibernate.Transaction;
  * @jls    1.1 Retrive empoyee by EmployeeId.
  */
 
-public class EmployeeDao extends BaseDao {
+public class EmployeeDao {
 
+    /**
+     * {@code insertEmployee} to insert the new employee.
+     *
+     * @param employee
+     *       Employee object to be insert.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public int insertEmployee(Employee employee) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Transaction transaction = null;
         Session session = null;
         int employeeId = 0;
@@ -65,8 +75,16 @@ public class EmployeeDao extends BaseDao {
         }
     }
  
+    /**
+     * {@code retrieveEmployees} to retrieve all the employees.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public List<Employee> retriveEmployees() throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -85,8 +103,19 @@ public class EmployeeDao extends BaseDao {
         }     
     }
 
+    /**
+     * {@code deleteEmployee} to delete the employee
+     *
+     * @param employee
+     *       Employee to be deleted.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean deleteEmployee(Employee employee) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -104,8 +133,19 @@ public class EmployeeDao extends BaseDao {
         }
     }  
     
+    /**
+     * {@code updateEmployeeDetails} to update employee all details.
+     *
+     * @param employee
+     *       Employee need to be update.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.0
+     * 
+     */ 
     public boolean updateEmployeeDetails(Employee employee) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -123,8 +163,19 @@ public class EmployeeDao extends BaseDao {
         }
     }
 
+    /**
+     * {@code retrieveEmployeeById} to retrieve employee based on the employee id.
+     *
+     * @param employeeId
+     *       Employee id to be retrieve.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.1
+     * 
+     */ 
     public Employee retriveEmployeeById(int employeeId) throws CustomException {
-        SessionFactory sessionFactory = databaseConnection();
+        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {

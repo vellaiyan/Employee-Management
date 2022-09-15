@@ -8,20 +8,19 @@ package com.ideas2it.utils;
 /**
  * The {@code Constants} class implemented to hold the constants values to be use in other functions.
  * 
- *
  * @author Vellaiyan
  *
  * @since  1.0
  *
  */
 public class Constants {
-    public static String TRAINEE = "Trainee";
-    public static String TRAINER = "Trainer";
-    public static String PROJECT_MANAGER = "Project Manager"; 
-    public static String  HUMAN_RESOURCE = "Human Resource";
-    public static String DATABASE_URL = "jdbc:mysql://localhost/hibernatedatabase?verifyServerCertificate=false&useSSL=true";
-    public static String USER_NAME = "root";
-    public static String PASSWORD = "VellaiyanI22146";  
-    public static String ACTIVE_STATUS = "active";
-    public static String DELETE_STATUS = "inactive";
+    public static final String TRAINEE = "Trainee";
+    public static final String TRAINER = "Trainer";
+    public static final String PROJECT_MANAGER = "Project Manager"; 
+    public static final String  HUMAN_RESOURCE = "Human Resource";
+    public static final String DATABASE_URL = "jdbc:mysql://localhost/hibernatedatabase?verifyServerCertificate=false&useSSL=true";
+    public static final String USER_NAME = "root";
+    public static final String PASSWORD = "VellaiyanI22146";  
+    public static final String ACTIVE_STATUS = "active";
+    public static final String DELETE_STATUS = "inactive";
 }

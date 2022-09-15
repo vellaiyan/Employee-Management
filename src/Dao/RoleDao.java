@@ -38,15 +38,23 @@ import org.hibernate.Transaction;
  * 
  */
 
-public class RoleDao extends BaseDao {
+public class RoleDao {
 
+    /**
+     * {@code insertRoles} to insert the default roles.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.1
+     * 
+     */ 
     public boolean insertRoles() throws CustomException {
         Transaction transaction = null;
         Session session = null;
         Role roleObject = new Role();
         List<Role> roles = roleObject.defaultRoles();
         try {
-            SessionFactory factory = databaseConnection();
+            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession();
             transaction = session.beginTransaction();
             for (Role role: roles) {                
@@ -63,15 +71,26 @@ public class RoleDao extends BaseDao {
         }
     }
    
-    public List<Role> retrieveRolesByRoleName(String name) throws CustomException {
+    /**
+     * {@code retrieveRolesByRoleName} to retrieve roles by role name.
+     *
+     * @param roleName
+     *       Role name to be retrieve.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.1
+     * 
+     */ 
+    public List<Role> retrieveRolesByRoleName(String roleName) throws CustomException {
         Session session = null;
         Transaction transaction = null;
         
         try {
-            SessionFactory factory = databaseConnection();
+            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession(); 
             Criteria criteria = session.createCriteria(Role.class);
-            criteria.add(Restrictions.eq("name", name));
+            criteria.add(Restrictions.eq("name", roleName));
             return criteria.list();
         } catch (HibernateException hibernateException) { 
             throw new CustomException("Error while retrieve roles by role name", hibernateException); 
@@ -82,15 +101,26 @@ public class RoleDao extends BaseDao {
         } 
     }
 
-    public Role retriveRoleByRoleName(String name) throws CustomException {
+    /**
+     * {@code retrieveRoleByRoleName} to retrieve role by role name.
+     *
+     * @param roleName
+     *       Role name to be retrieve.
+     *
+     * @throws CustomException.
+     *
+     * @since 1.1
+     * 
+     */ 
+    public Role retriveRoleByRoleName(String roleName) throws CustomException {
         Session session = null;
         Transaction transaction = null;
         try {
-            SessionFactory factory = databaseConnection();
+            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession();
             transaction = session.beginTransaction();
             transaction.commit();
-            Role role = (Role)session.createQuery("FROM Role where name = :name").setString("name", name).uniqueResult(); 
+            Role role = (Role)session.createQuery("FROM Role where name = :name").setString("name", roleName).uniqueResult(); 
             return role;          
         } catch (HibernateException hibernateException) {
             throw new CustomException("Error while retrieve role by role name", hibernateException);

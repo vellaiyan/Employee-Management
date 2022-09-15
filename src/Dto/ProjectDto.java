@@ -11,13 +11,13 @@ import java.util.List;
 import com.ideas2it.model.EmployeeProject;
 
 /**
- * The {@code Employee} class represents the all  fields  of project.
+ * The {@code ProjectDto} class represents the all  fields to be accessable for front-end.
  * 
  *
  * @author Vellaiyan
  *
  * @since  1.0
- * @jls    1.1 Adding Project id.
+ * @jls    1.1 Adding status.
  */ 
 
 public class ProjectDto {

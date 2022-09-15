@@ -6,7 +6,6 @@
 package com.ideas2it.dao;
 
 import com.ideas2it.exception.CustomException;
-import com.ideas2it.utilitis.Constants;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,19 +17,21 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /**
- * The {@code BaseDao} class implemented to connect the SQL database using username and password.
- * 
+ * The {@code BaseDao} implemented to create a session factory.
  *
  * @author Vellaiyan
  *
  * @since  1.0
  *
  */
-
 public class BaseDao {
     protected static SessionFactory sessionFactory = null;
 
-    public SessionFactory databaseConnection() throws CustomException {
+    private BaseDao() {
+
+    } 
+
+    public static SessionFactory databaseConnection() throws CustomException {
         try {
             if (sessionFactory == null) {
                 sessionFactory = new Configuration().configure().buildSessionFactory();

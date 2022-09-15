@@ -2,7 +2,6 @@
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-
 package com.ideas2it.controller;
 
 import com.ideas2it.controller.SignInAndLogInController;
@@ -28,16 +27,13 @@ import org.apache.log4j.Logger;
  * @author Vellaiyan
  *
  * @since  1.0
+ *
  * @jls    1.1  Additional option to trainees to trainers.
  */
-
 public class EmployeeController {
     private static boolean isFlow = true;
-    private EmployeeService employeeService = new EmployeeService();
-    private ProjectService projectService = new ProjectService();
-    private SignInAndLogInController signInController = new SignInAndLogInController();
     public static Logger logger = Logger.getLogger(EmployeeController.class);
-
+    
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();  
         BasicConfigurator.configure();
@@ -50,10 +46,17 @@ public class EmployeeController {
         } while (isFlow);
     }
 
-    public void showOptions() {
+    /**
+     * {@code showOptions } to show different options to employee.
+     *
+     * @since 1.0
+     *
+     */
+    private void showOptions() {
         int userOption;
         logger.info("\nPlease choose the option below\n");
-        Scanner scanner = new Scanner(System.in);        
+        Scanner scanner = new Scanner(System.in);    
+        SignInAndLogInController signInController = new SignInAndLogInController();    
         while (isFlow) {
             logger.info("1. Trainee SignIn. \n2. Trainer SignIn."
                 + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add Or Update Or delete projects.  \n6. Assigning projects."
@@ -82,61 +85,31 @@ public class EmployeeController {
                     break;
                 
                 case 6:
-                    try {
-                        signInController.assignEmployees();
-                    } catch (CustomException exception) {
-                        logger.error(exception);   
-                    }
+                    signInController.assignEmployees();
                     break;
 
                 case 7:
                     try {
-                        trainerOptions();
+                        signInController.traineeOperations();
                     } catch (CustomException exception) {
                         logger.error(exception);
                     }
                     break;
                 
-                case 8:
-                    try {
-                        if (employeeService.addRoles()) {
-                            logger.info("Roles added successfully\n");
-                        } else {
-                            logger.error("Failed\n");
-                        } 
-                    } catch (CustomException custmoException) {
-                    }
+                case 8: 
+                    addDefaultRoles();
                     break;
         
                 case 9:
-                    try {
-                        getProjectById();
-                    } catch (CustomException exception) {
-                        logger.error(exception);
-                    }
+                    displayProjectDetail();
                     break;
 
                 case 10:
-                    try {
-                        getAllAssignedProjects();
-                    } catch (CustomException exception) {
-                        logger.error(exception);
-                    }
-                break;
+                    displayAllAssignedProjects();
+                    break;
                  
                 case 11:
-                    try {
-                         boolean isValidProjectId = true;
-                         while (isValidProjectId) {
-                             int projectId = getProjectId("Enter the project Id want to see assigned employees");
-                             if (projectService.checkIsProjectAvailableById(projectId)) {
-                                 isValidProjectId = false;
-                                 signInController.displayAllEmployees(projectService.getAssignedEmployeesForSingleProject(projectId));
-                             }
-                         } 
-                    } catch (CustomException exception) {
-                        logger.error(exception);
-                    }
+                    displayAssignedEmployeesOfProject(); 
                     break;
        
                 default:
@@ -145,84 +118,203 @@ public class EmployeeController {
         }       
     }
  
-    public void userSignIn(String userType) {
+    /**
+     * {@code userSignIn} common method for all employee to sign-in.
+     *
+     * @param userType
+     *       Which user (Trainee/Trainer/Project manager/Human Resource) is going to sign-in.
+     *
+     * @since 1.0
+     * 
+     */
+    private void userSignIn(String userType) {
         try {
+            SignInAndLogInController signInController = new SignInAndLogInController();
             signInController.signIn(userType,"add", 0);
         } catch (CustomException exception) {
             logger.error(exception);
         }
     }
 
-    public void addOrUpdateProject(String userType) {
+    /**
+     * {@code addOrUpdateProject} is helps the project manager to add or update project details.
+     *
+     * @param userType
+     *        Only project manager get a access to perform project related CRUD operations.
+     *
+     * @since 1.0
+     * 
+     */
+    private void addOrUpdateProject(String userType) {
         try {
+            SignInAndLogInController signInController = new SignInAndLogInController();
             logger.info("Choose the option below.\n 1. Add project. \n2. Update Project. \n3. delete project.");
             Scanner scanner = new Scanner(System.in);
             int userOption = scanner.nextInt();
             switch (userOption) {
                 case 1:
-                    signInController.addOrUpdateProject(userType, "add", 0);
+                    signInController.addAndUpdateProject(userType, "add", 0);
                     break;
                 case 2:
-                    boolean isValidProjectId = true;
-                    while (isValidProjectId) {
-                        int projectId = getProjectId("Enter the Project id you want to update");
-                        if (projectService.checkIsProjectAvailableById(projectId)) {
-                            isValidProjectId = false;
-                            signInController.addOrUpdateProject(userType, "update", projectId);
-                        } 
-                    }
+                    validateAndUpdateProject();
                     break;
                 case 3:
-                    boolean isValidId = true;
-                    while (isValidId) {
-                        int projectId = getProjectId("Enter the projectId you want to delete");
-                        if (projectService.checkIsProjectAvailableById(projectId)) {
-                            projectService.deleteProject(projectId);
-                            isValidId = false;
-                        }
-                    }
+                    validateAndDeleteProject();
                     break;                       
             }
         } catch (CustomException exception) {
             logger.error(exception);
         }
     }
-
-    public void trainerOptions() throws CustomException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the user name : ");
-        String userName = scanner.next();
-        logger.info("Enter the password : ");
-        String password = scanner.next();
-        signInController.trainerOperations(userName, password);
-    }
  
-    public void getProjectById() throws CustomException {
-        boolean isValidProjectId = true;
-        Scanner scanner = new Scanner(System.in);
-        while (isValidProjectId) {
-            logger.info("Enter the project id you want to get");
-            int projectId = scanner.nextInt();
-            if (projectService.checkIsProjectAvailableById(projectId)) {
-                isValidProjectId = false;
-                logger.info(projectService.getProjectById(projectId));
+    /**
+     * {@code displayProjectDetail} is implemented to display the project by validating project id which 
+     * is given by user as a input.
+     *
+     * @since 1.0
+     * 
+     */
+    private void displayProjectDetail() {
+        try {
+            ProjectService projectService = new ProjectService();
+            boolean isValidProjectId = true;
+            Scanner scanner = new Scanner(System.in);
+            while (isValidProjectId) {
+                logger.info("Enter the project id you want to get");
+                int projectId = scanner.nextInt();
+                if (projectService.checkIsProjectAvailableById(projectId)) {
+                    isValidProjectId = false;
+                    logger.info(projectService.getProjectById(projectId));
+                }
             }
+        } catch (CustomException exception) {
+            logger.error(exception);
         }
     } 
 
-    public void getAllAssignedProjects() throws CustomException {
-        List<EmployeeProjectDto> employeeProjectDtos = projectService.getAllAssignedProjects();
-        for(EmployeeProjectDto employeeProjectDto: employeeProjectDtos) {
-            logger.info(employeeProjectDto);   
+    /**
+     * {@code displayAllAssignedProjects} is implemented to display all the assigned project to all the employees.
+     *
+     * @since 1.0
+     * 
+     */
+    private void displayAllAssignedProjects() {
+        try {
+            ProjectService projectService = new ProjectService();
+            List<EmployeeProjectDto> employeeProjectDtos = projectService.getAllAssignedProjects();
+            for(EmployeeProjectDto employeeProjectDto: employeeProjectDtos) {
+                logger.info(employeeProjectDto);   
+            }
+        } catch (CustomException exception) {
+            logger.error(exception);
         }
     }
 
-    public int getProjectId(String userNeed) throws CustomException {
+    /**
+     * {@code getProjectId} is common method for asking the project id from the user for validation.
+     *
+     * @param userNeed
+     *        For what operation user going to perform related to project.
+     * 
+     * @return projectId.
+     *
+     * @since 1.0
+     * 
+     */
+    private int getProjectId(String userNeed) {
         Scanner scanner = new Scanner(System.in);
         logger.info(userNeed);
         int projectId = scanner.nextInt();
         
         return projectId;
     }
-        
+
+    /**
+     * {@code displayAssignedEmployeesOfProject} is displays all the employees whos are assigned in single project.
+     *
+     * @since 1.0
+     * 
+     */
+    private void displayAssignedEmployeesOfProject() {
+        try {
+            ProjectService projectService = new ProjectService();
+            SignInAndLogInController signInController = new SignInAndLogInController();
+            boolean isValidProjectId = true;
+            while (isValidProjectId) {
+                int projectId = getProjectId("Enter the project Id want to see assigned employees");
+                if (projectService.checkIsProjectAvailableById(projectId)) {
+                    isValidProjectId = false;
+                    signInController.displayAllEmployees(projectService.getAssignedEmployeesForSingleProject(projectId));
+                }
+            } 
+        } catch (CustomException exception) {
+            logger.error(exception);
+        }
+    }  
+
+    /**
+     * {@code ValidateAndupdateProject} implemented to validate and update the project details.
+     *
+     *
+     * @since 1.0
+     * 
+     */
+    private void validateAndUpdateProject() {
+        try {    
+            ProjectService projectService = new ProjectService();
+            SignInAndLogInController signInController = new SignInAndLogInController();
+            boolean isValidProjectId = true;
+            while (isValidProjectId) {
+                int projectId = getProjectId("Enter the Project id you want to update");
+                if (projectService.checkIsProjectAvailableById(projectId)) {
+                    isValidProjectId = false;
+                    signInController.addAndUpdateProject(Constants.PROJECT_MANAGER, "update", projectId);
+                } 
+            } 
+        } catch (CustomException exception) {
+            logger.error(exception);
+        }   
+    } 
+
+    /**
+     * {@code deleteProject} is implemented to validate and delete the project.
+     *
+     * @since 1.0
+     * 
+     */
+    private void validateAndDeleteProject() {
+        try {
+            boolean isValidId = true;
+            ProjectService projectService = new ProjectService();
+            while (isValidId) {
+                int projectId = getProjectId("Enter the projectId you want to delete");
+                if (projectService.checkIsProjectAvailableById(projectId)) {
+                    projectService.deleteProject(projectId);
+                    isValidId = false;
+                }
+            }
+        } catch (CustomException exception) {
+            logger.error(exception);
+        }
+    }
+
+    /**
+     * {@code addDefaultRoles} is helps to add default roles in the database.
+     *
+     *
+     * @since 1.0
+     * 
+     */
+    private void addDefaultRoles() {
+        try {
+            EmployeeService employeeService = new EmployeeService();
+            if (employeeService.addRoles()) {
+                logger.info("Roles added successfully\n");
+            } else {
+                logger.error("Failed\n");
+            } 
+        } catch (CustomException exception) {
+            logger.error(exception);
+        }
+    }
 }
