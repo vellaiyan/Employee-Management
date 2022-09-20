@@ -49,7 +49,7 @@ public class DateUtil {
                 LocalDate givenDate = timeZone.toLocalDate();
                 int birthYear = givenDate.getYear();
                 int givenDay = givenDate.getDayOfMonth();
-                boolean leapYear = (((birthYear % 4 == 0) && (birthYear % 100!= 0)) || (birthYear%400 == 0));
+                boolean leapYear = (((birthYear % 4 == 0) && (birthYear % 100!= 0)) || (birthYear % 400 == 0));
                 int currentYear = LocalDate.now().getYear();    
 
                 if (birthYear > currentYear) {
@@ -100,7 +100,6 @@ public class DateUtil {
             return "Not valid";
         }
     }
-
 
     /**
      * {@code timeDelay} to create a timedelay

@@ -30,7 +30,6 @@ import java.util.List;
  * @since  1.0
  * 
  */
-
 public class ProjectService {
 
    /**
@@ -41,7 +40,7 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return boolean.
+     * @return addedStatus.
      *
      * @since 1.0
      * 
@@ -60,12 +59,12 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return list of projectDtos.
+     * @return projectDtos.
      *
      * @since 1.0
      * 
      */ 
-    public List<ProjectDto> getProjects () throws CustomException {
+    public List<ProjectDto> getProjects() throws CustomException {
         ProjectDao projectDao = new ProjectDao();
         ProjectMapper projectMapper = new ProjectMapper();
         List<Project> projects = projectDao.retrieveProjects();
@@ -86,7 +85,7 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return boolean.
+     * @return checkedStatus.
      *
      * @since 1.0
      * 
@@ -133,7 +132,7 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return boolean.
+     * @return updatedStatus.
      *
      * @since 1.0
      * 
@@ -155,7 +154,7 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return boolean.
+     * @return deleteStatus.
      *
      * @since 1.0
      * 
@@ -180,7 +179,7 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return boolean.
+     * @return assignedStatus.
      *
      * @since 1.0
      * 
@@ -206,8 +205,6 @@ public class ProjectService {
      *       Project need to be update.
      *
      * @throws CustomException.
-     *
-     * @return void.
      *
      * @since 1.0
      * 

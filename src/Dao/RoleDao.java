@@ -37,13 +37,14 @@ import org.hibernate.Transaction;
  * @since  1.0
  * 
  */
-
 public class RoleDao {
 
     /**
      * {@code insertRoles} to insert the default roles.
      *
      * @throws CustomException.
+     *
+     * @return insertedStatus.
      *
      * @since 1.1
      * 
@@ -79,6 +80,8 @@ public class RoleDao {
      *
      * @throws CustomException.
      *
+     * @return roles.
+     *
      * @since 1.1
      * 
      */ 
@@ -108,6 +111,8 @@ public class RoleDao {
      *       Role name to be retrieve.
      *
      * @throws CustomException.
+     *
+     * @return role.
      *
      * @since 1.1
      * 

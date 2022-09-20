@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * The {@code EmployeeDto} class represents the all  fields to be accessable for front-end.
- * 
+ * The {@code EmployeeDto} class represents all the fields related to front end.
  *
  * @author Vellaiyan
  *
  * @since  1.0
- * @jls    1.1 Adding EmployeeId
+ *
+ * @jls    1.1 Adding delete status.
  */
 public class EmployeeDto { 
     private int employeeId;
@@ -180,9 +180,3 @@ public class EmployeeDto {
         return output;   
     }
 }
-
-
-
-
-
-

@@ -70,7 +70,7 @@ public class Role {
         roles.add(new Role(2, "Trainer"));
         roles.add(new Role(3, "Project Manager"));
         roles.add(new Role(4, "Human Resource"));
+
         return roles;
-    }   
- 
+    }    
 }

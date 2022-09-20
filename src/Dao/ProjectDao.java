@@ -40,6 +40,7 @@ import org.hibernate.Transaction;
  * @author Vellaiyan
  *
  * @since  1.0
+ *
  * @jls    1.1 Retrive project by projectId.
  */
 public class ProjectDao {  
@@ -51,6 +52,8 @@ public class ProjectDao {
      *       project object to be insert.
      *
      * @throws CustomException.
+     *
+     * @return projectId.
      *
      * @since 1.0
      * 
@@ -80,6 +83,8 @@ public class ProjectDao {
      *
      * @throws CustomException.
      *
+     * @return projects.
+     *
      * @since 1.0
      * 
      */
@@ -90,8 +95,7 @@ public class ProjectDao {
         try { 
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            Query query = session.createQuery("FROM Project where status = :status");
-            query.setString("status", "active");
+            Query query = session.createQuery("FROM Project where status = :status").setString("status", "active");
             transaction.commit();
             return query.getResultList();
         } catch (Exception exception) {
@@ -110,6 +114,8 @@ public class ProjectDao {
      *       project need to be update.
      *
      * @throws CustomException.
+     *
+     * @return updatedStatus.
      *
      * @since 1.0
      * 
@@ -143,6 +149,8 @@ public class ProjectDao {
      *
      * @throws CustomException.
      *
+     * @return deletedStatus.
+     *
      * @since 1.0
      * 
      */ 
@@ -172,6 +180,8 @@ public class ProjectDao {
      *       project id to be retrieve.
      *
      * @throws CustomException.
+     *
+     * @return project.
      *
      * @since 1.1
      * 
@@ -204,6 +214,8 @@ public class ProjectDao {
      *
      * @throws CustomException.
      *
+     * @return insertedStatus.
+     *
      * @since 1.0
      * 
      */ 
@@ -230,6 +242,8 @@ public class ProjectDao {
      * {@code retrieveAllAssignedProjects} to retrieve  all the assigned projects.
      *
      * @throws CustomException.
+     *
+     * @return employeeProjects.
      *
      * @since 1.0
      * 

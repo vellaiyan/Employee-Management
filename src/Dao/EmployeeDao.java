@@ -37,6 +37,7 @@ import org.hibernate.Transaction;
  * @author Vellaiyan
  *
  * @since  1.0
+ *  
  * @jls    1.1 Retrive empoyee by EmployeeId.
  */
 
@@ -49,6 +50,8 @@ public class EmployeeDao {
      *       Employee object to be insert.
      *
      * @throws CustomException.
+     *
+     * @return employeeId.
      *
      * @since 1.0
      * 
@@ -79,6 +82,8 @@ public class EmployeeDao {
      * {@code retrieveEmployees} to retrieve all the employees.
      *
      * @throws CustomException.
+     *
+     * @return employees.
      *
      * @since 1.0
      * 
@@ -111,6 +116,8 @@ public class EmployeeDao {
      *
      * @throws CustomException.
      *
+     * @return deletedStatus.
+     *
      * @since 1.0
      * 
      */ 
@@ -140,6 +147,8 @@ public class EmployeeDao {
      *       Employee need to be update.
      *
      * @throws CustomException.
+     *
+     * @return updatedStatus.
      *
      * @since 1.0
      * 
@@ -171,6 +180,8 @@ public class EmployeeDao {
      *
      * @throws CustomException.
      *
+     * @return employee.
+     *
      * @since 1.1
      * 
      */ 
@@ -194,24 +205,3 @@ public class EmployeeDao {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

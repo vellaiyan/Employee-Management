@@ -5,18 +5,18 @@
 
 package com.ideas2it.dto;
 
+import com.ideas2it.model.EmployeeProject;
+
 import java.time.LocalDate;
 import java.util.List;
 
-import com.ideas2it.model.EmployeeProject;
-
 /**
  * The {@code ProjectDto} class represents the all  fields to be accessable for front-end.
- * 
  *
  * @author Vellaiyan
  *
  * @since  1.0
+ *
  * @jls    1.1 Adding status.
  */ 
 

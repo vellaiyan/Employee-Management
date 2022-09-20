@@ -10,6 +10,7 @@ import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
 import com.ideas2it.service.ProjectService;
+import com.ideas2it.service.RoleService;
 import com.ideas2it.utils.Constants;
 import com.ideas2it.utils.DateUtil;
 
@@ -22,13 +23,13 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 /**
- * The {@code EmployeeController} class is to show and control the employee options.
+ * The {@code EmployeeController} class is to show and control the employee's options.
  *
  * @author Vellaiyan
  *
  * @since  1.0
  *
- * @jls    1.1  Additional option to trainees to trainers.
+ * @jls    1.1  Additional option to trainees and trainers.
  */
 public class EmployeeController {
     private static boolean isFlow = true;
@@ -81,7 +82,7 @@ public class EmployeeController {
                     break;
  
                 case 5:
-                    addOrUpdateProject(Constants.PROJECT_MANAGER);
+                    addOrUpdateProjectByUserRole(Constants.PROJECT_MANAGER);
                     break;
                 
                 case 6:
@@ -101,7 +102,7 @@ public class EmployeeController {
                     break;
         
                 case 9:
-                    displayProjectDetail();
+                    displayProjectDetails();
                     break;
 
                 case 10:
@@ -137,7 +138,7 @@ public class EmployeeController {
     }
 
     /**
-     * {@code addOrUpdateProject} is helps the project manager to add or update project details.
+     * {@code addOrUpdateProjectByUserRole} is helps the project manager to add or update project details.
      *
      * @param userType
      *        Only project manager get a access to perform project related CRUD operations.
@@ -145,7 +146,7 @@ public class EmployeeController {
      * @since 1.0
      * 
      */
-    private void addOrUpdateProject(String userType) {
+    private void addOrUpdateProjectByUserRole(String userType) {
         try {
             SignInAndLogInController signInController = new SignInAndLogInController();
             logger.info("Choose the option below.\n 1. Add project. \n2. Update Project. \n3. delete project.");
@@ -155,9 +156,11 @@ public class EmployeeController {
                 case 1:
                     signInController.addAndUpdateProject(userType, "add", 0);
                     break;
+
                 case 2:
                     validateAndUpdateProject();
                     break;
+
                 case 3:
                     validateAndDeleteProject();
                     break;                       
@@ -168,13 +171,13 @@ public class EmployeeController {
     }
  
     /**
-     * {@code displayProjectDetail} is implemented to display the project by validating project id which 
-     * is given by user as a input.
+     * {@code displayProjectDetails} is implemented to display the project by validating project id which 
+     * was given by user as a input.
      *
      * @since 1.0
      * 
      */
-    private void displayProjectDetail() {
+    private void displayProjectDetails() {
         try {
             ProjectService projectService = new ProjectService();
             boolean isValidProjectId = true;
@@ -301,14 +304,13 @@ public class EmployeeController {
     /**
      * {@code addDefaultRoles} is helps to add default roles in the database.
      *
-     *
      * @since 1.0
      * 
      */
     private void addDefaultRoles() {
         try {
-            EmployeeService employeeService = new EmployeeService();
-            if (employeeService.addRoles()) {
+            RoleService roleService = new RoleService();
+            if (roleService.addRoles()) {
                 logger.info("Roles added successfully\n");
             } else {
                 logger.error("Failed\n");
