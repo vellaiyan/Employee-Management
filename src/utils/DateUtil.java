@@ -5,16 +5,9 @@
 
 package com.ideas2it.utils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Period;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-
+import java.text.ParseException;
+import java.util.Date;  
 /**
  * The {@code DateUtil} class represents Date of birth validation. This class is implemented to avoid child labours and future date of birth
  * and invalid dates as well months. 
@@ -38,39 +31,18 @@ public class DateUtil {
      * @since 1.0
      * 
      */ 
-    public static String validateDateOfBirth(String dateOfBirth, String choosenDate) {
+    public static boolean validateDateOfBirth(String dateOfBirth, String choosenDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = "";
         try {
             if (choosenDate.equals("dob")) {
-                Date dateOfBirthParse = simpleDateFormat.parse(dateOfBirth);            
-                Instant instant = dateOfBirthParse.toInstant();
-                ZonedDateTime timeZone = instant.atZone(ZoneId.systemDefault());
-                LocalDate givenDate = timeZone.toLocalDate();
-                int birthYear = givenDate.getYear();
-                int givenDay = givenDate.getDayOfMonth();
-                boolean leapYear = (((birthYear % 4 == 0) && (birthYear % 100!= 0)) || (birthYear % 400 == 0));
-                int currentYear = LocalDate.now().getYear();    
-
-                if (birthYear > currentYear) {
-                    dateOfBirth = "max";
-                } else if (birthYear <= 1950) {
-                    dateOfBirth = "low";
-                } else if ((currentYear - birthYear) <= 18 ) {
-                    dateOfBirth = "min";
-                } else if (((leapYear == true) &&((givenDate.getMonth().toString().equals("FEBRUARY")) == true)) && (givenDay>29)) {
-                    dateOfBirth = "low";
-                }
-                else {
-                    dateOfBirth = dateOfBirth;
-                }
-            } else {
-                return dateOfBirth = dateOfBirth;
+                Date dateOfBirthParse = simpleDateFormat.parse(dateOfBirth);
+                return true;            
             }
         } catch (ParseException parseException) {
-            dateOfBirth = "invalid";            
+            return false;          
         }
-        return dateOfBirth;
+        return false;
     }
 
     /**

@@ -19,6 +19,7 @@ import com.ideas2it.model.Project;
 import com.ideas2it.service.EmployeeService;
 
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,11 @@ import java.util.List;
  * 
  */
 public class ProjectService {
+    ProjectDao projectDao = new ProjectDao();
+    ProjectMapper projectMapper = new ProjectMapper();
+    EmployeeService employeeService = new EmployeeService();
+    EmployeeMapper employeeMapper = new EmployeeMapper();
+    EmployeeProjectMapper employeeProjectMapper = new EmployeeProjectMapper();
 
    /**
      * {@code addProject} to add new project.
@@ -45,13 +51,11 @@ public class ProjectService {
      * @since 1.0
      * 
      */ 
-    public boolean addProject(ProjectDto projectDto) throws CustomException {
-        ProjectDao projectDao = new ProjectDao();
-        ProjectMapper projectMapper = new ProjectMapper();
+    public int addProject(ProjectDto projectDto) throws CustomException {
         Project project = projectMapper.fromDto(projectDto);
         int projectId = projectDao.insertProject(project);
 
-        return true;
+        return projectId;
     }
 
     /**
@@ -65,8 +69,6 @@ public class ProjectService {
      * 
      */ 
     public List<ProjectDto> getProjects() throws CustomException {
-        ProjectDao projectDao = new ProjectDao();
-        ProjectMapper projectMapper = new ProjectMapper();
         List<Project> projects = projectDao.retrieveProjects();
         List<ProjectDto> projectDtos = new ArrayList<ProjectDto>();
         for (Project project: projects) {
@@ -91,7 +93,6 @@ public class ProjectService {
      * 
      */        
     public boolean checkIsProjectAvailableById(int projectId) throws CustomException {
-        ProjectDao projectDao = new ProjectDao();
         for (Project project: projectDao.retrieveProjects()) {
             if (project.getProjectId() == projectId) {
 
@@ -115,7 +116,6 @@ public class ProjectService {
      * 
      */ 
     public ProjectDto getProjectById(int projectId) throws CustomException {
-        ProjectDao projectDao = new ProjectDao();
         ProjectMapper projectMapper = new ProjectMapper();
         return projectMapper.toDto(projectDao.retrieveProjectById(projectId));
     }
@@ -137,9 +137,7 @@ public class ProjectService {
      * @since 1.0
      * 
      */ 
-    public boolean updateProject(ProjectDto projectDto, int projectId) throws CustomException {   
-        ProjectDao projectDao = new ProjectDao(); 
-        ProjectMapper projectMapper = new ProjectMapper();    
+    public boolean updateProject(ProjectDto projectDto, int projectId) throws CustomException {      
         Project project = projectMapper.fromDto(projectDto);
         project.setProjectId(projectId);
 
@@ -160,8 +158,6 @@ public class ProjectService {
      * 
      */ 
     public boolean deleteProject(int projectId) throws CustomException {
-        ProjectDao projectDao = new ProjectDao();
-        ProjectMapper projectMapper = new ProjectMapper();
         ProjectDto projectDto = getProjectById(projectId);
         projectDto.setStatus("inactive");
         Project project = projectMapper.fromDto(projectDto);
@@ -185,10 +181,6 @@ public class ProjectService {
      * 
      */ 
     public boolean assignProjectToEmployee(EmployeeProjectDto employeeProjectDto) throws CustomException {    
-        EmployeeService employeeService = new EmployeeService();
-        ProjectDao projectDao = new ProjectDao();
-        EmployeeProjectMapper employeeProjectMapper = new EmployeeProjectMapper();
-        ProjectMapper projectMapper = new ProjectMapper();
         EmployeeProject employeeProject = employeeProjectMapper.fromDto(employeeProjectDto);
         Employee employee = employeeService.getEmployeeDetailsById(employeeProjectDto.getEmployeeId());
         ProjectDto projectDto = getProjectById(employeeProjectDto.getProjectId());
@@ -261,7 +253,6 @@ public class ProjectService {
      */ 
     public List<EmployeeDto> getAssignedEmployeesForSingleProject(int projectId) throws CustomException {
         Project project = getProjectDetailsById(projectId);
-        EmployeeMapper employeeMapper = new EmployeeMapper();
         List<EmployeeProject> employeeProjects = project.getEmployeeProjects();
         List<Employee> employees = new ArrayList<Employee>();
  

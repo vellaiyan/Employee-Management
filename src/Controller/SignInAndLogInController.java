@@ -16,9 +16,18 @@ import com.ideas2it.utils.ValidationUtil;
 
 import java.text.DateFormat;  
 import java.text.SimpleDateFormat; 
+
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime; 
 import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Period;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;  
@@ -26,9 +35,9 @@ import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner; 
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger; 
 
@@ -44,6 +53,10 @@ import org.apache.log4j.Logger;
  *
  */
 public class SignInAndLogInController { 
+    EmployeeDto employeeDto = new EmployeeDto();  
+    ProjectDto projectDto = new ProjectDto();
+    ProjectService projectService = new ProjectService(); 
+    EmployeeService employeeService = new EmployeeService();
 
     /**
      * {@code signIn} implemented to sign-in  for all employees.
@@ -55,8 +68,6 @@ public class SignInAndLogInController {
      *
      */
     public void signIn(String userRole, String processToBeProceed, int employeeId) throws CustomException {
-        EmployeeDto employeeDto = new EmployeeDto();   
-        EmployeeService employeeService = new EmployeeService();
         DateTimeFormatter dateTimeFormater = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
         LocalDateTime localDate = LocalDateTime.now();     
         employeeDto.setFirstName(getAndValidateInputByRegex("First Name", ValidationUtil.NAME_PATTERN));
@@ -97,29 +108,30 @@ public class SignInAndLogInController {
         String dateOfBirthAndJoining = "";
         int remainingTimes = 0;
         for (int checkingLoop = 0; checkingLoop < 5; checkingLoop++) {            
-            EmployeeController.logger.info("informationToPrint");
+            EmployeeController.logger.info(informationToPrint);
             dateOfBirthAndJoining = scanner.next();
-            String date = DateUtil.validateDateOfBirth(dateOfBirthAndJoining, choosenDate);
-
-            if (date.equals(dateOfBirthAndJoining)) {
-                isValidDate = false;
-                checkingLoop = 4;
-                dateOfBirthAndJoining = date;
-            } else if (date.equals("max")) {
-                EmployeeController.logger.info("Your date of birth exceeds current year");
-                remainingTimes++;
-            } else if (date.equals("low")) { 
-                EmployeeController.logger.error("Given date of birth is not valid");
-                remainingTimes++;
-            } else if (date.equals("min")) {
-                EmployeeController.logger.error("Your age is too low");
-                remainingTimes++;
-            } else if (date.equals("invalid")) {
-                EmployeeController.logger.error("Invalid dateOfBirth");
-                remainingTimes++;
-            } if (remainingTimes == 5) {
-                throw new CustomException("Invalid Input");                
-            }
+            if (DateUtil.validateDateOfBirth(dateOfBirthAndJoining, choosenDate)) {
+                String date = dateValidation(dateOfBirthAndJoining);             
+                if (date.equals(dateOfBirthAndJoining)) {
+                    isValidDate = false;
+                    checkingLoop = 4;
+                    dateOfBirthAndJoining = date;
+                } else if (date.equals("max")) {
+                    EmployeeController.logger.info("Your date of birth exceeds current year");
+                    remainingTimes++;
+                } else if (date.equals("low")) { 
+                    EmployeeController.logger.error("Given date of birth is not valid");
+                    remainingTimes++;
+                } else if (date.equals("min")) {
+                    EmployeeController.logger.error("Your age is too low");
+                    remainingTimes++;
+                } else if (date.equals("invalid")) {
+                    EmployeeController.logger.error("Invalid dateOfBirth");
+                    remainingTimes++;
+                } if (remainingTimes == 5) {
+                   throw new CustomException("Invalid Input");                
+                }
+            } 
         }
         return dateOfBirthAndJoining;
     }   
@@ -175,8 +187,6 @@ public class SignInAndLogInController {
      * 
      */    
     public void addAndUpdateProject(String userRole, String processToBeProceed, int projectId) throws CustomException {
-        ProjectDto projectDto = new ProjectDto();
-        ProjectService projectService = new ProjectService();
         projectDto.setProjectId(0);
         projectDto.setProjectName(getAndValidateInputByRegex("Project Name", ValidationUtil.NAME_PATTERN));
         projectDto.setProjectDescription(getAndValidateInputByRegex("Project Description", ValidationUtil.NAME_PATTERN));
@@ -202,8 +212,6 @@ public class SignInAndLogInController {
      */ 
     public void traineeOperations() throws CustomException {
         Scanner scanner = new Scanner(System.in);
-        EmployeeService employeeService = new EmployeeService();
-        ProjectService projectService = new ProjectService();
         EmployeeController.logger.info("Enter the user name : ");
         String userName = scanner.next();
         EmployeeController.logger.info("Enter the password : ");
@@ -303,7 +311,6 @@ public class SignInAndLogInController {
      */ 
     public void displayEmployeesByRole(String userRole) throws CustomException {
         try { 
-            EmployeeService employeeService = new EmployeeService();
             List<EmployeeDto> employeeDtos = employeeService.getEmployeesByRole(userRole);
             for (EmployeeDto employeeDto: employeeDtos) {
                 EmployeeController.logger.info(employeeDto);
@@ -322,7 +329,6 @@ public class SignInAndLogInController {
     public void validateAndDisplayEmployeeDetail() {
         try {
             Scanner scanner = new Scanner(System.in);
-            EmployeeService employeeService = new EmployeeService();
             EmployeeController.logger.info("Enter the trainee Id you want to see");
             int traineeId = scanner.nextInt();
                 if (!employeeService.checkEmployeeById(traineeId)) {
@@ -345,7 +351,6 @@ public class SignInAndLogInController {
      */ 
     public void updateEmployeeDetails() {
         try {
-            EmployeeService employeeService = new EmployeeService();
             Scanner scanner = new Scanner(System.in);
             EmployeeController.logger.info("Enter the Employee Id you want to update");
             int employeeId = scanner.nextInt();
@@ -369,7 +374,6 @@ public class SignInAndLogInController {
      */ 
     public void validateAndUpdateProject() throws CustomException {
         Scanner scanner = new Scanner(System.in);
-        ProjectService projectService = new ProjectService();
         EmployeeController.logger.info("Enter the project Id you want to update");
         int projectId = scanner.nextInt();
         if (projectService.checkIsProjectAvailableById(projectId)) {
@@ -387,7 +391,6 @@ public class SignInAndLogInController {
      */ 
     public void validateAndDeleteEmployee() {
         try {
-            EmployeeService employeeService = new EmployeeService();
             Scanner scanner = new Scanner(System.in);
             EmployeeController.logger.info("Enter the employee Id you want to delete");
             int employeeId = scanner.nextInt();
@@ -410,7 +413,6 @@ public class SignInAndLogInController {
      */ 
     public void validateAndUpdateEmployeeDetail() {
         try {
-            EmployeeService employeeService = new EmployeeService();
             Scanner scanner = new Scanner(System.in);
             EmployeeController.logger.info("Enter the user email id you want to update");
             int employeeId= scanner.nextInt();
@@ -453,7 +455,6 @@ public class SignInAndLogInController {
      */ 
     public void assignEmployees() {
         try {
-            ProjectService projectService = new ProjectService();
             boolean isContinue = true;
             while (isContinue) {
                 int projectId = validateAndGetProjectId();
@@ -492,7 +493,6 @@ public class SignInAndLogInController {
     public int validateAndGetProjectId() {
         boolean isValidProjectId = true;
         Scanner scanner = new Scanner(System.in);
-        ProjectService projectService = new ProjectService();
         int projectId;
         while (isValidProjectId) {
             EmployeeController.logger.info("Enter the project Id");
@@ -523,7 +523,6 @@ public class SignInAndLogInController {
     public int validateAndGetEmployeeId() {
         boolean isValidEmployeeId = true;
         Scanner scanner = new Scanner(System.in);
-        EmployeeService employeeService = new EmployeeService();
         int employeeId;
         while (isValidEmployeeId) {
             EmployeeController.logger.info("Enter EmployeeId want to assign");
@@ -583,6 +582,48 @@ public class SignInAndLogInController {
         return "";       
     } 
 
+
+    /**
+     * {@code dateValidation} is implemented to validate the date.
+     *
+     * @param givenDate
+     *       Given user input.
+     *
+     * @return date.
+     *
+     * @since 1.0
+     * 
+     */ 
+    public String dateValidation(String userInput) throws CustomException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateOfBirth = "";
+        try {
+            Date dateOfBirthParse = simpleDateFormat.parse(userInput);
+            Instant instant = dateOfBirthParse.toInstant();
+            ZonedDateTime timeZone = instant.atZone(ZoneId.systemDefault());
+            LocalDate givenDate = timeZone.toLocalDate();
+            int birthYear = givenDate.getYear();
+            int givenDay = givenDate.getDayOfMonth();
+            boolean leapYear = (((birthYear % 4 == 0) && (birthYear % 100!= 0)) || (birthYear % 400 == 0));
+            int currentYear = LocalDate.now().getYear();    
+
+            if (birthYear > currentYear) {
+                dateOfBirth = "max";
+            } else if (birthYear <= 1950) {
+                dateOfBirth = "low";
+            } else if ((currentYear - birthYear) <= 18 ) {
+                dateOfBirth = "min";
+            } else if (((leapYear == true) &&((givenDate.getMonth().toString().equals("FEBRUARY")) == true)) && (givenDay>29)) {
+                dateOfBirth = "low";
+            } else {
+                dateOfBirth = userInput;
+            }
+        } catch (ParseException parseException) {
+             return "invalid";
+        }
+        return userInput;
+    }
+ 
     /**
      * {@code addEmployee} is implemented to add the employee.
      *
@@ -599,12 +640,11 @@ public class SignInAndLogInController {
      * 
      */ 
     public void addEmployee(EmployeeDto employeeDto, LocalDateTime localDate, String userRole) throws CustomException {
-        EmployeeService employeeService = new EmployeeService();
         employeeDto.setCreateDate(localDate);
         employeeDto.setUpdateDate(localDate);
-        if (employeeService.addEmployee(employeeDto, userRole)) {
-            EmployeeController.logger.debug("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");
-        }
+        employeeService.addEmployee(employeeDto, userRole);
+        EmployeeController.logger.debug("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");
+        
     }
 
     /**
@@ -621,7 +661,6 @@ public class SignInAndLogInController {
      */ 
     public void assignRoleToEmployee(EmployeeDto employeeDto, int employeeId) throws CustomException {
         Scanner scanner = new Scanner(System.in);
-        EmployeeService employeeService = new EmployeeService();
         EmployeeController.logger.info("Enter the new role you want to assign for this employee. \n1. Trainee."
             +"\n2. Trainer. \n3. Project Manager. \n4. Human Resource");
             int newRole = scanner.nextInt();

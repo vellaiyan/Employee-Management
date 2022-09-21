@@ -19,6 +19,7 @@ import java.util.List;
  *
  */
 public class RoleService {
+    RoleDao roleDao = new RoleDao();
 
     /**
      * {@code addRoles} to add default roles.
@@ -31,7 +32,6 @@ public class RoleService {
      * 
      */ 
     public boolean addRoles() throws CustomException {
-        RoleDao roleDao = new RoleDao();
 
         return roleDao.insertRoles();
     }
@@ -50,7 +50,6 @@ public class RoleService {
      * 
      */ 
     public List<Role> getRolesByRoleName(String userRole) throws CustomException {
-        RoleDao roleDao = new RoleDao();
 
         return roleDao.retrieveRolesByRoleName(userRole);
     }
@@ -69,7 +68,6 @@ public class RoleService {
      * 
      */ 
     public Role getRoleByRoleName(String userRole) throws CustomException {
-        RoleDao roleDao = new RoleDao();
 
         return roleDao.retriveRoleByRoleName(userRole);
     }

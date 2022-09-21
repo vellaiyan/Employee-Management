@@ -15,15 +15,19 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.text.DateFormat;  
-import java.text.SimpleDateFormat;   
+import java.text.SimpleDateFormat;  
+ 
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.List;
+
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -44,6 +48,7 @@ import org.hibernate.Transaction;
  * @jls    1.1 Retrive project by projectId.
  */
 public class ProjectDao {  
+    SessionFactory sessionFactory = BaseDao.databaseConnection();
 
     /**
      * {@code insertProject} to insert the new project.
@@ -59,7 +64,6 @@ public class ProjectDao {
      * 
      */ 
     public int insertProject(Project project) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Transaction transaction = null;
         Session session = null;
         int projectId = 0;
@@ -89,13 +93,12 @@ public class ProjectDao {
      * 
      */
     public List<Project> retrieveProjects() throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try { 
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            Query query = session.createQuery("FROM Project where status = :status").setString("status", "active");
+            Query query = session.createQuery("FROM Project where status = :status").setString("status", Constants.DELETE_STATUS);
             transaction.commit();
             return query.getResultList();
         } catch (Exception exception) {
@@ -121,7 +124,6 @@ public class ProjectDao {
      * 
      */ 
     public boolean updateProject(Project project) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -131,8 +133,6 @@ public class ProjectDao {
             transaction.commit();
             return true;
         } catch (Exception exception) {
-            exception.printStackTrace();
-            System.out.println(exception);
             throw new CustomException("Error occured while updating project details", exception);
         } finally {
             if (session != null) {
@@ -155,11 +155,10 @@ public class ProjectDao {
      * 
      */ 
     public boolean deleteProject(Project project) throws CustomException {
-        SessionFactory factory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
-            session = factory.openSession();
+            session = sessionFactory.openSession();
             session.saveOrUpdate(project);
             transaction = session.beginTransaction();
             transaction.commit();
@@ -187,14 +186,13 @@ public class ProjectDao {
      * 
      */ 
     public Project retrieveProjectById(int projectId) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             Project project = (Project) session.createQuery("FROM Project where id = :id AND status = :status")
-                .setInteger("id", projectId).setString("status", "active").uniqueResult();
+                .setInteger("id", projectId).setString("status", Constants.ACTIVE_STATUS).uniqueResult();
             transaction.commit();
             return project;
         } catch (Exception exception) {
@@ -220,7 +218,6 @@ public class ProjectDao {
      * 
      */ 
     public boolean insertAssignedProject(EmployeeProject employeeProject) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -249,7 +246,6 @@ public class ProjectDao {
      * 
      */ 
     public List<EmployeeProject> retrieveAllAssignedProjects() throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {

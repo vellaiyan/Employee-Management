@@ -19,6 +19,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.TimeZone;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -32,7 +33,10 @@ import org.apache.log4j.Logger;
  * @jls    1.1  Additional option to trainees and trainers.
  */
 public class EmployeeController {
+    RoleService roleService = new RoleService();
+    ProjectService projectService = new ProjectService();
     private static boolean isFlow = true;
+    SignInAndLogInController signInController = new SignInAndLogInController();    
     public static Logger logger = Logger.getLogger(EmployeeController.class);
     
     public static void main(String[] args) {
@@ -57,7 +61,6 @@ public class EmployeeController {
         int userOption;
         logger.info("\nPlease choose the option below\n");
         Scanner scanner = new Scanner(System.in);    
-        SignInAndLogInController signInController = new SignInAndLogInController();    
         while (isFlow) {
             logger.info("1. Trainee SignIn. \n2. Trainer SignIn."
                 + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add Or Update Or delete projects.  \n6. Assigning projects."
@@ -130,7 +133,6 @@ public class EmployeeController {
      */
     private void userSignIn(String userType) {
         try {
-            SignInAndLogInController signInController = new SignInAndLogInController();
             signInController.signIn(userType,"add", 0);
         } catch (CustomException exception) {
             logger.error(exception);
@@ -148,7 +150,6 @@ public class EmployeeController {
      */
     private void addOrUpdateProjectByUserRole(String userType) {
         try {
-            SignInAndLogInController signInController = new SignInAndLogInController();
             logger.info("Choose the option below.\n 1. Add project. \n2. Update Project. \n3. delete project.");
             Scanner scanner = new Scanner(System.in);
             int userOption = scanner.nextInt();
@@ -179,7 +180,6 @@ public class EmployeeController {
      */
     private void displayProjectDetails() {
         try {
-            ProjectService projectService = new ProjectService();
             boolean isValidProjectId = true;
             Scanner scanner = new Scanner(System.in);
             while (isValidProjectId) {
@@ -203,7 +203,6 @@ public class EmployeeController {
      */
     private void displayAllAssignedProjects() {
         try {
-            ProjectService projectService = new ProjectService();
             List<EmployeeProjectDto> employeeProjectDtos = projectService.getAllAssignedProjects();
             for(EmployeeProjectDto employeeProjectDto: employeeProjectDtos) {
                 logger.info(employeeProjectDto);   
@@ -240,8 +239,6 @@ public class EmployeeController {
      */
     private void displayAssignedEmployeesOfProject() {
         try {
-            ProjectService projectService = new ProjectService();
-            SignInAndLogInController signInController = new SignInAndLogInController();
             boolean isValidProjectId = true;
             while (isValidProjectId) {
                 int projectId = getProjectId("Enter the project Id want to see assigned employees");
@@ -264,8 +261,6 @@ public class EmployeeController {
      */
     private void validateAndUpdateProject() {
         try {    
-            ProjectService projectService = new ProjectService();
-            SignInAndLogInController signInController = new SignInAndLogInController();
             boolean isValidProjectId = true;
             while (isValidProjectId) {
                 int projectId = getProjectId("Enter the Project id you want to update");
@@ -288,7 +283,6 @@ public class EmployeeController {
     private void validateAndDeleteProject() {
         try {
             boolean isValidId = true;
-            ProjectService projectService = new ProjectService();
             while (isValidId) {
                 int projectId = getProjectId("Enter the projectId you want to delete");
                 if (projectService.checkIsProjectAvailableById(projectId)) {
@@ -309,7 +303,6 @@ public class EmployeeController {
      */
     private void addDefaultRoles() {
         try {
-            RoleService roleService = new RoleService();
             if (roleService.addRoles()) {
                 logger.info("Roles added successfully\n");
             } else {
