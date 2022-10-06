@@ -39,6 +39,7 @@ import org.hibernate.Transaction;
  */
 
 public class RoleDao {
+    SessionFactory sessionFactory = BaseDao.databaseConnection();
 
     /**
      * {@code insertRoles} to insert the default roles.
@@ -54,7 +55,6 @@ public class RoleDao {
         Role roleObject = new Role();
         List<Role> roles = roleObject.defaultRoles();
         try {
-            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession();
             transaction = session.beginTransaction();
             for (Role role: roles) {                
@@ -84,10 +84,8 @@ public class RoleDao {
      */ 
     public List<Role> retrieveRolesByRoleName(String roleName) throws CustomException {
         Session session = null;
-        Transaction transaction = null;
-        
+        Transaction transaction = null;        
         try {
-            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession(); 
             Criteria criteria = session.createCriteria(Role.class);
             criteria.add(Restrictions.eq("name", roleName));
@@ -116,7 +114,6 @@ public class RoleDao {
         Session session = null;
         Transaction transaction = null;
         try {
-            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession();
             transaction = session.beginTransaction();
             transaction.commit();

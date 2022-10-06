@@ -42,6 +42,8 @@ import org.hibernate.Transaction;
 
 public class EmployeeDao {
 
+    SessionFactory sessionFactory = BaseDao.databaseConnection();
+
     /**
      * {@code insertEmployee} to insert the new employee.
      *
@@ -54,7 +56,6 @@ public class EmployeeDao {
      * 
      */ 
     public int insertEmployee(Employee employee) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Transaction transaction = null;
         Session session = null;
         int employeeId = 0;
@@ -65,8 +66,6 @@ public class EmployeeDao {
             transaction.commit();
             return employeeId;
         } catch (Exception exception) {
-            exception.printStackTrace();
-            System.out.println(exception);
             throw new CustomException("Error occured while inserting employee", exception);
         } finally {
             if (transaction != null) {
@@ -84,7 +83,6 @@ public class EmployeeDao {
      * 
      */ 
     public List<Employee> retriveEmployees() throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -115,7 +113,6 @@ public class EmployeeDao {
      * 
      */ 
     public boolean deleteEmployee(Employee employee) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -145,7 +142,6 @@ public class EmployeeDao {
      * 
      */ 
     public boolean updateEmployeeDetails(Employee employee) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -175,7 +171,6 @@ public class EmployeeDao {
      * 
      */ 
     public Employee retriveEmployeeById(int employeeId) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {

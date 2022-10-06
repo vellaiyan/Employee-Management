@@ -43,6 +43,7 @@ import org.hibernate.Transaction;
  * @jls    1.1 Retrive project by projectId.
  */
 public class ProjectDao {  
+    SessionFactory sessionFactory = BaseDao.databaseConnection();
 
     /**
      * {@code insertProject} to insert the new project.
@@ -56,7 +57,6 @@ public class ProjectDao {
      * 
      */ 
     public int insertProject(Project project) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Transaction transaction = null;
         Session session = null;
         int projectId = 0;
@@ -84,7 +84,6 @@ public class ProjectDao {
      * 
      */
     public List<Project> retrieveProjects() throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try { 
@@ -115,7 +114,6 @@ public class ProjectDao {
      * 
      */ 
     public boolean updateProject(Project project) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -147,7 +145,6 @@ public class ProjectDao {
      * 
      */ 
     public boolean deleteProject(Project project) throws CustomException {
-        SessionFactory factory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -177,7 +174,6 @@ public class ProjectDao {
      * 
      */ 
     public Project retrieveProjectById(int projectId) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -208,7 +204,6 @@ public class ProjectDao {
      * 
      */ 
     public boolean insertAssignedProject(EmployeeProject employeeProject) throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -235,7 +230,6 @@ public class ProjectDao {
      * 
      */ 
     public List<EmployeeProject> retrieveAllAssignedProjects() throws CustomException {
-        SessionFactory sessionFactory = BaseDao.databaseConnection();
         Session session = null;
         Transaction transaction = null;
         try {

@@ -27,10 +27,6 @@ import org.hibernate.Transaction;
 public class BaseDao {
     protected static SessionFactory sessionFactory = null;
 
-    private BaseDao() {
-
-    } 
-
     public static SessionFactory databaseConnection() throws CustomException {
         try {
             if (sessionFactory == null) {

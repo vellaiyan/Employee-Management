@@ -7,7 +7,6 @@ package com.ideas2it.service;
 
 import com.ideas2it.utils.Constants;
 import com.ideas2it.dao.EmployeeDao;
-import com.ideas2it.dao.RoleDao;
 import com.ideas2it.dto.EmployeeDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.mapper.EmployeeMapper;
@@ -27,6 +26,9 @@ import java.util.List;
  * @jls    1.1 Get employee by employee id.
  */
 public class EmployeeService {   
+    EmployeeDao employeeDao = new EmployeeDao();
+    EmployeeMapper employeeMapper = new EmployeeMapper();
+    RoleService roleService = new RoleService();
 
     /**
      * {@code addEmployee} to add new employee.
@@ -45,10 +47,7 @@ public class EmployeeService {
      * 
      */ 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();
-        EmployeeMapper employeeMapper = new EmployeeMapper();
-        RoleDao roleDao = new RoleDao();
-        List<Role> roles = roleDao.retrieveRolesByRoleName(userRole);
+        List<Role> roles = roleService.getRolesByRoleName(userRole);
         Employee employee = employeeMapper.fromDto(employeeDto);
         employee.setRoles(roles);
         int employeeId = employeeDao.insertEmployee(employee);
@@ -67,8 +66,6 @@ public class EmployeeService {
      * 
      */ 
     public List<EmployeeDto> getEmployees() throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();
-        EmployeeMapper employeeMapper = new EmployeeMapper();
         List<Employee> employees = employeeDao.retriveEmployees();
         List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
 
@@ -94,11 +91,10 @@ public class EmployeeService {
      * 
      */ 
     public List<EmployeeDto> getEmployeesByRole(String userRole) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();    
-        EmployeeMapper employeeMapper = new EmployeeMapper();
+
         RoleDao roleDao = new RoleDao();
         List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
-        Role role = roleDao.retriveRoleByRoleName(userRole);
+        Role role = roleService.getRoleByRoleName(userRole);
         List<Employee> employees = role.getEmployees();
 
         for (Employee employee: employees) {
@@ -206,12 +202,10 @@ public class EmployeeService {
      * 
      */ 
     public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId, String userRole) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();        
-        EmployeeMapper employeeMapper = new EmployeeMapper();
-        RoleDao roleDao = new RoleDao();
+
         Employee employee = employeeMapper.fromDto(employeeDto);
         Employee employeeFromDatabase = employeeDao.retriveEmployeeById(employeeId);        
-        List<Role> roles = roleDao.retrieveRolesByRoleName(userRole);
+        List<Role> roles = roleService.getRolesByRoleName(userRole);
         roles.addAll(employeeFromDatabase.getRoles());
         employee.setRoles(roles);
         employee.setEmployeeId(employeeId);
@@ -234,8 +228,6 @@ public class EmployeeService {
      * 
      */ 
     public EmployeeDto getEmployeeById(int employeeId) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();        
-        EmployeeMapper employeeMapper = new EmployeeMapper();
         if(checkEmployeeById(employeeId)) {
             Employee employee = employeeDao.retriveEmployeeById(employeeId);
 
@@ -256,14 +248,11 @@ public class EmployeeService {
      * 
      */ 
     public boolean addRoles() throws CustomException {
-        RoleDao roleDao = new RoleDao();
 
-        return roleDao.insertRoles();
+        return roleService.insertRoles();
     }
 
     public boolean setUpdatedEmployee(EmployeeDto employeeDto) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();
-        EmployeeMapper employeeMapper = new EmployeeMapper();
         Employee employee = employeeMapper.fromDto(employeeDto);
 
         return employeeDao.updateEmployeeDetails(employee);
@@ -283,7 +272,6 @@ public class EmployeeService {
      * 
      */ 
     public Employee getEmployeeDetailsById(int employeeId) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();
 
         return employeeDao.retriveEmployeeById(employeeId);
     }
