@@ -10,7 +10,6 @@ import com.ideas2it.dto.EmployeeProjectDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.service.EmployeeService;
 import com.ideas2it.service.ProjectService;
-import com.ideas2it.service.RoleService;
 import com.ideas2it.utils.Constants;
 import com.ideas2it.utils.DateUtil;
 
@@ -19,24 +18,20 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.TimeZone;
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 /**
- * The {@code EmployeeController} class is to show and control the employee's options.
+ * The {@code EmployeeController} class is to show and control the employee options.
  *
  * @author Vellaiyan
  *
  * @since  1.0
  *
- * @jls    1.1  Additional option to trainees and trainers.
+ * @jls    1.1  Additional option to trainees to trainers.
  */
 public class EmployeeController {
-    RoleService roleService = new RoleService();
-    ProjectService projectService = new ProjectService();
     private static boolean isFlow = true;
-    SignInAndLogInController signInController = new SignInAndLogInController();    
     public static Logger logger = Logger.getLogger(EmployeeController.class);
     
     public static void main(String[] args) {
@@ -61,6 +56,7 @@ public class EmployeeController {
         int userOption;
         logger.info("\nPlease choose the option below\n");
         Scanner scanner = new Scanner(System.in);    
+        SignInAndLogInController signInController = new SignInAndLogInController();    
         while (isFlow) {
             logger.info("1. Trainee SignIn. \n2. Trainer SignIn."
                 + "\n3. Projct Manager SignIn .\n4. HumanResource SignIn.  \n5. Add Or Update Or delete projects.  \n6. Assigning projects."
@@ -85,7 +81,7 @@ public class EmployeeController {
                     break;
  
                 case 5:
-                    addOrUpdateProjectByUserRole(Constants.PROJECT_MANAGER);
+                    addOrUpdateProject(Constants.PROJECT_MANAGER);
                     break;
                 
                 case 6:
@@ -105,7 +101,7 @@ public class EmployeeController {
                     break;
         
                 case 9:
-                    displayProjectDetails();
+                    displayProjectDetail();
                     break;
 
                 case 10:
@@ -133,6 +129,7 @@ public class EmployeeController {
      */
     private void userSignIn(String userType) {
         try {
+            SignInAndLogInController signInController = new SignInAndLogInController();
             signInController.signIn(userType,"add", 0);
         } catch (CustomException exception) {
             logger.error(exception);
@@ -140,7 +137,7 @@ public class EmployeeController {
     }
 
     /**
-     * {@code addOrUpdateProjectByUserRole} is helps the project manager to add or update project details.
+     * {@code addOrUpdateProject} is helps the project manager to add or update project details.
      *
      * @param userType
      *        Only project manager get a access to perform project related CRUD operations.
@@ -148,8 +145,9 @@ public class EmployeeController {
      * @since 1.0
      * 
      */
-    private void addOrUpdateProjectByUserRole(String userType) {
+    private void addOrUpdateProject(String userType) {
         try {
+            SignInAndLogInController signInController = new SignInAndLogInController();
             logger.info("Choose the option below.\n 1. Add project. \n2. Update Project. \n3. delete project.");
             Scanner scanner = new Scanner(System.in);
             int userOption = scanner.nextInt();
@@ -157,11 +155,9 @@ public class EmployeeController {
                 case 1:
                     signInController.addAndUpdateProject(userType, "add", 0);
                     break;
-
                 case 2:
                     validateAndUpdateProject();
                     break;
-
                 case 3:
                     validateAndDeleteProject();
                     break;                       
@@ -172,14 +168,15 @@ public class EmployeeController {
     }
  
     /**
-     * {@code displayProjectDetails} is implemented to display the project by validating project id which 
-     * was given by user as a input.
+     * {@code displayProjectDetail} is implemented to display the project by validating project id which 
+     * is given by user as a input.
      *
      * @since 1.0
      * 
      */
-    private void displayProjectDetails() {
+    private void displayProjectDetail() {
         try {
+            ProjectService projectService = new ProjectService();
             boolean isValidProjectId = true;
             Scanner scanner = new Scanner(System.in);
             while (isValidProjectId) {
@@ -203,6 +200,7 @@ public class EmployeeController {
      */
     private void displayAllAssignedProjects() {
         try {
+            ProjectService projectService = new ProjectService();
             List<EmployeeProjectDto> employeeProjectDtos = projectService.getAllAssignedProjects();
             for(EmployeeProjectDto employeeProjectDto: employeeProjectDtos) {
                 logger.info(employeeProjectDto);   
@@ -239,6 +237,8 @@ public class EmployeeController {
      */
     private void displayAssignedEmployeesOfProject() {
         try {
+            ProjectService projectService = new ProjectService();
+            SignInAndLogInController signInController = new SignInAndLogInController();
             boolean isValidProjectId = true;
             while (isValidProjectId) {
                 int projectId = getProjectId("Enter the project Id want to see assigned employees");
@@ -261,6 +261,8 @@ public class EmployeeController {
      */
     private void validateAndUpdateProject() {
         try {    
+            ProjectService projectService = new ProjectService();
+            SignInAndLogInController signInController = new SignInAndLogInController();
             boolean isValidProjectId = true;
             while (isValidProjectId) {
                 int projectId = getProjectId("Enter the Project id you want to update");
@@ -283,6 +285,7 @@ public class EmployeeController {
     private void validateAndDeleteProject() {
         try {
             boolean isValidId = true;
+            ProjectService projectService = new ProjectService();
             while (isValidId) {
                 int projectId = getProjectId("Enter the projectId you want to delete");
                 if (projectService.checkIsProjectAvailableById(projectId)) {
@@ -298,12 +301,14 @@ public class EmployeeController {
     /**
      * {@code addDefaultRoles} is helps to add default roles in the database.
      *
+     *
      * @since 1.0
      * 
      */
     private void addDefaultRoles() {
         try {
-            if (roleService.addRoles()) {
+            EmployeeService employeeService = new EmployeeService();
+            if (employeeService.addRoles()) {
                 logger.info("Roles added successfully\n");
             } else {
                 logger.error("Failed\n");

@@ -22,15 +22,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-/**
- * The {@code EmployeeProject} class represents all the fields of employee project.
- * 
- * @author Vellaiyan
- *
- * @since  1.0
- *
- * @jls    1.1 Adding status.
- */ 
 @Entity
 @Table(name = "employee_projects")
 public class EmployeeProject {

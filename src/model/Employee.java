@@ -1,4 +1,4 @@
-/*
+   /*
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
@@ -30,8 +30,9 @@ import javax.persistence.Table;
  *
  * @since  1.0
  *
- * @jls    1.1 Adding batch.
+ * @jls    1.1 Adding EmployeeId
  */  
+
 @Entity
 @Table(name = "employee")
 public class Employee {

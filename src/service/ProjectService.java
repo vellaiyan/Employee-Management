@@ -19,7 +19,6 @@ import com.ideas2it.model.Project;
 import com.ideas2it.service.EmployeeService;
 
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +30,8 @@ import java.util.List;
  * @since  1.0
  * 
  */
+
 public class ProjectService {
-    ProjectDao projectDao = new ProjectDao();
-    ProjectMapper projectMapper = new ProjectMapper();
-    EmployeeService employeeService = new EmployeeService();
-    EmployeeMapper employeeMapper = new EmployeeMapper();
-    EmployeeProjectMapper employeeProjectMapper = new EmployeeProjectMapper();
 
    /**
      * {@code addProject} to add new project.
@@ -46,16 +41,18 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return addedStatus.
+     * @return boolean.
      *
      * @since 1.0
      * 
      */ 
-    public int addProject(ProjectDto projectDto) throws CustomException {
+    public boolean addProject(ProjectDto projectDto) throws CustomException {
+        ProjectDao projectDao = new ProjectDao();
+        ProjectMapper projectMapper = new ProjectMapper();
         Project project = projectMapper.fromDto(projectDto);
         int projectId = projectDao.insertProject(project);
 
-        return projectId;
+        return true;
     }
 
     /**
@@ -63,12 +60,14 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return projectDtos.
+     * @return list of projectDtos.
      *
      * @since 1.0
      * 
      */ 
-    public List<ProjectDto> getProjects() throws CustomException {
+    public List<ProjectDto> getProjects () throws CustomException {
+        ProjectDao projectDao = new ProjectDao();
+        ProjectMapper projectMapper = new ProjectMapper();
         List<Project> projects = projectDao.retrieveProjects();
         List<ProjectDto> projectDtos = new ArrayList<ProjectDto>();
         for (Project project: projects) {
@@ -87,12 +86,13 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return checkedStatus.
+     * @return boolean.
      *
      * @since 1.0
      * 
      */        
     public boolean checkIsProjectAvailableById(int projectId) throws CustomException {
+        ProjectDao projectDao = new ProjectDao();
         for (Project project: projectDao.retrieveProjects()) {
             if (project.getProjectId() == projectId) {
 
@@ -116,6 +116,7 @@ public class ProjectService {
      * 
      */ 
     public ProjectDto getProjectById(int projectId) throws CustomException {
+        ProjectDao projectDao = new ProjectDao();
         ProjectMapper projectMapper = new ProjectMapper();
         return projectMapper.toDto(projectDao.retrieveProjectById(projectId));
     }
@@ -132,12 +133,14 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return updatedStatus.
+     * @return boolean.
      *
      * @since 1.0
      * 
      */ 
-    public boolean updateProject(ProjectDto projectDto, int projectId) throws CustomException {      
+    public boolean updateProject(ProjectDto projectDto, int projectId) throws CustomException {   
+        ProjectDao projectDao = new ProjectDao(); 
+        ProjectMapper projectMapper = new ProjectMapper();    
         Project project = projectMapper.fromDto(projectDto);
         project.setProjectId(projectId);
 
@@ -152,12 +155,14 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return deleteStatus.
+     * @return boolean.
      *
      * @since 1.0
      * 
      */ 
     public boolean deleteProject(int projectId) throws CustomException {
+        ProjectDao projectDao = new ProjectDao();
+        ProjectMapper projectMapper = new ProjectMapper();
         ProjectDto projectDto = getProjectById(projectId);
         projectDto.setStatus("inactive");
         Project project = projectMapper.fromDto(projectDto);
@@ -175,12 +180,16 @@ public class ProjectService {
      *
      * @throws CustomException.
      *
-     * @return assignedStatus.
+     * @return boolean.
      *
      * @since 1.0
      * 
      */ 
     public boolean assignProjectToEmployee(EmployeeProjectDto employeeProjectDto) throws CustomException {    
+        EmployeeService employeeService = new EmployeeService();
+        ProjectDao projectDao = new ProjectDao();
+        EmployeeProjectMapper employeeProjectMapper = new EmployeeProjectMapper();
+        ProjectMapper projectMapper = new ProjectMapper();
         EmployeeProject employeeProject = employeeProjectMapper.fromDto(employeeProjectDto);
         Employee employee = employeeService.getEmployeeDetailsById(employeeProjectDto.getEmployeeId());
         ProjectDto projectDto = getProjectById(employeeProjectDto.getProjectId());
@@ -197,6 +206,8 @@ public class ProjectService {
      *       Project need to be update.
      *
      * @throws CustomException.
+     *
+     * @return void.
      *
      * @since 1.0
      * 
@@ -253,6 +264,7 @@ public class ProjectService {
      */ 
     public List<EmployeeDto> getAssignedEmployeesForSingleProject(int projectId) throws CustomException {
         Project project = getProjectDetailsById(projectId);
+        EmployeeMapper employeeMapper = new EmployeeMapper();
         List<EmployeeProject> employeeProjects = project.getEmployeeProjects();
         List<Employee> employees = new ArrayList<Employee>();
  

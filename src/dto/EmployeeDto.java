@@ -9,17 +9,16 @@ import com.ideas2it.model.EmployeeProject;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.util.List;
 
 /**
- * The {@code EmployeeDto} class represents all the fields related to front end.
+ * The {@code EmployeeDto} class represents the all  fields to be accessable for front-end.
+ * 
  *
  * @author Vellaiyan
  *
  * @since  1.0
- *
- * @jls    1.1 Adding delete status.
+ * @jls    1.1 Adding EmployeeId
  */
 public class EmployeeDto { 
     private int employeeId;
@@ -181,3 +180,9 @@ public class EmployeeDto {
         return output;   
     }
 }
+
+
+
+
+
+

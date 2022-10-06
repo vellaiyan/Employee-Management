@@ -6,12 +6,9 @@
 package com.ideas2it.dto;
 
 import java.sql.Date;
-
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;  
@@ -25,13 +22,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * The {@code EmployeeProjectDto} class represents all the fields related to front end.
+ * The {@code EmployeeProjectDto} class represents the all  fields to be accessable for front-end.
+ * 
  *
  * @author Vellaiyan
  *
  * @since  1.0
- *
- * @jls    1.1 Adding relieved date.
+ * @jls    1.1 Adding relievedOd.
  */
 public class EmployeeProjectDto {
     private int projectId;

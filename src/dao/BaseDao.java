@@ -9,7 +9,6 @@ import com.ideas2it.exception.CustomException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException; 
 import org.hibernate.Session; 
@@ -32,11 +31,18 @@ public class BaseDao {
 
     } 
 
-    public static SessionFactory databaseConnection() {
-        if (sessionFactory == null) {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        } 
+    public static SessionFactory databaseConnection() throws CustomException {
+        try {
+            if (sessionFactory == null) {
+                sessionFactory = new Configuration().configure().buildSessionFactory();
+            }
+        } catch (HibernateException hibernateException) {             
+            throw new CustomException("Error occured while creating session factory", hibernateException);
+        }  
       
         return sessionFactory;
     }    
 }
+
+
+

@@ -13,17 +13,13 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.text.DateFormat;  
 import java.text.SimpleDateFormat; 
-
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;  
-
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -41,15 +37,13 @@ import org.hibernate.Transaction;
  * @since  1.0
  * 
  */
+
 public class RoleDao {
-    SessionFactory factory = BaseDao.databaseConnection();
 
     /**
      * {@code insertRoles} to insert the default roles.
      *
      * @throws CustomException.
-     *
-     * @return insertedStatus.
      *
      * @since 1.1
      * 
@@ -60,6 +54,7 @@ public class RoleDao {
         Role roleObject = new Role();
         List<Role> roles = roleObject.defaultRoles();
         try {
+            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession();
             transaction = session.beginTransaction();
             for (Role role: roles) {                
@@ -84,8 +79,6 @@ public class RoleDao {
      *
      * @throws CustomException.
      *
-     * @return roles.
-     *
      * @since 1.1
      * 
      */ 
@@ -94,10 +87,10 @@ public class RoleDao {
         Transaction transaction = null;
         
         try {
+            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession(); 
             Criteria criteria = session.createCriteria(Role.class);
             criteria.add(Restrictions.eq("name", roleName));
-
             return criteria.list();
         } catch (HibernateException hibernateException) { 
             throw new CustomException("Error while retrieve roles by role name", hibernateException); 
@@ -116,8 +109,6 @@ public class RoleDao {
      *
      * @throws CustomException.
      *
-     * @return role.
-     *
      * @since 1.1
      * 
      */ 
@@ -125,11 +116,11 @@ public class RoleDao {
         Session session = null;
         Transaction transaction = null;
         try {
+            SessionFactory factory = BaseDao.databaseConnection();
             session = factory.openSession();
             transaction = session.beginTransaction();
             transaction.commit();
             Role role = (Role)session.createQuery("FROM Role where name = :name").setString("name", roleName).uniqueResult(); 
-
             return role;          
         } catch (HibernateException hibernateException) {
             throw new CustomException("Error while retrieve role by role name", hibernateException);

@@ -27,6 +27,7 @@ import javax.persistence.Table;
 /**
  * The {@code Project} class represents the all  fields related to project.
  * 
+ *
  * @author Vellaiyan
  *
  * @since  1.0

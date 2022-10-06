@@ -2,6 +2,7 @@
  * Copyright (c) 2021, 2022, Ideas2it and/or its affiliates. All rights reserved.
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
+
 package com.ideas2it.controller;
 
 import com.ideas2it.dto.EmployeeDto;
@@ -16,18 +17,9 @@ import com.ideas2it.utils.ValidationUtil;
 
 import java.text.DateFormat;  
 import java.text.SimpleDateFormat; 
-
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime; 
 import java.time.LocalDate;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Period;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;  
@@ -35,29 +27,26 @@ import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner; 
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger; 
 
 /**
  * The {@code SignInAndLogInController} class helps all employees to signin or login into their account. 
- * This class also provides modification support and viewing aswell. 
+ * This class also provides modification support aswell. 
  *
  * @author Vellaiyan
  *
  * @since  1.0
- *
  * @jls    1.1 Showing details in table format.
- *
  */
-public class SignInAndLogInController { 
-    EmployeeDto employeeDto = new EmployeeDto();  
-    ProjectDto projectDto = new ProjectDto();
-    ProjectService projectService = new ProjectService(); 
-    EmployeeService employeeService = new EmployeeService();
 
+public class SignInAndLogInController { 
+    private EmployeeService employeeService = new EmployeeService();
+    private ProjectService projectService = new ProjectService();
+    
     /**
      * {@code signIn} implemented to sign-in  for all employees.
      * 
@@ -68,6 +57,7 @@ public class SignInAndLogInController {
      *
      */
     public void signIn(String userRole, String processToBeProceed, int employeeId) throws CustomException {
+        EmployeeDto employeeDto = new EmployeeDto();   
         DateTimeFormatter dateTimeFormater = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
         LocalDateTime localDate = LocalDateTime.now();     
         employeeDto.setFirstName(getAndValidateInputByRegex("First Name", ValidationUtil.NAME_PATTERN));
@@ -102,36 +92,36 @@ public class SignInAndLogInController {
      * @since 1.0
      * 
      */
+
     public String  getDateOfBirthAndDateOfJoining(String informationToPrint, String choosenDate) throws CustomException {
         Scanner scanner = new Scanner(System.in);
         boolean isValidDate = true;
         String dateOfBirthAndJoining = "";
         int remainingTimes = 0;
         for (int checkingLoop = 0; checkingLoop < 5; checkingLoop++) {            
-            EmployeeController.logger.info(informationToPrint);
+            EmployeeController.logger.info("informationToPrint");
             dateOfBirthAndJoining = scanner.next();
-            if (DateUtil.validateDateOfBirth(dateOfBirthAndJoining, choosenDate)) {
-                String date = dateValidation(dateOfBirthAndJoining);             
-                if (date.equals(dateOfBirthAndJoining)) {
-                    isValidDate = false;
-                    checkingLoop = 4;
-                    dateOfBirthAndJoining = date;
-                } else if (date.equals("max")) {
-                    EmployeeController.logger.info("Your date of birth exceeds current year");
-                    remainingTimes++;
-                } else if (date.equals("low")) { 
-                    EmployeeController.logger.error("Given date of birth is not valid");
-                    remainingTimes++;
-                } else if (date.equals("min")) {
-                    EmployeeController.logger.error("Your age is too low");
-                    remainingTimes++;
-                } else if (date.equals("invalid")) {
-                    EmployeeController.logger.error("Invalid dateOfBirth");
-                    remainingTimes++;
-                } if (remainingTimes == 5) {
-                   throw new CustomException("Invalid Input");                
-                }
-            } 
+            String date = DateUtil.validateDateOfBirth(dateOfBirthAndJoining, choosenDate);
+
+            if (date.equals(dateOfBirthAndJoining)) {
+                isValidDate = false;
+                checkingLoop = 4;
+                dateOfBirthAndJoining = date;
+            } else if (date.equals("max")) {
+                EmployeeController.logger.info("Your date of birth exceeds current year");
+                remainingTimes++;
+            } else if (date.equals("low")) { 
+                EmployeeController.logger.error("Given date of birth is not valid");
+                remainingTimes++;
+            } else if (date.equals("min")) {
+                EmployeeController.logger.error("Your age is too low");
+                remainingTimes++;
+            } else if (date.equals("invalid")) {
+                EmployeeController.logger.error("Invalid dateOfBirth");
+                remainingTimes++;
+            } if (remainingTimes == 5) {
+                throw new CustomException("Invalid Input");                
+            }
         }
         return dateOfBirthAndJoining;
     }   
@@ -181,12 +171,13 @@ public class SignInAndLogInController {
      *       which proecss (add or update) is going to perform.
      *
      * @param projectId
-     *       Id of the project which requires update.
+     *       Project id required to update project.
      *
      * @since 1.0
      * 
      */    
     public void addAndUpdateProject(String userRole, String processToBeProceed, int projectId) throws CustomException {
+        ProjectDto projectDto = new ProjectDto();
         projectDto.setProjectId(0);
         projectDto.setProjectName(getAndValidateInputByRegex("Project Name", ValidationUtil.NAME_PATTERN));
         projectDto.setProjectDescription(getAndValidateInputByRegex("Project Description", ValidationUtil.NAME_PATTERN));
@@ -217,53 +208,51 @@ public class SignInAndLogInController {
         EmployeeController.logger.info("Enter the password : ");
         String password = scanner.next();
         boolean isContinue = true;
-
         if ((userName.equals("ideas2it")) && (password.equals("admin"))) {
             EmployeeController.logger.info("1. View all trainee details. \n2. View all trainer details. \n3. View all project managers."
                 +"\n4. Update employee details. \n5. Delete employee \n6. Update employee particular detail. \n7. View particular employee"
                 + "\n8. Display all employees. \n9. Display all projects. \n10. Exit");
             String userOption = scanner.next();
-
-            switch (userOption) {
-                case "1":
-                    displayEmployeesByRole(Constants.TRAINEE);
-                    break;
+                switch (userOption) {
+                    case "1":
+                        displayEmployeesByRole(Constants.TRAINEE);
+                        break;
  
-                case "2":
-                    displayEmployeesByRole(Constants.TRAINER);
-                    break;
+                    case "2":
+                        displayEmployeesByRole(Constants.TRAINER);
+                        break;
 
-                case "3":
-                    displayEmployeesByRole(Constants.PROJECT_MANAGER);
-                    break;
+                    case "3":
+                        displayEmployeesByRole(Constants.PROJECT_MANAGER);
+                        break;
 
-                case "4":
-                    updateEmployeeDetails();
-                    break;
+                    case "4":
+                         updateEmployeeDetails();
+                         break;
                     
-                case "5":
-                    validateAndDeleteEmployee();
-                    break;
+                    case "5":
+                        validateAndDeleteEmployee();
+                        break;
 
-                case "6":
-                    validateAndUpdateEmployeeDetail();
-                    break;
+                    case "6":
+                        validateAndUpdateEmployeeDetail();
+                        break;
 
-                case "7":
-                    validateAndDisplayEmployeeDetail();
-                    break;
+                    case "7":
+                        validateAndDisplayEmployeeDetail();
+                        break;
 
-                case "8":
-                    displayAllEmployees(employeeService.getEmployees());
-                    break;
+                    case "8":
+                        displayAllEmployees(employeeService.getEmployees());
+                        break;
    
-                case "9" :
-                    displayAllProjects(projectService.getProjects());
-                    break;
+                    case "9" :
+                        displayAllProjects(projectService.getProjects());
+                        break;
                     
-                default:
-                    isContinue = false;
-            }        
+                    default:
+                        isContinue = false;
+                }        
         }
     } 
 
@@ -344,7 +333,7 @@ public class SignInAndLogInController {
     }
 
     /**
-     * {@code updateEmployeeDetails} used by employee to update their details.
+     * {@code updateEmployeeDetails} uses employee to update their details.
      *
      * @since 1.0
      * 
@@ -435,7 +424,7 @@ public class SignInAndLogInController {
      * {@code getUpdatedValue) is the common method to get all the updated values.
      *
      * @param informationToPrint
-     *       Information to print.
+     *       which update value is going to get from user.
      *
      * @since 1.0
      * 
@@ -494,10 +483,11 @@ public class SignInAndLogInController {
         boolean isValidProjectId = true;
         Scanner scanner = new Scanner(System.in);
         int projectId;
-        while (isValidProjectId) {
+        Scanner scanner1 = new Scanner(System.in);
+        while(isValidProjectId) {
             EmployeeController.logger.info("Enter the project Id");
             try {
-                projectId = scanner.nextInt();
+                projectId = scanner1.nextInt();
                 if (projectService.checkIsProjectAvailableById(projectId)) {
                     isValidProjectId = false;
                     return projectId;
@@ -515,11 +505,10 @@ public class SignInAndLogInController {
     /**
      * {@code validateAndGetEmployeeId} is implemented to validate and get the employee id.
      *
-     * @return employeeId.
-     *
      * @since 1.0
      * 
-     */   
+     */ 
+  
     public int validateAndGetEmployeeId() {
         boolean isValidEmployeeId = true;
         Scanner scanner = new Scanner(System.in);
@@ -547,11 +536,10 @@ public class SignInAndLogInController {
      * @param modeOfValidation
      *       which date (date of birth / date of joinint) is going to validate.
      *
-     * @return date.
-     *
      * @since 1.0
      * 
      */ 
+
     public String validateAndGetBothAssignedAndCompletionDate(String modeOfValidation) {
         boolean isValidDate = true;
         Scanner scanner = new Scanner(System.in);
@@ -582,48 +570,6 @@ public class SignInAndLogInController {
         return "";       
     } 
 
-
-    /**
-     * {@code dateValidation} is implemented to validate the date.
-     *
-     * @param givenDate
-     *       Given user input.
-     *
-     * @return date.
-     *
-     * @since 1.0
-     * 
-     */ 
-    public String dateValidation(String userInput) throws CustomException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateOfBirth = "";
-        try {
-            Date dateOfBirthParse = simpleDateFormat.parse(userInput);
-            Instant instant = dateOfBirthParse.toInstant();
-            ZonedDateTime timeZone = instant.atZone(ZoneId.systemDefault());
-            LocalDate givenDate = timeZone.toLocalDate();
-            int birthYear = givenDate.getYear();
-            int givenDay = givenDate.getDayOfMonth();
-            boolean leapYear = (((birthYear % 4 == 0) && (birthYear % 100!= 0)) || (birthYear % 400 == 0));
-            int currentYear = LocalDate.now().getYear();    
-
-            if (birthYear > currentYear) {
-                dateOfBirth = "max";
-            } else if (birthYear <= 1950) {
-                dateOfBirth = "low";
-            } else if ((currentYear - birthYear) <= 18 ) {
-                dateOfBirth = "min";
-            } else if (((leapYear == true) &&((givenDate.getMonth().toString().equals("FEBRUARY")) == true)) && (givenDay>29)) {
-                dateOfBirth = "low";
-            } else {
-                dateOfBirth = userInput;
-            }
-        } catch (ParseException parseException) {
-             return "invalid";
-        }
-        return userInput;
-    }
- 
     /**
      * {@code addEmployee} is implemented to add the employee.
      *
@@ -642,9 +588,8 @@ public class SignInAndLogInController {
     public void addEmployee(EmployeeDto employeeDto, LocalDateTime localDate, String userRole) throws CustomException {
         employeeDto.setCreateDate(localDate);
         employeeDto.setUpdateDate(localDate);
-        employeeService.addEmployee(employeeDto, userRole);
-        EmployeeController.logger.debug("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");
-        
+        boolean isAdded = employeeService.addEmployee(employeeDto, userRole);
+       EmployeeController.logger.debug("\nYour details are added in Trainee list.\nYou have to LogIn again to access your account\n");
     }
 
     /**
@@ -669,19 +614,17 @@ public class SignInAndLogInController {
                 case 1: 
                     role = Constants.TRAINEE;
                     break;
-
                 case 2:
                     role = Constants.TRAINER;
                     break;
-
                 case 3:
                     role = Constants.PROJECT_MANAGER;
                     break;
-
                 case 4: 
                     role = Constants.HUMAN_RESOURCE;
                     break;
         }
         employeeService.updateEmployeeDetails(employeeDto, employeeId, role);
     }
+
 }
