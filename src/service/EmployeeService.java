@@ -5,13 +5,11 @@
 
 package com.ideas2it.service;
 
-import com.ideas2it.utils.Constants;
 import com.ideas2it.dao.EmployeeDao;
 import com.ideas2it.dto.EmployeeDto;
 import com.ideas2it.exception.CustomException;
 import com.ideas2it.mapper.EmployeeMapper;
 import com.ideas2it.model.Employee;
-import com.ideas2it.model.Role;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,10 +23,11 @@ import java.util.List;
  * @since  1.0
  * @jls    1.1 Get employee by employee id.
  */
+
 public class EmployeeService {   
-    EmployeeDao employeeDao = new EmployeeDao();
-    EmployeeMapper employeeMapper = new EmployeeMapper();
-    RoleService roleService = new RoleService();
+    private EmployeeDao employeeDao = new EmployeeDao();
+    private EmployeeMapper employeeMapper = new EmployeeMapper();
+    private RoleService roleService = new RoleService();
 
     /**
      * {@code addEmployee} to add new employee.
@@ -47,11 +46,14 @@ public class EmployeeService {
      * 
      */ 
     public boolean addEmployee(EmployeeDto employeeDto, String userRole) throws CustomException {
-        List<Role> roles = roleService.getRolesByRoleName(userRole);
-        Employee employee = employeeMapper.fromDto(employeeDto);
-        employee.setRoles(roles);
-        int employeeId = employeeDao.insertEmployee(employee);
-
+        if (checkEmployeeByEmailId(employeeDto.getEmailId())) {
+            System.out.println("Given email id is already exist please choose different Email");
+        } else {
+            Employee employee = employeeMapper.fromDto(employeeDto);
+            int roleId = roleService.getRoleIdByName(userRole);
+            int employeeId = employeeDao.insertEmployee(employee);
+            return roleDao.assignEmployeeRole(employeeId, roleId);
+        }
         return false;
     }
 
@@ -65,16 +67,11 @@ public class EmployeeService {
      * @since 1.0
      * 
      */ 
-    public List<EmployeeDto> getEmployees() throws CustomException {
+    public List<Employee> getEmployees() throws CustomException {
         List<Employee> employees = employeeDao.retriveEmployees();
-        List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
-
-        for (Employee employee: employees) {
-            EmployeeDto employeeDto = employeeMapper.toDto(employee);
-            employeeDtos.add(employeeDto);    
+        for (Employee employee : employees) {
         }
-
-        return employeeDtos;    
+        return employees;
     }
 
     /**
@@ -91,18 +88,13 @@ public class EmployeeService {
      * 
      */ 
     public List<EmployeeDto> getEmployeesByRole(String userRole) throws CustomException {
-
-        RoleDao roleDao = new RoleDao();
-        List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
-        Role role = roleService.getRoleByRoleName(userRole);
-        List<Employee> employees = role.getEmployees();
-
-        for (Employee employee: employees) {
+         int roleId = roleDao.getRoleIdByName(userRole);
+         List<EmployeeDto> employeeDtos = new ArrayList<EmployeeDto>();
+         List<Employee> employees = employeeDao.retriveEmployeeByRole(roleId);
+         for (Employee employee : employees) {
             EmployeeDto employeeDto = employeeMapper.toDto(employee);
-            employeeDto.setRole(userRole);
             employeeDtos.add(employeeDto);
          }
-
          return employeeDtos;
     }
     
@@ -120,21 +112,20 @@ public class EmployeeService {
      * 
      */ 
     public boolean checkEmployeeById(int employeeId) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();
-        for (Employee employee: employeeDao.retriveEmployees()) { 
-            if (employee.getEmployeeId() == employeeId) {
+        for (Employee employee : employeeDao.retriveEmployees()) {
+            System.out.println(employee.getEmployeeId());
+            if(employee.getEmployeeId() == employeeId){
                 return true;
             }
         }
-
         return false;
     }
-
+  
     /**
-     * {@code checkEmployeeByEmailId} to check is emploee emial id is available or not.
+     * {@code checkEmployeeByEmailId} to check employee is available or not by EmailId
      *
-     * @param emailId
-     *       emailId need to be check..
+     * @param employeeId
+     *       EmployeeId need to be check.
      *
      * @throws CustomException.
      *
@@ -144,14 +135,11 @@ public class EmployeeService {
      * 
      */ 
     public boolean checkEmployeeByEmailId(String emailId) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();
-        for(Employee employee: employeeDao.retriveEmployees()) {
-            if (employee.getEmailId().equals(emailId)) {
-
+        for(Employee employee : employeeDao.retriveEmployees()) {
+            if(employee.getEmailId().equals(emailId)) {
                 return true;
             } 
         }
-
         return false;
     }
  
@@ -169,18 +157,12 @@ public class EmployeeService {
      * 
      */ 
     public boolean deleteEmployeeById(int employeeId) throws CustomException {
-        EmployeeDao employeeDao = new EmployeeDao();
-        List<Role> role = new ArrayList<Role>();
-        Employee employee = employeeDao.retriveEmployeeById(employeeId);
-        employee.setStatus(Constants.DELETE_STATUS);
-        employee.setRoles(role);
-        if (employeeDao.deleteEmployee(employee)) {
-
+        if(employeeDao.deleteEmployeeById(employeeId)) {
             return true;
         }
-
         return false;
     }
+
 
     /**
      * {@code updateEmployeeDetails} to update employee all details.
@@ -200,19 +182,35 @@ public class EmployeeService {
      *
      * @since 1.0
      * 
-     */ 
-    public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId, String userRole) throws CustomException {
-
+    public boolean updateEmployeeDetails(EmployeeDto employeeDto, int employeeId) throws CustomException {
         Employee employee = employeeMapper.fromDto(employeeDto);
-        Employee employeeFromDatabase = employeeDao.retriveEmployeeById(employeeId);        
-        List<Role> roles = roleService.getRolesByRoleName(userRole);
-        roles.addAll(employeeFromDatabase.getRoles());
-        employee.setRoles(roles);
-        employee.setEmployeeId(employeeId);
-        employee.setCreateDate(employeeFromDatabase.getCreateDate());
-
-        return employeeDao.updateEmployeeDetails(employee);
+        return employeeDao.updateEmployeeDetailsById(employee, employeeId);
     }
+
+    /**
+     * {@code updateEmployeeDetaiuls} to update employee details.
+     *
+     * @param employeeId
+     *       Employee id need to be get.
+     *
+     * @param value 
+     *       New updated value.
+     *
+     * @param fieldName
+     *       Field name need to be updated.
+     *
+     * @throws CustomException.
+     *
+     * @return employeeDto.
+     *
+     * @since 1.0
+     * 
+     */ 
+    public boolean updateEmployeeDetail(int employeeId, String value, String fieldName) throws CustomException {
+        return employeeDao.updateEmployeeDetailById(employeeId, value, fieldName);
+
+    }
+
 
     /**
      * {@code getEmployeeById} to get employee based on the employee id.
@@ -228,52 +226,11 @@ public class EmployeeService {
      * 
      */ 
     public EmployeeDto getEmployeeById(int employeeId) throws CustomException {
-        if(checkEmployeeById(employeeId)) {
-            Employee employee = employeeDao.retriveEmployeeById(employeeId);
-
-            return employeeMapper.toDto(employeeDao.retriveEmployeeById(employeeId));
-        }
-
+       if(checkEmployeeById(employeeId)) {
+           Employee employee = employeeDao.retriveEmployeeById(employeeId);
+           return employeeMapper.toDto(employeeDao.retriveEmployeeById(employeeId));
+       }
        return null;
-    }
-
-    /**
-     * {@code addRoles} to add default roles in the database.
-     *
-     * @throws CustomException.
-     *
-     * @return boolean.
-     *
-     * @since 1.0
-     * 
-     */ 
-    public boolean addRoles() throws CustomException {
-
-        return roleService.insertRoles();
-    }
-
-    public boolean setUpdatedEmployee(EmployeeDto employeeDto) throws CustomException {
-        Employee employee = employeeMapper.fromDto(employeeDto);
-
-        return employeeDao.updateEmployeeDetails(employee);
-    }
-
-    /**
-     * {@code getEmployeeDetailsById} to get employeeDetails by Id.
-     *
-     * @param employeeId
-     *       Employee need to be get.
-     *
-     * @throws CustomException.
-     *
-     * @return employee.
-     *
-     * @since 1.0
-     * 
-     */ 
-    public Employee getEmployeeDetailsById(int employeeId) throws CustomException {
-
-        return employeeDao.retriveEmployeeById(employeeId);
     }
 }
 

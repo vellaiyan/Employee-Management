@@ -5,14 +5,10 @@
 
 package com.ideas2it.dto;
 
-import com.ideas2it.model.EmployeeProject;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * The {@code EmployeeDto} class represents the all  fields to be accessable for front-end.
+ * The {@code Employee} class represents the all  fields  of employees.
  * 
  *
  * @author Vellaiyan
@@ -20,6 +16,7 @@ import java.util.List;
  * @since  1.0
  * @jls    1.1 Adding EmployeeId
  */
+
 public class EmployeeDto { 
     private int employeeId;
     private int batch;
@@ -28,21 +25,18 @@ public class EmployeeDto {
     private String gender;
     private LocalDate dateOfBirth;
     private LocalDate dateOfJoining;
+    private LocalDate createDate;
+    private LocalDate updateDate;
+    private String timeZone;
     private String emailId;
     private long mobileNumber;  
-    private LocalDateTime createDate;
-    private LocalDateTime modifiedDate;
-    private String role;
-    private String status;
-    private EmployeeProject employeeProjects;
 
     public EmployeeDto() {
 
     }
 
     public EmployeeDto(int employeeId, int batch , String firstName, String subject, String gender,
-            LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber,
-            LocalDateTime createDate, LocalDateTime modifiedDate, String status) {
+            LocalDate dateOfBirth, LocalDate dateOfJoining, String emailId, long mobileNumber, LocalDate createDate, LocalDate updateDate) {
         this.employeeId = employeeId;
         this.batch = batch;
         this.firstName = firstName;
@@ -53,26 +47,16 @@ public class EmployeeDto {
         this.emailId = emailId;
         this.mobileNumber = mobileNumber;
         this.createDate = createDate;
-        this.modifiedDate = modifiedDate;
-        this.status = status;
-    }
-
-    public EmployeeProject getEmployeeProjects() {
-        return employeeProjects;
-    }
-
-    public String getRole() {
-        return role;
+        this.updateDate = updateDate;
     }
 
     public String getSubject() {
         return subject;
     }
-  
-    public String getStatus() {
-        return status;
-    }
 
+    public String getTimeZone() {
+        return timeZone;
+    }
  
     public LocalDate getDateOfJoining() {
         return dateOfJoining;
@@ -91,7 +75,6 @@ public class EmployeeDto {
          return emailId;
     }
 
-
     public String getGender() {
         return gender;
     }
@@ -104,12 +87,12 @@ public class EmployeeDto {
         return employeeId;
     }
    
-    public LocalDateTime getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
   
-    public LocalDateTime getUpdateDate() {
-        return modifiedDate;
+    public LocalDate getUpdateDate() {
+        return updateDate;
     }
   
     public LocalDate getDateOfBirth() {
@@ -145,12 +128,12 @@ public class EmployeeDto {
         this.dateOfJoining = dateOfJoining;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
+    public void setCreateDate(LocalDate createDate) {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(LocalDateTime modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
     }
 
     public void setEmployeeId(int employeeId) {
@@ -160,23 +143,15 @@ public class EmployeeDto {
     public void setBatch(int batch) {
         this.batch = batch;
     }
- 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-   
-    public void setRole(String role) {
-        this.role = role;
-    }
 
-    public void setEmployeeProjects(EmployeeProject employeeProjects) {
-        this.employeeProjects = employeeProjects;
+    public void getTimeZone(String timeZone) {
+        this.timeZone = timeZone; 
     }
 
     @Override
     public String toString() { 
-        String output = String.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s %10s\n", employeeId, batch, firstName, 
-            subject, gender, dateOfBirth, dateOfJoining, createDate, modifiedDate, emailId, mobileNumber, role);    
+        String output = String.format("%17s %8s %8s %15s %8s %15s %5s %15s %8s %15s %20s\n", employeeId, batch, firstName, subject, gender, dateOfBirth,
+            dateOfJoining, createDate, updateDate, emailId, mobileNumber);    
         return output;   
     }
 }

@@ -19,7 +19,7 @@ import com.ideas2it.model.Employee;
  */
 
 public class EmployeeMapper {
-
+     
     /**
      * {@code fromDto} to convert employeeDto object into employee object.
      *
@@ -34,7 +34,7 @@ public class EmployeeMapper {
     public Employee fromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee(employeeDto.getEmployeeId(), employeeDto.getBatch(), employeeDto.getFirstName(),
             employeeDto.getSubject(), employeeDto.getGender(),employeeDto.getDateOfBirth(), employeeDto.getDateOfJoining(),
-            employeeDto.getEmailId(), employeeDto.getMobileNumber(), employeeDto.getCreateDate(), employeeDto.getUpdateDate(),                                           employeeDto.getStatus());
+            employeeDto.getEmailId(), employeeDto.getMobileNumber(), employeeDto.getCreateDate(), employeeDto.getUpdateDate());
 
         return employee;
     }
@@ -53,8 +53,7 @@ public class EmployeeMapper {
     public EmployeeDto toDto(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto(employee.getEmployeeId(), employee.getBatch(), employee.getFirstName(),
             employee.getSubject(), employee.getGender(), employee.getDateOfBirth(), employee.getDateOfJoining(), 
-            employee.getEmailId(), employee.getMobileNumber(), employee.getCreateDate(), employee.getModifiedDate(),
-            employee.getStatus());
+            employee.getEmailId(), employee.getMobileNumber(), employee.getCreateDate(), employee.getUpdateDate());
 
             return employeeDto;
     }

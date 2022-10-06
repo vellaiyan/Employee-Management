@@ -3,7 +3,7 @@
  * IDEAS2IT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.ideas2it.utils; 
+package com.ideas2it.utilitis; 
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,28 +18,14 @@ import java.util.regex.Pattern;
  */
 
 public class ValidationUtil {
-    public static final String EMPLOYEE_ID_PATTERN = "^[0-9][0-9]$";
-    public static final String NAME_PATTERN = "^[a-zA-Z]{1,9}$";               
-    public static final String GENDER_PATTERN = "^male|female |others$";           
-    public static final String PHONE_PATTERN = "^[6-9][0-9]{9}$";                            
-    public static final String DOOR_PATTERN = "^([0-9]+)/([0-9][0-9][0-9])$";                                   
-    public static final String PIN_PATTERN = "^([6]+)([0-9][0-9][0-9][0-9][0-9])$";                            
-    public static final String EMAIL_PATTERN = "^([\\w-\\.]+){1,64}@([\\w&&[^_]]+){2,255}.[a-z]{2,}$";         
+    public static String EMPLOYEE_ID_PATTERN = "^[0-9][0-9]$";
+    public static String NAME_PATTERN = "^[a-zA-Z]{1,9}$";                                                     /* name valemployeeIdation     */
+    public static String GENDER_PATTERN = "^male|female$";                                                    /* gender valemployeeIdation   */
+    public static String PHONE_PATTERN = "^[6-9][0-9]{9}$";                                                  /* Phone no valemployeeIdation */
+    public static String DOOR_PATTERN = "^([0-9]+)/([0-9][0-9][0-9])$";                                     /* door no valemployeeIdation  */
+    public static String PIN_PATTERN = "^([6]+)([0-9][0-9][0-9][0-9][0-9])$";                              /* pin code valemployeeIdation */ 
+    public static String EMAIL_PATTERN = "^([\\w-\\.]+){1,64}@([\\w&&[^_]]+){2,255}.[a-z]{2,}$";          /* email valemployeeIdation    */
 
-    /**
-     * {@code inputCheckingByRegex} to check the given user input is valid or not.
-     *
-     * @param regex
-     *       regex for validation.
-     *
-     * @param value
-     *       User input need to be check.
-     *
-     * @return checkedStatus.
-     *
-     * @since 1.0
-     * 
-     */ 
     public static boolean inputCheckingByRegex (String regex, String value) {
         boolean isvalid = false;
         Pattern inputPattern = Pattern.compile(regex);
@@ -47,7 +33,6 @@ public class ValidationUtil {
         if (inputMatcher.find()) {
             isvalid = true;
         } 
-
         return isvalid;
     }
 }

@@ -6,38 +6,34 @@
 package com.ideas2it.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import com.ideas2it.model.EmployeeProject;
 
 /**
- * The {@code ProjectDto} class represents the all  fields to be accessable for front-end.
+ * The {@code Employee} class represents the all  fields  of project.
  * 
  *
  * @author Vellaiyan
  *
  * @since  1.0
- * @jls    1.1 Adding status.
+ * @jls    1.1 Adding Project id.
  */ 
 
 public class ProjectDto {
-    protected int projectId;
-    protected int employeeId;
-    protected String projectName;
-    protected String projectDescription;
-    protected String clientName;
-    protected String companyName;
-    protected LocalDate startingDate;
-    protected LocalDate estimatedEndingDate;
-    protected String status;
-    protected EmployeeProject employeeProjects;
+    private int projectId;
+    private String projectName;
+    private String projectDescription;
+    private String clientName;
+    private String companyName;
+    private LocalDate startingDate;
+    private LocalDate estimatedEndingDate;
+    private String deleteStatus;
 
     public ProjectDto() {
     
     }
 
     public ProjectDto(int projectId, String projectName, String projectDescription, String clientName, String companyName, LocalDate startingDate,
-            LocalDate estimatedEndingDate, String status) {
+            LocalDate estimatedEndingDate, String deleteStatus) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
@@ -45,12 +41,8 @@ public class ProjectDto {
         this.companyName = companyName;
         this.startingDate = startingDate;
         this.estimatedEndingDate = estimatedEndingDate; 
-        this.status = status;  
+        this.deleteStatus = deleteStatus;  
       
-    }
-
-    public EmployeeProject getEmployeeProjects() {
-        return employeeProjects;
     }
 
     public int getProjectId() {
@@ -77,8 +69,8 @@ public class ProjectDto {
         return startingDate;
     }
 
-    public String getStatus() {
-        return status;
+    public String getDeleteStatus() {
+        return deleteStatus;
     }
 
     public LocalDate getEstimatedEndingDate() {
@@ -113,17 +105,7 @@ public class ProjectDto {
         this.estimatedEndingDate = estimatedEndingDate;
     }
   
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setEmployeeProjects(EmployeeProject employeeProjects) {
-        this.employeeProjects = employeeProjects;
-    }
-
-    @Override
-    public String toString() {
-        String output = String.format("%15s %15s %15s %15s %15s %15s %15s", projectId, projectDescription, clientName, companyName, startingDate,                         estimatedEndingDate, status);
-        return output;
+    public void setDeleteStatus(String deleteStatus) {
+        this.deleteStatus = deleteStatus;
     }
 }

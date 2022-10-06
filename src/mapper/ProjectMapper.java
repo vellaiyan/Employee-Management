@@ -33,25 +33,8 @@ public class ProjectMapper {
      */ 
     public Project fromDto(ProjectDto projectDto) {
         Project project = new Project(projectDto.getProjectId(), projectDto.getProjectName(), projectDto.getProjectDescription(), 
-            projectDto.getClientName(), projectDto.getCompanyName(), projectDto.getStartingDate(), projectDto.getEstimatedEndingDate(),                                  projectDto.getStatus());
+            projectDto.getClientName(), projectDto.getCompanyName(), projectDto.getStartingDate(), projectDto.getEstimatedEndingDate(),                         projectDto.getDeleteStatus());
 
-        return project;
-    }
-
-    /**
-     * {@code fromDto} to convert project object into projectDto object.
-     *
-     * @param project
-     *       Project to be converted into projectDto.
-     *
-     * @return projectDto
-     *
-     * @since 1.0
-     * 
-     */ 
-    public ProjectDto toDto(Project project) {
-        ProjectDto projectDto = new ProjectDto(project.getProjectId(), project.getProjectName(), project.getProjectDescription(), project.getClientName(),             project.getCompanyName(), project.getStartingDate(), project.getEstimatedEndingDate(), project.getStatus());
-        
-        return projectDto;
+    return project;
     }
 }

@@ -5,60 +5,39 @@
 
 package com.ideas2it.dto;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;  
-import javax.persistence.FetchType; 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;  
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
-/**
- * The {@code EmployeeProjectDto} class represents the all  fields to be accessable for front-end.
- * 
- *
- * @author Vellaiyan
- *
- * @since  1.0
- * @jls    1.1 Adding relievedOd.
- */
 public class EmployeeProjectDto {
-    private int projectId;
     private int employeeId;
+    private int projectId;
+    private String projectName;
     private LocalDate assignedOn;
     private LocalDate completedOn;
     private LocalDate relievedOn;
     private String status;
- 
-    public EmployeeProjectDto() {
     
-    }
-
-    public EmployeeProjectDto(int projectId, int employeeId, LocalDate assignedOn, LocalDate completedOn, LocalDate relievedOn, String status) {
-        this.projectId = projectId;
+    public EmployeeProjectDto(int employeeId, int projectId, String projectName,  LocalDate assignedOn, LocalDate completedOn,
+            LocalDate relievedOn, String status) {
         this.employeeId = employeeId;
+        this.projectId = projectId;
+        this.projectName = projectName;
         this.assignedOn = assignedOn;
         this.completedOn = completedOn;
         this.relievedOn = relievedOn;
-        this.status = status;
+        this.status = status;    
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
     }
 
     public int getProjectId() {
         return projectId;
     }
-   
-    public int getEmployeeId() {
-        return employeeId;
-    }
 
+    public String getProjectName() {
+        return projectName;
+    }
     public LocalDate getAssignedOn() {
         return assignedOn;
     }
@@ -75,12 +54,12 @@ public class EmployeeProjectDto {
         return status;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
-
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public void setAssignedOn(LocalDate assignedOn) {
@@ -90,19 +69,18 @@ public class EmployeeProjectDto {
     public void setCompletedOn(LocalDate completedOn) {
         this.completedOn = completedOn;
     }
-
-    public void setRelievedOn(LocalDate relievedOn) {
-        this.relievedOn = relievedOn;
-    }
-
+  
     public void setStatus(String status) {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        String output = String.format("%17s %17s %17s %17s %17s %17s\n", projectId, employeeId, assignedOn, completedOn, relievedOn, status);
-        
-        return output;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
-}    
+
+    @Override
+    public String toString() { 
+        String output = String.format("%17s %17s %17s %15s %15s %15s %5s", employeeId, projectId, projectName, assignedOn, completedOn, relievedOn, status);    
+        return output;   
+    }
+}
